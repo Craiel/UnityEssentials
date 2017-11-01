@@ -1,0 +1,33 @@
+﻿namespace Assets.Scripts.Craiel.Essentials.Editor
+{
+    using UnityEditor;
+    using UnityEngine;
+
+    public class SceneToolbarUtils : SceneToolbarWidget
+    {
+        // -------------------------------------------------------------------
+        // Public
+        // -------------------------------------------------------------------
+        public override void OnGUi()
+        {
+            base.OnGUi();
+            if (GUILayout.Button("Utils", "ToolbarDropDown"))
+            {
+                var menu = new GenericMenu();
+              
+                menu.AddItem(new GUIContent("Clean Empty Directories"), false, () =>
+                {
+                    EditorWindow.GetWindow(typeof(DirectoryUtilsWindow), true, "Directory Utils");
+                });
+
+                menu.AddItem(new GUIContent("Search for Components"), false, () =>
+                {
+                    EditorWindow.GetWindow(typeof(SearchForComponentsWindow), true, "Search Components");
+                });
+                
+                menu.ShowAsContext();
+                Event.current.Use();
+            }
+        }
+    }
+}

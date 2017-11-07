@@ -5,25 +5,28 @@ namespace Assets.Scripts.Craiel.Essentials.Input
     using Contracts;
     using Enums;
     using Essentials;
+    using NLog;
     using Scene;
 
     public class InputHandler : UnitySingletonBehavior<InputHandler>
     {
-        private static readonly IDictionary<object, InputControlState> ControlState = new Dictionary<object, InputControlState>();
+        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
+        
+        private static readonly IDictionary<InputControl, InputControlState> ControlState;
 
         private readonly Stack<IInputState> stateStack;
 
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
+        static InputHandler()
+        {
+            ControlState = new Dictionary<InputControl, InputControlState>();
+        }
+        
         public InputHandler()
         {
             this.stateStack = new Stack<IInputState>();
-
-            foreach (object controlEnum in Enum.GetValues(EssentialsCore.InputControlType))
-            {
-                ControlState.Add(controlEnum, new InputControlState());
-            }
         }
 
         // -------------------------------------------------------------------
@@ -56,14 +59,25 @@ namespace Assets.Scripts.Craiel.Essentials.Input
             ResetStates();
             this.stateStack.Peek().Update();
         }
-        
-        public InputControlState GetControl<T>(T control)
-            where T : struct, IConvertible
+
+        public void RegisterControl(InputControl control)
         {
-            return ControlState[control];
+            InputControlState existing;
+            if (ControlState.TryGetValue(control, out existing))
+            {
+                Logger.Warn("Duplicate Input Control: " + control);
+                return;
+            }
+            
+            ControlState.Add(control, new InputControlState());
         }
 
-        public InputControlState GetControl(object control)
+        public void UnregisterControl(InputControl control)
+        {
+            ControlState.Remove(control);
+        }
+        
+        public InputControlState GetControl(InputControl control)
         {
             return ControlState[control];
         }
@@ -115,7 +129,7 @@ namespace Assets.Scripts.Craiel.Essentials.Input
         // -------------------------------------------------------------------
         private static void ResetStates()
         {
-            foreach (object control in ControlState.Keys)
+            foreach (InputControl control in ControlState.Keys)
             {
                 ControlState[control].Reset();
             }

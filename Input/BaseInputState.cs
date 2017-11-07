@@ -46,7 +46,7 @@ namespace Assets.Scripts.Craiel.Essentials.Input
             return this;
         }
 
-        public IInputState For(object target)
+        public IInputState For(InputControl target)
         {
             var state = new InputStateEntry { Control = target, Mode = this.currentEditedMapping.Mode };
             this.currentEditedMapping.AddState(state);
@@ -99,7 +99,7 @@ namespace Assets.Scripts.Craiel.Essentials.Input
         // -------------------------------------------------------------------
         // Protected
         // -------------------------------------------------------------------
-        protected void UpdateState(float value, bool pressed, object target, InputAxisMode mode)
+        protected void UpdateState(float value, bool pressed, InputControl target, InputAxisMode mode)
         {
             InputControlState state = InputHandler.Instance.GetControl(target);
             this.SetState(state, pressed);

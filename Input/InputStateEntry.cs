@@ -7,7 +7,7 @@ namespace Assets.Scripts.Craiel.Essentials.Input
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        public object Control { get; set; }
+        public InputControl Control { get; set; }
 
         public InputAxisMode Mode { get; set; }
     }

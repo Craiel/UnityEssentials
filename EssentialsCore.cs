@@ -34,8 +34,6 @@
         // -------------------------------------------------------------------
         public static IInputState DefaultInputState { get; set; }
 
-        public static Type InputControlType { get; set; }
-
         public static float LocalizationSaveInterval { get; set; }
 
         public static CarbonDirectory DataPath

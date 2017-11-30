@@ -62,10 +62,16 @@ namespace Assets.Scripts.Craiel.Essentials.Input
 
         public void RegisterControl(InputControl control)
         {
+            if (string.IsNullOrEmpty(control.Id))
+            {
+                Logger.Error("Input Control invalid!");
+                return;
+            }
+
             InputControlState existing;
             if (ControlState.TryGetValue(control, out existing))
             {
-                Logger.Warn("Duplicate Input Control: " + control);
+                Logger.Error("Duplicate Input Control: " + control);
                 return;
             }
             
@@ -76,7 +82,12 @@ namespace Assets.Scripts.Craiel.Essentials.Input
         {
             ControlState.Remove(control);
         }
-        
+
+        public bool IsRegistered(InputControl control)
+        {
+            return ControlState.ContainsKey(control);
+        }
+
         public InputControlState GetControl(InputControl control)
         {
             return ControlState[control];

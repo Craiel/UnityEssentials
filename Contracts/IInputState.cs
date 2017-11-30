@@ -1,17 +1,15 @@
 namespace Assets.Scripts.Craiel.Essentials.Contracts
 {
-    using Enums;
     using Input;
+    using UnityEngine;
 
     public interface IInputState
     {
         bool IsActive { get; }
 
-        IInputState AddAxis(string axis);
-        IInputState JoinWith(string axis);
-        IInputState WithMode(InputAxisMode mode);
-        IInputState For(InputControl target);
-        
+        InputStateAxisMapping AddAxis(string axis);
+        InputStateKeyMapping AddKey(KeyCode key);
+
         void Activate();
         void Deactivate();
 

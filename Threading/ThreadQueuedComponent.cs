@@ -96,17 +96,17 @@
 
             if (error > 0)
             {
-                Logger.Error("{0} operations in {0} had errors!", error, this.GetType());
+                Logger.Error("[{1}] {0} operations in {0} had errors!", error, this.GetType());
             }
 
             if (slowError > 0)
             {
-                Logger.Error("{0} operations in {0} took longer then expected!", slowError, this.GetType());
+                Logger.Error("[{1}] {0} operations in {0} took longer then expected!", slowError, this.GetType());
             }
 
             if (slowWarning > 0)
             {
-                Logger.Error("Operation in {0} took more than 2 seconds to complete", slowWarning, this.GetType());
+                Logger.Error("[{1}] Operation in {0} took more than 2 seconds to complete", slowWarning, this.GetType());
             }
         }
     }

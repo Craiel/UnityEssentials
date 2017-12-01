@@ -8,7 +8,7 @@
         // Public
         // -------------------------------------------------------------------
         public static T GetOrAddComponent<T>(this GameObject gameObject)
-            where T : Component
+            where T : UnityEngine.Component
         {
             T component = gameObject.GetComponent<T>();
             if (component != null)

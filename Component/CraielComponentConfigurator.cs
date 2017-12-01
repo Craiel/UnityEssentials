@@ -1,25 +1,24 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.UnityComponent
+﻿namespace Assets.Scripts.Craiel.Essentials.Component
 {
     using System;
     using System.Linq;
-    using Audio.Contracts;
     using Contracts;
     using NLog;
 
-    internal class UnityComponentCoreStatic
+    internal class CraielComponentCoreStatic
     {
         public static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
     }
 
-    public class UnityComponentConfigurator<T>
-        where T : IComponentConfig
+    public class CraielComponentConfigurator<T>
+        where T : class, ICraielComponentConfig
     {
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
         public void Configure()
         {
-            Initialize();
+            this.Initialize();
         }
         
         // -------------------------------------------------------------------
@@ -35,14 +34,14 @@
 
             if (implementations.Count != 1)
             {
-                UnityComponentCoreStatic.Logger.Error("No implementation of {0} found, configure your game data first", typeof(T).Name);
+                CraielComponentCoreStatic.Logger.Error("No implementation of {0} found, configure your game data first", typeof(T).Name);
                 return;
             }
 
-            var config = Activator.CreateInstance(implementations.First()) as IAudioConfig;
+            T config = Activator.CreateInstance(implementations.First()) as T;
             if (config == null)
             {
-                UnityComponentCoreStatic.Logger.Error("Failed to instantiate config class of type {0}", typeof(T).Name);
+                CraielComponentCoreStatic.Logger.Error("Failed to instantiate config class of type {0}", typeof(T).Name);
                 return;
             }
 

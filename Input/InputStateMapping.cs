@@ -3,11 +3,10 @@
     using System;
     using Enums;
     using NLog;
-    using UnityEngine.Playables;
 
     public abstract class InputStateMapping
     {
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         // -------------------------------------------------------------------
         // Constructor

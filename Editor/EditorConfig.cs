@@ -90,9 +90,20 @@
             }
         }
 
-        public void Set(T key, int value)
+        public void Set(T key, int? value = null)
         {
-            this.content.IntData[Convert.ToInt32(key)] = value;
+            int keyId = Convert.ToInt32(key);
+
+            if (value == null)
+            {
+                this.content.IntData[keyId] = 0;
+                this.content.IntDataSet[keyId] = false;
+            }
+            else
+            {
+                this.content.IntData[keyId] = value.Value;
+                this.content.IntDataSet[keyId] = true;
+            }
 
             if (!this.inBatch)
             {
@@ -100,9 +111,20 @@
             }
         }
 
-        public void Set(T key, bool value)
+        public void Set(T key, bool? value = null)
         {
-            this.content.BoolData[Convert.ToInt32(key)] = value;
+            int keyId = Convert.ToInt32(key);
+
+            if (value == null)
+            {
+                this.content.BoolData[keyId] = false;
+                this.content.BoolDataSet[keyId] = false;
+            }
+            else
+            {
+                this.content.BoolData[keyId] = value.Value;
+                this.content.BoolDataSet[keyId] = true;
+            }
 
             if (!this.inBatch)
             {
@@ -110,9 +132,20 @@
             }
         }
 
-        public void Set(T key, float value)
+        public void Set(T key, float? value = null)
         {
-            this.content.FloatData[Convert.ToInt32(key)] = value;
+            int keyId = Convert.ToInt32(key);
+
+            if (value == null)
+            {
+                this.content.FloatData[keyId] = 0f;
+                this.content.FloatDataSet[keyId] = false;
+            }
+            else
+            {
+                this.content.FloatData[keyId] = value.Value;
+                this.content.FloatDataSet[keyId] = true;
+            }
 
             if (!this.inBatch)
             {
@@ -122,26 +155,46 @@
 
         public string GetString(T key, string defaultValue = null)
         {
-            string value = this.content.StringData[Convert.ToInt32(key)];
+            int keyId = Convert.ToInt32(key);
+            
+            string value = this.content.StringData[keyId];
             return value ?? defaultValue;
         }
 
         public int GetInt(T key, int defaultValue = 0)
         {
-            int? value = this.content.IntData[Convert.ToInt32(key)];
-            return value ?? defaultValue;asd
+            int keyId = Convert.ToInt32(key);
+
+            if (!this.content.IntDataSet[keyId])
+            {
+                return defaultValue;
+            }
+            
+            return this.content.IntData[keyId];
         }
 
         public bool GetBool(T key, bool defaultValue = false)
         {
-            bool? value = this.content.BoolData[Convert.ToInt32(key)];
-            return value ?? defaultValue;asd
+            int keyId = Convert.ToInt32(key);
+
+            if (!this.content.BoolDataSet[keyId])
+            {
+                return defaultValue;
+            }
+            
+            return this.content.BoolData[keyId];
         }
 
         public float GetFloat(T key, float defaultValue = 0f)
         {
-            float? value = this.content.FloatData[Convert.ToInt32(key)];
-            return value ?? defaultValue;asd
+            int keyId = Convert.ToInt32(key);
+
+            if (!this.content.FloatDataSet[keyId])
+            {
+                return defaultValue;
+            }
+            
+            return this.content.FloatData[keyId];
         }
 
         public void BeginBatch()

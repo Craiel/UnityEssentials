@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using Contracts;
+    using Input;
     using IO;
     using NLog;
     using UnityEngine;
@@ -25,6 +26,8 @@
         static EssentialsCore()
         {
             LocalizationSaveInterval = 60f;
+
+            DefaultInputState = InputStateDefault.Instance;
 
             Initialize();
         }

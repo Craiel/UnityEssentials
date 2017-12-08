@@ -1,15 +1,16 @@
 ﻿namespace Assets.Scripts.Craiel.Essentials.Editor
 {
     using System.Collections.Generic;
-    using global::NLog;
-    using global::NLog.Config;
     using Logging;
+    using NLog;
+    using NLog.Config;
     using UnityEditor;
+
     using UnityEngine;
 
     public partial class NLogConsole : EditorWindow
     {
-        private readonly IList<Essentials.Editor.NLogConsole.CountedLog> renderList = new List<Essentials.Editor.NLogConsole.CountedLog>();
+        private readonly IList<CountedLog> renderList = new List<CountedLog>();
 
         private Texture2D errorIcon;
         private Texture2D warningIcon;
@@ -36,7 +37,8 @@
         private bool clearOnPlay = true;
         private bool wasPlaying;
         private bool collapse;
-        private bool scrollFollowMessages;
+        private bool scrollFollowMessages = true;
+        private bool limitMaxLines = true;
         private bool showFrameSource = true;
         private float currentTopPaneHeight = 200;
         private float dividerHeight = 5;
@@ -52,7 +54,7 @@
 
         private Vector2 drawPos;
 
-        private Essentials.Editor.NLogConsole.DrawingContext drawingContext = new Essentials.Editor.NLogConsole.DrawingContext();
+        private DrawingContext drawingContext = new DrawingContext();
 
         // -------------------------------------------------------------------
         // Public
@@ -65,7 +67,7 @@
 
         public static void Init()
         {
-            var window = CreateInstance<Essentials.Editor.NLogConsole>();
+            var window = CreateInstance<NLogConsole>();
             window.Show();
             window.position = new Rect(200, 200, 400, 300);
             window.currentTopPaneHeight = window.position.height / 2;
@@ -103,7 +105,7 @@
 
             this.titleContent.text = "NLog Console";
 
-            EditorApplication.playModeStateChanged += this.OnPlaymodeStateChanged;
+            EditorApplication.playmodeStateChanged += this.OnPlaymodeStateChanged;
 
             this.ClearSelectedMessage();
 

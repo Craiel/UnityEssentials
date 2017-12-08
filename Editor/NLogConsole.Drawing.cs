@@ -2,15 +2,21 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Text.RegularExpressions;
-    using global::NLog;
     using Logging;
+    using NLog;
+
     using UnityEditor;
+
     using UnityEngine;
+
     using UserInterface;
 
     public partial class NLogConsole
     {
+        private const int RenderLineLimit = 250;
+        
         // -------------------------------------------------------------------
         // Private
         // -------------------------------------------------------------------
@@ -31,7 +37,6 @@
             NLogInterceptor.Instance.PauseOnError = GuiUtils.ToggleClamped(this.drawPos, NLogInterceptor.Instance.PauseOnError, "Error Pause", EditorStyles.toolbarButton, out elementSize);
             drawPos.x += elementSize.x;
             
-            drawPos.x += elementSize.x;
             var newCollapse = GuiUtils.ToggleClamped(this.drawPos, this.collapse, "Collapse", EditorStyles.toolbarButton, out elementSize);
             if (newCollapse != this.collapse)
             {
@@ -43,6 +48,9 @@
             drawPos.x += elementSize.x;
 
             scrollFollowMessages = GuiUtils.ToggleClamped(this.drawPos, scrollFollowMessages, "Follow", EditorStyles.toolbarButton, out elementSize);
+            drawPos.x += elementSize.x;
+
+            this.limitMaxLines = GuiUtils.ToggleClamped(this.drawPos, this.limitMaxLines, "Limit Lines", EditorStyles.toolbarButton, out elementSize);
             drawPos.x += elementSize.x;
 
             var errorToggleContent = new GUIContent(NLogInterceptor.Instance.GetCount(LogLevel.Error).ToString(), smallErrorIcon);
@@ -107,80 +115,101 @@
 
             drawPos.y += size.y;
         }
+
+        private void UpdateRenderList()
+        {
+            var logLineStyle = entryStyleBackEven;
+            logListMaxWidth = 0;
+            logListLineHeight = 0;
+            collapseBadgeMaxWidth = 0;
+            this.renderList.Clear();
+
+            // When collapsed, count up the unique elements and use those to display
+            if (collapse)
+            {
+                var collapsedLines = new Dictionary<string, CountedLog>();
+                var collapsedLinesList = new List<CountedLog>();
+
+                for (var i = NLogInterceptor.Instance.Events.Count - 1; i > 0; i--)
+                {
+                    NLogInterceptorEvent logEvent = NLogInterceptor.Instance.Events[i];
+                    if (!FilterLogLevel(logEvent) && !FilterLog(logEvent))
+                    {
+                        var matchString = string.Concat(logEvent.Message, "!$", logEvent.Level, "!$", logEvent.LoggerName);
+
+                        CountedLog countedLog;
+                        if (collapsedLines.TryGetValue(matchString, out countedLog))
+                        {
+                            countedLog.Count++;
+                        }
+                        else
+                        {
+                            countedLog = new CountedLog(logEvent, 1);
+                            collapsedLines.Add(matchString, countedLog);
+                            collapsedLinesList.Add(countedLog);
+                            if (this.limitMaxLines && collapsedLinesList.Count > RenderLineLimit)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                foreach (var countedLog in collapsedLinesList)
+                {
+                    var content = this.GetLogLineGUIContent(countedLog.Event);
+                    this.renderList.Add(countedLog);
+                    var logLineSize = logLineStyle.CalcSize(content);
+                    logListMaxWidth = Mathf.Max(logListMaxWidth, logLineSize.x);
+                    logListLineHeight = Mathf.Max(logListLineHeight, logLineSize.y);
+
+                    var collapseBadgeContent = new GUIContent(countedLog.Count.ToString());
+                    var collapseBadgeSize = EditorStyles.miniButton.CalcSize(collapseBadgeContent);
+                    collapseBadgeMaxWidth = Mathf.Max(collapseBadgeMaxWidth, collapseBadgeSize.x);
+                }
+            }
+            else
+            {
+                // If we're not collapsed, display everything in order
+                for (var i = NLogInterceptor.Instance.Events.Count - 1; i > 0; i--)
+                {
+                    NLogInterceptorEvent logEvent = NLogInterceptor.Instance.Events[i];
+                    if (!FilterLogLevel(logEvent) && !FilterLog(logEvent))
+                    {
+                        var content = this.GetLogLineGUIContent(logEvent);
+                        this.renderList.Add(new CountedLog(logEvent, 1));
+                        var logLineSize = logLineStyle.CalcSize(content);
+                        logListMaxWidth = Mathf.Max(logListMaxWidth, logLineSize.x);
+                        logListLineHeight = Mathf.Max(logListLineHeight, logLineSize.y);
+
+                        if (this.limitMaxLines && this.renderList.Count > RenderLineLimit)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+
+            logListMaxWidth += collapseBadgeMaxWidth;
+
+            // Have to reverse the render list if we limit the max line count
+            IList<CountedLog> reversed = this.renderList.Reverse().ToList();
+            this.renderList.Clear();
+            this.renderList.AddRange(reversed);
+        }
         
         private void DrawLogList(float height)
         {
             var oldColor = GUI.backgroundColor;
 
             var collapseBadgeStyle = EditorStyles.miniButton;
-            var logLineStyle = entryStyleBackEven;
-
+            
             // If we've been marked dirty, we need to recalculate the elements to be displayed
             if (this.hasChanged)
             {
-                logListMaxWidth = 0;
-                logListLineHeight = 0;
-                collapseBadgeMaxWidth = 0;
-                this.renderList.Clear();
-
-                // When collapsed, count up the unique elements and use those to display
-                if (collapse)
-                {
-                    var collapsedLines = new Dictionary<string, Essentials.Editor.NLogConsole.CountedLog>();
-                    var collapsedLinesList = new List<Essentials.Editor.NLogConsole.CountedLog>();
-
-                    foreach (var log in NLogInterceptor.Instance.Events)
-                    {
-                        if (!FilterLog(log))
-                        {
-                            var matchString = string.Concat(log.Message, "!$", log.Level, "!$", log.LoggerName);
-
-                            Essentials.Editor.NLogConsole.CountedLog countedLog;
-                            if (collapsedLines.TryGetValue(matchString, out countedLog))
-                            {
-                                countedLog.Count++;
-                            }
-                            else
-                            {
-                                countedLog = new Essentials.Editor.NLogConsole.CountedLog(log, 1);
-                                collapsedLines.Add(matchString, countedLog);
-                                collapsedLinesList.Add(countedLog);
-                            }
-                        }
-                    }
-
-                    foreach (var countedLog in collapsedLinesList)
-                    {
-                        var content = this.GetLogLineGUIContent(countedLog.Event);
-                        this.renderList.Add(countedLog);
-                        var logLineSize = logLineStyle.CalcSize(content);
-                        logListMaxWidth = Mathf.Max((float) logListMaxWidth, logLineSize.x);
-                        logListLineHeight = Mathf.Max((float) logListLineHeight, logLineSize.y);
-
-                        var collapseBadgeContent = new GUIContent(countedLog.Count.ToString());
-                        var collapseBadgeSize = collapseBadgeStyle.CalcSize(collapseBadgeContent);
-                        collapseBadgeMaxWidth = Mathf.Max(collapseBadgeMaxWidth, collapseBadgeSize.x);
-                    }
-                }
-                else
-                {
-                    // If we're not collapsed, display everything in order
-                    foreach (var log in NLogInterceptor.Instance.Events)
-                    {
-                        if (!FilterLog(log))
-                        {
-                            var content = this.GetLogLineGUIContent(log);
-                            this.renderList.Add(new Essentials.Editor.NLogConsole.CountedLog(log, 1));
-                            var logLineSize = logLineStyle.CalcSize(content);
-                            logListMaxWidth = Mathf.Max((float) logListMaxWidth, logLineSize.x);
-                            logListLineHeight = Mathf.Max((float) logListLineHeight, logLineSize.y);
-                        }
-                    }
-                }
-
-                logListMaxWidth += collapseBadgeMaxWidth;
+                this.UpdateRenderList();
             }
-
+            
             var scrollRect = new Rect(drawPos, new Vector2(position.width, height));
             float lineWidth = Mathf.Max(logListMaxWidth, scrollRect.width);
 
@@ -203,14 +232,14 @@
             int firstRenderLogIndex = (int)(logListScrollPosition.y / logListLineHeight);
             int lastRenderLogIndex = firstRenderLogIndex + (int)(height / logListLineHeight);
 
-            firstRenderLogIndex = Mathf.Clamp(firstRenderLogIndex, (int) 0, (int) this.renderList.Count);
-            lastRenderLogIndex = Mathf.Clamp(lastRenderLogIndex, (int) 0, (int) this.renderList.Count);
+            firstRenderLogIndex = Mathf.Clamp(firstRenderLogIndex, 0, this.renderList.Count);
+            lastRenderLogIndex = Mathf.Clamp(lastRenderLogIndex, 0, this.renderList.Count);
             var buttonY = firstRenderLogIndex * this.logListLineHeight;
 
             for (int renderLogIndex = firstRenderLogIndex; renderLogIndex < lastRenderLogIndex; renderLogIndex++)
             {
                 var countedLog = this.renderList[renderLogIndex];
-                logLineStyle = (renderLogIndex % 2 == 0) ? entryStyleBackEven : entryStyleBackOdd;
+                GUIStyle logLineStyle = (renderLogIndex % 2 == 0) ? entryStyleBackEven : entryStyleBackOdd;
                 if (renderLogIndex == selectedLogIndex)
                 {
                     GUI.backgroundColor = new Color(0.5f, 0.5f, 1);
@@ -258,7 +287,8 @@
 
         private GUIContent GetLogLineGUIContent(NLogInterceptorEvent log)
         {
-            var content = new GUIContent(log.Message, this.GetIconForLog(log));
+            string displayString = string.Format("[{0:H:mm:ss.fff}] {1}", log.TimeStamp, log.Message);
+            var content = new GUIContent(displayString, this.GetIconForLog(log));
             return content;
         }
 
@@ -412,7 +442,7 @@
         {
             var oldColor = GUI.backgroundColor;
 
-            this.selectedLogIndex = Mathf.Clamp((int) this.selectedLogIndex, (int) 0, (int) this.renderList.Count);
+            this.selectedLogIndex = Mathf.Clamp(this.selectedLogIndex, 0, this.renderList.Count);
 
             if (this.renderList.Count > 0 && this.selectedLogIndex >= 0)
             {

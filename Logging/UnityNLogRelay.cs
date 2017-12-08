@@ -1,12 +1,12 @@
 ﻿namespace Assets.Scripts.Craiel.Essentials.Logging
 {
-    using Essentials;
     using NLog;
+
     using UnityEngine;
 
     public class UnityNLogRelay : UnitySingleton<UnityNLogRelay>
     {
-        private static readonly global::NLog.Logger Logger = LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
 
         // -------------------------------------------------------------------
         // Public

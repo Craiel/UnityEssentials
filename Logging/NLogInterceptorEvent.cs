@@ -15,6 +15,7 @@
             this.Level = info.Level;
             this.StackTrace = info.StackTrace;
             this.Exception = info.Exception;
+            this.TimeStamp = info.TimeStamp;
 
             string[] messageSegments = info.FormattedMessage.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             if (messageSegments.Length > 1)
@@ -31,6 +32,8 @@
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
+        public DateTime TimeStamp { get; private set; }
+
         public string LoggerName { get; private set; }
 
         public string Message { get; private set; }

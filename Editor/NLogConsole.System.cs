@@ -1,8 +1,10 @@
 ﻿namespace Assets.Scripts.Craiel.Essentials.Editor
 {
-    using global::NLog;
     using Logging;
+    using NLog;
+
     using UnityEditor;
+
     using UnityEngine;
 
     public partial class NLogConsole
@@ -21,15 +23,22 @@
                 || this.nameFilter == "All" 
                 || (this.nameFilter == "No Name" && string.IsNullOrEmpty(log.LoggerName)))
             {
-                if ((log.Level == LogLevel.Info && this.showInfo)
-                   || (log.Level == LogLevel.Warn && this.showWarning)
-                   || (log.Level == LogLevel.Error && this.showError))
+                if (this.filterRegex.IsMatch(log.Message))
                 {
-                    if (this.filterRegex == null || this.filterRegex.IsMatch(log.Message))
-                    {
-                        return false;
-                    }
+                    return false;
                 }
+            }
+
+            return true;
+        }
+
+        private bool FilterLogLevel(NLogInterceptorEvent log)
+        {
+            if ((log.Level == LogLevel.Info && this.showInfo)
+                || (log.Level == LogLevel.Warn && this.showWarning)
+                || (log.Level == LogLevel.Error && this.showError))
+            {
+                return false;
             }
 
             return true;
@@ -42,7 +51,7 @@
             showFrameSource = false;
         }
 
-        private void OnPlaymodeStateChanged(PlayModeStateChange playModeStateChange)
+        private void OnPlaymodeStateChanged()
         {
             if (!this.wasPlaying && EditorApplication.isPlayingOrWillChangePlaymode)
             {
@@ -84,7 +93,7 @@
                 resize = false;
             }
 
-            currentTopPaneHeight = Mathf.Clamp((float) currentTopPaneHeight, 100, position.height - 100);
+            currentTopPaneHeight = Mathf.Clamp(currentTopPaneHeight, 100, position.height - 100);
         }
 
         private class CountedLog

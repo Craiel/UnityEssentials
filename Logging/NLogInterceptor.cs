@@ -2,9 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using Essentials;
     using NLog;
-
+    
     public class NLogInterceptor : UnitySingleton<NLogInterceptor>
     {
         // -------------------------------------------------------------------
@@ -59,31 +58,31 @@
         // -------------------------------------------------------------------
         private void OnEventReceived(LogEventInfo @event)
         {
-            var eventData = new NLogInterceptorEvent(@event);
-            this.Events.Add(eventData);
+            var interceptorEvent = new NLogInterceptorEvent(@event);
+            this.Events.Add(interceptorEvent);
 
-            if (!this.Count.ContainsKey(eventData.Level))
+            if (!this.Count.ContainsKey(@event.Level))
             {
-                this.Count.Add(eventData.Level, 1);
+                this.Count.Add(@event.Level, 1);
             }
             else
             {
-                this.Count[eventData.Level]++;
+                this.Count[@event.Level]++;
             }
 
-            if (eventData.Level == LogLevel.Error && this.PauseOnError)
+            if (@event.Level == LogLevel.Error && this.PauseOnError)
             {
                 UnityEngine.Debug.Break();
             }
 
-            if (!this.Names.Contains(eventData.LoggerName))
+            if (!this.Names.Contains(@event.LoggerName))
             {
-                this.Names.Add(eventData.LoggerName);
+                this.Names.Add(@event.LoggerName);
             }
 
             if (this.OnLogChanged != null)
             {
-                this.OnLogChanged(eventData);
+                this.OnLogChanged(interceptorEvent);
             }
         }
     }

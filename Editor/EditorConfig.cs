@@ -18,10 +18,10 @@
         private const string SaveKeyDataSuffix = "_data";
         private const string SaveKeyVersionSuffix = "_version";
 
-        private readonly IList<T> enumValues;
-
         private readonly string saveKey;
 
+        private readonly IList<T> enumValues;
+        
         private SaveContent content;
 
         private bool inBatch;
@@ -35,10 +35,10 @@
             {
                 throw new InvalidOperationException("EditorConfig Save key is invalid");
             }
-
-            // Get all keys
+            
             this.enumValues = Enum.GetValues(typeof(T)).Cast<T>().ToList();
-            this.content = new SaveContent(this.enumValues.Count);
+            this.content = new SaveContent();
+            this.content.Initialize(this.enumValues.Count);
 
             this.saveKey = saveKey;
             this.Version = version;
@@ -69,6 +69,12 @@
             }
 
             SaveContent loadedContent = JsonUtility.FromJson<SaveContent>(rawData);
+            if (loadedContent == null)
+            {
+                this.content.Clear();
+                return;
+            }
+            
             if (version != this.Version)
             {
                 if (!this.Upgrade(ref loadedContent, version))
@@ -78,6 +84,7 @@
             }
 
             this.content = loadedContent;
+            this.content.Initialize(this.enumValues.Count);
         }
 
         public void Set(T key, string value)
@@ -163,7 +170,7 @@
 
         public int GetInt(T key, int defaultValue = 0)
         {
-            int keyId = Convert.ToInt32(key);
+            int keyId = Convert.ToInt32(key); 
 
             if (!this.content.IntDataSet[keyId])
             {
@@ -233,17 +240,6 @@
         [Serializable]
         protected class SaveContent
         {
-            public SaveContent(int entryCount)
-            {
-                this.StringData = new string[entryCount];
-                this.IntData = new int[entryCount];
-                this.IntDataSet = new bool[entryCount];
-                this.BoolData = new bool[entryCount];
-                this.BoolDataSet = new bool[entryCount];
-                this.FloatData = new float[entryCount];
-                this.FloatDataSet = new bool[entryCount];
-            }
-
             [SerializeField]
             public string[] StringData;
 
@@ -274,6 +270,17 @@
                 Array.Clear(this.BoolDataSet, 0, this.BoolDataSet.Length);
                 Array.Clear(this.FloatData, 0, this.FloatData.Length);
                 Array.Clear(this.FloatDataSet, 0, this.FloatDataSet.Length);
+            }
+
+            public void Initialize(int entryCount)
+            {
+                this.StringData = this.StringData ?? new string[entryCount];
+                this.IntData = this.IntData ?? new int[entryCount];
+                this.IntDataSet = this.IntDataSet ?? new bool[entryCount];
+                this.BoolData = this.BoolData ?? new bool[entryCount];
+                this.BoolDataSet = this.BoolDataSet ?? new bool[entryCount];
+                this.FloatData = this.FloatData ?? new float[entryCount];
+                this.FloatDataSet = this.FloatDataSet ?? new bool[entryCount];
             }
         }
     }

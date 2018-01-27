@@ -105,7 +105,7 @@
 
             this.titleContent.text = "NLog Console";
 
-            EditorApplication.playmodeStateChanged += this.OnPlaymodeStateChanged;
+            EditorApplication.playModeStateChanged += this.OnPlaymodeStateChanged;
 
             this.ClearSelectedMessage();
 

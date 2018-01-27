@@ -51,7 +51,7 @@
             showFrameSource = false;
         }
 
-        private void OnPlaymodeStateChanged()
+        private void OnPlaymodeStateChanged(PlayModeStateChange change)
         {
             if (!this.wasPlaying && EditorApplication.isPlayingOrWillChangePlaymode)
             {

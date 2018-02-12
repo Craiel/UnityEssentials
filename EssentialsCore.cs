@@ -18,6 +18,8 @@
 
         public static readonly CarbonDirectory AssetsPath = new CarbonDirectory("Assets");
 
+        public static readonly CarbonDirectory DefaultScenesPath = AssetsPath.ToDirectory("Scenes");
+
         private static CarbonDirectory dataPath;
 
         // -------------------------------------------------------------------
@@ -29,6 +31,10 @@
 
             DefaultInputState = InputStateDefault.Instance;
 
+            CoreScenes = new CarbonFile[0];
+            
+            ScenesPath = DefaultScenesPath;
+
             Initialize();
         }
 
@@ -39,10 +45,14 @@
 
         public static float LocalizationSaveInterval { get; set; }
 
+        public static CarbonFile[] CoreScenes { get; set; }
+
         public static CarbonDirectory DataPath
         {
             get { return dataPath ?? (dataPath = new CarbonDirectory(Application.dataPath)); }
         }
+
+        public static CarbonDirectory ScenesPath { get; set; }
 
         // -------------------------------------------------------------------
         // Private

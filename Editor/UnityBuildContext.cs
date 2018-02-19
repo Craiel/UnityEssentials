@@ -51,7 +51,7 @@
 
         public bool IncludeCoreScenes { get; set; }
         
-        public IList<CarbonFile> ScenesToIncludeInBuild { get; }
+        public IList<CarbonFile> ScenesToIncludeInBuild { get; private set; }
 
         public void SetTargetName(string name)
         {

@@ -1,5 +1,7 @@
 ﻿namespace Assets.Scripts.Craiel.Essentials.Editor.NodeEditor
 {
+    using System;
+    using GDX.AI.Sharp.Mathematics;
     using UnityEngine;
 
     public abstract class ScriptableNodeBase : IScriptableNode
@@ -30,12 +32,19 @@
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
+        public bool VisualChanged { get; set; }
+        
         public virtual void Move(Vector2 position)
         {
             this.NodeRect.position = position;
         }
 
-        public virtual void Drag(Vector2 delta)
+        public virtual void DragWorld(Vector2 delta)
+        {
+            this.NodeRect.position += delta;
+        }
+        
+        public virtual void DragNode(Vector2 delta)
         {
             if (!this.EnableDrag)
             {
@@ -47,7 +56,15 @@
 
         public virtual void Draw(Rect drawArea)
         {
-            this.ConstrainNodeToArea(drawArea);
+            if (this.EnableConstrainToView)
+            {
+                this.ConstrainNodeToArea(drawArea);
+            }
+        }
+
+        public Vector2 GetSize()
+        {
+            return this.NodeRect.size;
         }
 
         public virtual bool ProcessEvent(Event eventData)
@@ -81,12 +98,21 @@
         // -------------------------------------------------------------------
         protected bool EnableDrag;
 
+        protected bool EnableConstrainToView;
+
         protected Rect NodeRect;
 
-        protected void SetSize(int width, int height)
+        protected void SetSize(float width, float height)
         {
+            if (Math.Abs(this.NodeRect.width - width) < MathUtils.Epsilon 
+                && Math.Abs(this.NodeRect.height - height) < MathUtils.Epsilon)
+            {
+                return;
+            }
+            
             this.NodeRect.width = width;
             this.NodeRect.height = height;
+            this.VisualChanged = true;
         }
 
         // -------------------------------------------------------------------
@@ -163,7 +189,7 @@
                 {
                     if (this.isBeingDragged)
                     {
-                        this.Drag(eventData.delta);
+                        this.DragNode(eventData.delta);
                         eventData.Use();
                         GUI.changed = true;
                         return true;

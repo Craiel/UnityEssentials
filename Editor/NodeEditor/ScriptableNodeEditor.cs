@@ -1,6 +1,7 @@
 ﻿namespace Assets.Scripts.Craiel.Essentials.Editor.NodeEditor
 {
     using System.Collections.Generic;
+    using System.Linq;
     using UnityEditor;
     using UnityEngine;
 
@@ -13,6 +14,9 @@
         
         private Vector2 gridOffset;
         private Vector2 currentDrag;
+
+        private Rect layouterLastRect;
+        private bool layouterRefreshRequired = true;
 
         // -------------------------------------------------------------------
         // Constructor
@@ -29,7 +33,7 @@
 
             this.GridEnableMeasureSections = true;
             this.GridSpacing = 20;
-            this.GridSpacingMeasureMultiplier = 4;
+            this.GridSpacingMeasureMultiplier = 5;
             this.GridOpacity = 0.2f;
             this.GridOpacityMeasureMultiplier = 2;
             this.GridColor = Color.grey;
@@ -49,8 +53,21 @@
         protected float GridOpacityMeasureMultiplier;
         protected Color GridColor;
 
+        protected bool LayouterEnabled;
+        protected IScriptableNodeLayouter Layouter;
+
         protected void Draw(Rect drawArea)
         {
+            if (this.LayouterEnabled)
+            {
+                if (this.layouterRefreshRequired 
+                    || this.layouterLastRect != drawArea
+                    || this.nodes.Any(x => x.VisualChanged))
+                {
+                    this.Relayout(drawArea);
+                }
+            }
+            
             if (this.BorderEnabled)
             {
                 this.DrawRect(drawArea, this.BorderOpacity, this.BorderColor);
@@ -68,6 +85,7 @@
 
             foreach (IScriptableNode node in this.nodes)
             {
+                node.VisualChanged = false;
                 node.Draw(drawArea);
             }
 
@@ -118,7 +136,7 @@
             {
                 for (int i = 0; i < nodes.Count; i++)
                 {
-                    nodes[i].Drag(delta);
+                    nodes[i].DragWorld(delta);
                 }
             }
 
@@ -137,11 +155,13 @@
         protected void RemoveNode(IScriptableNode node)
         {
             this.nodes.Remove(node);
+            this.layouterRefreshRequired = true;
         }
 
         protected void AddNode(IScriptableNode node)
         {
             this.nodes.Add(node);
+            this.layouterRefreshRequired = true;
         }
 
         // -------------------------------------------------------------------
@@ -189,6 +209,20 @@
 
             Handles.color = Color.white;
             Handles.EndGUI();
+        }
+        
+        private void Relayout(Rect drawRect)
+        {
+            this.layouterRefreshRequired = false;
+            this.layouterLastRect = drawRect;
+            
+            this.Layouter.BeginLayout(drawRect);
+            foreach (IScriptableNode node in this.nodes)
+            {
+                this.Layouter.Layout(node);
+            }
+            
+            this.Layouter.EndLayout();
         }
     }
 }

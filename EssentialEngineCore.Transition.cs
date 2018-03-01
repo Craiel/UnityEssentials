@@ -1,9 +1,10 @@
-﻿using System;
-using Assets.Scripts.Craiel.Essentials.Enums;
-using UnityEngine.SceneManagement;
-
-namespace Assets.Scripts.Craiel.UnityEssentials
+﻿namespace Assets.Scripts.Craiel.UnityEssentials
 {
+    using System;
+    using System.Collections.Generic;
+    using Essentials.Enums;
+    using UnityEngine.SceneManagement;
+
     public abstract partial class EssentialEngineCore<T, TSceneEnum>
     {
         private bool transitioning;
@@ -48,7 +49,8 @@ namespace Assets.Scripts.Craiel.UnityEssentials
 
             this.InTransition = true;
 
-            if (this.ActiveSceneType == type)
+            if (this.ActiveSceneType.HasValue 
+                && EqualityComparer<TSceneEnum>.Default.Equals(this.ActiveSceneType.Value, type))
             {
                 Logger.Warn("Transition target and active scene are the same, skipping!");
                 return;
@@ -67,7 +69,8 @@ namespace Assets.Scripts.Craiel.UnityEssentials
         private void UpdateSceneTransition()
         {
             // Check if we are still on the previous scene
-            if (this.activeScene != null && this.activeScene.Type != this.transitionTarget)
+            if (this.activeScene != null 
+                && EqualityComparer<TSceneEnum>.Default.Equals(this.activeScene.Type, this.transitionTarget))
             {
                 // We need to destroy this scene
                 if (this.activeScene.ContinueDestroy(this.transitionStep))

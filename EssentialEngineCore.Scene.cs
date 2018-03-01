@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using Assets.Scripts.Core.Scenes;
-using Assets.Scripts.Craiel.Essentials.Scene;
-
-namespace Assets.Scripts.Craiel.UnityEssentials
+﻿namespace Assets.Scripts.Craiel.UnityEssentials
 {
+    using System;
+    using System.Collections.Generic;
+    using Essentials.Scene;
+    
     public abstract partial class EssentialEngineCore<T, TSceneEnum>
     {
         private readonly IDictionary<TSceneEnum, Type> sceneImplementations = new Dictionary<TSceneEnum, Type>();
 
-        private readonly IDictionary<TSceneEnum, BaseScene> scenes = new Dictionary<TSceneEnum, BaseScene>();
+        private readonly IDictionary<TSceneEnum, BaseScene<TSceneEnum>> scenes = new Dictionary<TSceneEnum, BaseScene<TSceneEnum>>();
 
-        private BaseScene activeScene;
+        private BaseScene<TSceneEnum> activeScene;
 
         // -------------------------------------------------------------------
         // Public
@@ -19,15 +18,15 @@ namespace Assets.Scripts.Craiel.UnityEssentials
         public TSceneEnum? ActiveSceneType { get; private set; }
 
         public TS GetScene<TS>()
-            where TS : BaseScene
+            where TS : BaseScene<TSceneEnum>
         {
             return (TS)this.activeScene;
         }
 
-        protected void RegisterSceneImplementation<T>(TSceneEnum type)
-            where T : BaseScene
+        protected void RegisterSceneImplementation<TImplementation>(TSceneEnum type)
+            where TImplementation : BaseScene<TSceneEnum>
         {
-            sceneImplementations.Add(type, typeof(T));
+            sceneImplementations.Add(type, typeof(TImplementation));
         }
 
         // -------------------------------------------------------------------
@@ -48,7 +47,7 @@ namespace Assets.Scripts.Craiel.UnityEssentials
         {
             if (!this.scenes.ContainsKey(type))
             {
-                BaseScene scene = this.InitializeScene(type);
+                BaseScene<TSceneEnum> scene = this.InitializeScene(type);
                 if (scene == null)
                 {
                     return;
@@ -58,7 +57,7 @@ namespace Assets.Scripts.Craiel.UnityEssentials
             }
         }
 
-        private BaseScene InitializeScene(TSceneEnum type)
+        private BaseScene<TSceneEnum> InitializeScene(TSceneEnum type)
         {
             if (this.scenes.ContainsKey(type))
             {
@@ -73,13 +72,13 @@ namespace Assets.Scripts.Craiel.UnityEssentials
                 return null;
             }
 
-            if (!typeof(BaseScene).IsAssignableFrom(implementation))
+            if (!typeof(BaseScene<TSceneEnum>).IsAssignableFrom(implementation))
             {
                 Logger.Error("Scene implementation {0} is not of type IGameScene!", implementation);
                 return null;
             }
 
-            return (BaseScene)Activator.CreateInstance(implementation);
+            return (BaseScene<TSceneEnum>)Activator.CreateInstance(implementation);
         }
     }
 }

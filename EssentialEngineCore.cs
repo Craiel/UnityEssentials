@@ -6,6 +6,7 @@ using Assets.Scripts.Craiel.Essentials.Enums;
 using Assets.Scripts.Craiel.Essentials.Event;
 using Assets.Scripts.Craiel.Essentials.I18N;
 using Assets.Scripts.Craiel.Essentials.Input;
+using Assets.Scripts.Craiel.Essentials.Logging;
 using Assets.Scripts.Craiel.Essentials.Resource;
 using Assets.Scripts.Craiel.Essentials.Scene;
 using Assets.Scripts.Craiel.GameData;
@@ -28,7 +29,7 @@ namespace Assets.Scripts.Craiel.UnityEssentials
             base.Initialize();
 
             // System components first
-            ConfigureNLog();
+            NLogUtils.InitializeDefaultConfig();
 
             ResourceProvider.InstantiateAndInitialize();
             BundleProvider.InstantiateAndInitialize();

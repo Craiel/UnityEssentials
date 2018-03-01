@@ -10,7 +10,8 @@
 
     public delegate bool PartialSceneLoadingDelegate(SceneTransitionStep step);
 
-    public abstract class BaseScene
+    public abstract class BaseScene<TSceneEnum>
+        where TSceneEnum: struct, IConvertible
     {
         private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
 
@@ -39,6 +40,8 @@
         // Public
         // -------------------------------------------------------------------
         public string Name { get; private set; }
+        
+        public abstract TSceneEnum Type { get; }
 
         public string LevelName { get; private set; }
 
@@ -258,11 +261,7 @@
         {
             if (this.loadLevelOperation == null)
             {
-#if UNITY_5_2
-                this.loadLevelOperation = Application.LoadLevelAsync(this.LevelName);
-#else
                 this.loadLevelOperation = SceneManager.LoadSceneAsync(this.LevelName, this.loadMode);
-#endif
                 return true;
             }
 
@@ -285,11 +284,7 @@
                 else
                 {
                     // Start the next additive async load
-#if UNITY_5_2
-                    operation = Application.LoadLevelAdditiveAsync(additiveLevelName);
-#else
                     operation = SceneManager.LoadSceneAsync(additiveLevelName, LoadSceneMode.Additive);
-#endif
                     this.additiveLoadLevelOperations.Add(additiveLevelName, operation);
                     return true;
                 }

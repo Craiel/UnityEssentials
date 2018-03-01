@@ -20,10 +20,12 @@
 
         public static long NextLong(this Random rand, long min, long max)
         {
+#pragma warning disable CS0675
             long result = rand.Next((int)min >> 32, (int)max >> 32);
             result = result << 32;
             result = result | rand.Next((int)min, (int)max);
             return result;
+#pragma warning restore CS0675 
         }
 
         public static float Range(this Random rand, float min, float max)

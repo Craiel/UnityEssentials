@@ -28,7 +28,7 @@
             return this.aggregate.Subscribe(actionDelegate);
         }
 
-        public BaseEventSubscriptionTicket Subscribe<TSpecific>(BaseEventAggregate<IGameEvent>.GameEventAction<TSpecific> actionDelegate, Func<IGameEvent, bool> filterDelegate)
+        public BaseEventSubscriptionTicket Subscribe<TSpecific>(BaseEventAggregate<IGameEvent>.GameEventAction<TSpecific> actionDelegate, Func<TSpecific, bool> filterDelegate)
             where TSpecific : IGameEvent
         {
             return this.aggregate.Subscribe(actionDelegate, filterDelegate);

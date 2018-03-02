@@ -16,7 +16,7 @@
             return Aggregate.Subscribe(actionDelegate);
         }
 
-        public static BaseEventSubscriptionTicket Subscribe<TSpecific>(BaseEventAggregate<IEditorEvent>.GameEventAction<TSpecific> actionDelegate, Func<IEditorEvent, bool> filterDelegate)
+        public static BaseEventSubscriptionTicket Subscribe<TSpecific>(BaseEventAggregate<IEditorEvent>.GameEventAction<TSpecific> actionDelegate, Func<TSpecific, bool> filterDelegate)
             where TSpecific : IEditorEvent
         {
             return Aggregate.Subscribe(actionDelegate, filterDelegate);

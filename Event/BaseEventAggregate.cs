@@ -2,37 +2,38 @@
 {
     using System;
     using System.Collections.Generic;
-    using Contracts;
-
-    public delegate void GameEventAction<in T>(T eventData) where T : IGameEvent;
-
-    public class GameEventAggregate
+    
+    public class BaseEventAggregate<T> : IEventAggregate
+        where T : class
     {
-        private readonly IDictionary<Type, GameEventTargetCollection> subscribers;
+        private readonly IDictionary<Type, BaseEventTargetCollection<T>> subscribers;
 
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public GameEventAggregate()
+        public BaseEventAggregate()
         {
-            this.subscribers = new Dictionary<Type, GameEventTargetCollection>();
+            this.subscribers = new Dictionary<Type, BaseEventTargetCollection<T>>();
         }
 
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        public GameEventSubscriptionTicket Subscribe<T>(GameEventAction<T> actionDelegate)
-            where T : IGameEvent
+        public delegate void GameEventAction<in TSpecific>(TSpecific eventData)
+            where TSpecific : T;
+        
+        public BaseEventSubscriptionTicket Subscribe<TSpecific>(GameEventAction<TSpecific> actionDelegate)
+            where TSpecific : T
         {
-            var ticket = new GameEventSubscriptionTicket(this, typeof(T), actionDelegate);
+            var ticket = new BaseEventSubscriptionTicket(this, typeof(T), actionDelegate);
             this.DoSubscribe(ticket);
             return ticket;
         }
 
-        public GameEventSubscriptionTicket Subscribe<T>(GameEventAction<T> actionDelegate, Func<T, bool> filterDelegate)
-            where T : IGameEvent
+        public BaseEventSubscriptionTicket Subscribe<TSpecific>(GameEventAction<TSpecific> actionDelegate, Func<T, bool> filterDelegate)
+            where TSpecific : T
         {
-            var ticket = new GameEventSubscriptionTicket(this, typeof(T), actionDelegate)
+            var ticket = new BaseEventSubscriptionTicket(this, typeof(T), actionDelegate)
                 {
                     FilterDelegate = x => filterDelegate((T) x)
                 };
@@ -41,13 +42,13 @@
             return ticket;
         }
 
-        public void Unsubscribe(GameEventSubscriptionTicket ticket)
+        public void Unsubscribe(BaseEventSubscriptionTicket ticket)
         {
             this.DoUnsubscribe(ticket);
         }
 
-        public void Send<T>(T eventData)
-            where T : IGameEvent
+        public void Send<TSpecific>(TSpecific eventData)
+            where TSpecific : T
         {
             this.DoSend(typeof(T), eventData);
         }
@@ -55,14 +56,14 @@
         // -------------------------------------------------------------------
         // Protected
         // -------------------------------------------------------------------
-        protected void DoSubscribe(GameEventSubscriptionTicket ticket)
+        protected void DoSubscribe(BaseEventSubscriptionTicket ticket)
         {
             lock (this.subscribers)
             {
-                GameEventTargetCollection targets;
+                BaseEventTargetCollection<T> targets;
                 if (!this.subscribers.TryGetValue(ticket.TargetType, out targets))
                 {
-                    targets = new GameEventTargetCollection();
+                    targets = new BaseEventTargetCollection<T>();
                     this.subscribers.Add(ticket.TargetType, targets);
                 }
 
@@ -70,11 +71,11 @@
             }
         }
 
-        protected void DoUnsubscribe(GameEventSubscriptionTicket ticket)
+        protected void DoUnsubscribe(BaseEventSubscriptionTicket ticket)
         {
             lock (this.subscribers)
             {
-                GameEventTargetCollection targets;
+                BaseEventTargetCollection<T> targets;
                 if (this.subscribers.TryGetValue(ticket.TargetType, out targets))
                 {
                     if (!targets.Remove(ticket))
@@ -85,12 +86,12 @@
             }
         }
 
-        protected void DoSend<T>(Type eventType, T eventData)
-            where T : IGameEvent
+        protected void DoSend<TSpecific>(Type eventType, TSpecific eventData)
+            where TSpecific : T
         {
             lock (this.subscribers)
             {
-                GameEventTargetCollection targets;
+                BaseEventTargetCollection<T> targets;
                 if (this.subscribers.TryGetValue(eventType, out targets))
                 {
                     targets.Send(eventData);

@@ -2,14 +2,14 @@
 {
     using System;
 
-    public class GameEventSubscriptionTicket : IDisposable
+    public class BaseEventSubscriptionTicket : IDisposable
     {
-        private GameEventAggregate aggregate;
+        private IEventAggregate aggregate;
 
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public GameEventSubscriptionTicket(GameEventAggregate aggregate, Type targetType, object targetDelegate)
+        public BaseEventSubscriptionTicket(IEventAggregate aggregate, Type targetType, object targetDelegate)
         {
             this.aggregate = aggregate;
             this.TargetType = targetType;

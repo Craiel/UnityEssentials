@@ -4,7 +4,8 @@
     using System.Reflection;
     using Contracts;
 
-    internal class GameEventTargetCollection
+    internal class BaseEventTargetCollection<T>
+        where T : class
     {
         private const byte DefaultEventTargetSize = 100;
 
@@ -13,9 +14,9 @@
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public GameEventTargetCollection()
+        public BaseEventTargetCollection()
         {
-            this.Targets = new GameEventSubscriptionTicket[0];
+            this.Targets = new BaseEventSubscriptionTicket[0];
 
             // Do one increase to set the initial size
             this.IncreaseSize();
@@ -24,14 +25,13 @@
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        
         // Fields are intentional for performance
-        public GameEventSubscriptionTicket[] Targets;
+        public BaseEventSubscriptionTicket[] Targets;
 
         public int Capacity;
         public int Occupied;
 
-        public void Add(GameEventSubscriptionTicket newTarget)
+        public void Add(BaseEventSubscriptionTicket newTarget)
         {
             if (this.Occupied == this.Capacity)
             {
@@ -51,7 +51,7 @@
             this.FindFreeIndex();
         }
 
-        public bool Remove(GameEventSubscriptionTicket target)
+        public bool Remove(BaseEventSubscriptionTicket target)
         {
             if (this.Occupied == 0)
             {
@@ -82,8 +82,8 @@
             return false;
         }
 
-        public void Send<T>(T eventData)
-            where T : IGameEvent
+        public void Send<TSpecific>(TSpecific eventData)
+            where TSpecific : T
         {
             int sentCount = 0;
             for (var i = 0; i < this.Targets.Length; i++)
@@ -92,18 +92,18 @@
                 {
                     continue;
                 }
-
-                GameEventSubscriptionTicket target = this.Targets[i];
+                
+                BaseEventSubscriptionTicket target = this.Targets[i];
                 if (target.FilterDelegate != null)
                 {
                     if (target.FilterDelegate(eventData))
                     {
-                        ((GameEventAction<T>) target.TargetDelegate).Invoke(eventData);
+                        ((BaseEventAggregate<T>.GameEventAction<TSpecific>) target.TargetDelegate).Invoke(eventData);
                     }
                 }
                 else
                 {
-                    ((GameEventAction<T>)target.TargetDelegate).Invoke(eventData);
+                    ((BaseEventAggregate<T>.GameEventAction<TSpecific>)target.TargetDelegate).Invoke(eventData);
                 }
 
                 sentCount++;
@@ -129,7 +129,7 @@
         }
 
 #if DEBUG
-        private bool IsDuplicate(GameEventSubscriptionTicket target)
+        private bool IsDuplicate(BaseEventSubscriptionTicket target)
         {
             if (this.Occupied == 0)
             {

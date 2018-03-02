@@ -8,7 +8,7 @@
 
     public class GameEvents : UnitySingletonBehavior<GameEvents>
     {
-        private GameEventAggregate aggregate;
+        private BaseEventAggregate<IGameEvent> aggregate;
 
         // -------------------------------------------------------------------
         // Public
@@ -19,22 +19,22 @@
 
             base.Initialize();
 
-            this.aggregate = new GameEventAggregate();
+            this.aggregate = new BaseEventAggregate<IGameEvent>();
         }
 
-        public GameEventSubscriptionTicket Subscribe<T>(GameEventAction<T> actionDelegate)
-            where T : IGameEvent
+        public BaseEventSubscriptionTicket Subscribe<TSpecific>(BaseEventAggregate<IGameEvent>.GameEventAction<TSpecific> actionDelegate)
+            where TSpecific : IGameEvent
         {
             return this.aggregate.Subscribe(actionDelegate);
         }
 
-        public GameEventSubscriptionTicket Subscribe<T>(GameEventAction<T> actionDelegate, Func<T, bool> filterDelegate)
-            where T : IGameEvent
+        public BaseEventSubscriptionTicket Subscribe<TSpecific>(BaseEventAggregate<IGameEvent>.GameEventAction<TSpecific> actionDelegate, Func<IGameEvent, bool> filterDelegate)
+            where TSpecific : IGameEvent
         {
             return this.aggregate.Subscribe(actionDelegate, filterDelegate);
         }
 
-        public void Unsubscribe(GameEventSubscriptionTicket ticket)
+        public void Unsubscribe(BaseEventSubscriptionTicket ticket)
         {
             this.aggregate.Unsubscribe(ticket);
         }

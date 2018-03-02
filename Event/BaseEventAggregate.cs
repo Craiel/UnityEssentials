@@ -50,7 +50,7 @@
         public void Send<TSpecific>(TSpecific eventData)
             where TSpecific : T
         {
-            this.DoSend(typeof(T), eventData);
+            this.DoSend<TSpecific>(eventData);
         }
 
         // -------------------------------------------------------------------
@@ -86,13 +86,13 @@
             }
         }
 
-        protected void DoSend<TSpecific>(Type eventType, TSpecific eventData)
+        protected void DoSend<TSpecific>(TSpecific eventData)
             where TSpecific : T
         {
             lock (this.subscribers)
             {
                 BaseEventTargetCollection<T> targets;
-                if (this.subscribers.TryGetValue(eventType, out targets))
+                if (this.subscribers.TryGetValue(typeof(TSpecific), out targets))
                 {
                     targets.Send(eventData);
                 }

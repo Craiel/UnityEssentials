@@ -6,7 +6,7 @@
     using UnityEditor;
     using UnityEngine;
 
-    public abstract class DynamicContextMenu
+    public abstract class DynamicContextMenu : IDisposable
     {
         private readonly IList<ContextOperation> contextOperations;
 
@@ -33,6 +33,12 @@
             genericMenu.ShowAsContext();
         }
 
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
         // -------------------------------------------------------------------
         // Protected
         // -------------------------------------------------------------------
@@ -53,6 +59,15 @@
 
             this.contextOperations.Remove(operation);
             this.ReorderContextMenu();
+        }
+
+        protected void Clear()
+        {
+            this.contextOperations.Clear();
+        }
+
+        protected virtual void Dispose(bool isDisposing)
+        {
         }
 
         // -------------------------------------------------------------------

@@ -1,11 +1,12 @@
 ﻿namespace Assets.Scripts.Craiel.Essentials.Editor.NodeEditor
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using UnityEditor;
     using UnityEngine;
 
-    public abstract class ScriptableNodeEditor
+    public abstract class ScriptableNodeEditor : IDisposable
     {
         private readonly IList<IScriptableNode> nodes;
         private readonly IList<IScriptableNodeConnection> connections;
@@ -34,6 +35,49 @@
             this.GridOpacity = 0.2f;
             this.GridOpacityMeasureMultiplier = 2;
             this.GridColor = Color.grey;
+        }
+        
+        // -------------------------------------------------------------------
+        // Public
+        // -------------------------------------------------------------------
+        public bool ProcessEvent(Event eventData)
+        {
+            foreach (IScriptableNode node in this.nodes)
+            {
+                node.ProcessEvent(eventData);
+            }
+
+            switch (eventData.type)
+            {
+                case EventType.MouseDown:
+                {
+                    if (eventData.button == 1
+                        && this.ContextMenu != null)
+                    {
+                        this.ContextMenu.Show(eventData.mousePosition);
+                        return true;
+                    }
+
+                    return false;
+                }
+                
+                case EventType.MouseDrag:
+                {
+                    this.DragScreen(eventData.delta);
+                    return true;
+                }
+
+                default:
+                {
+                    return false;
+                }
+            }
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         // -------------------------------------------------------------------
@@ -94,58 +138,6 @@
             }
         }
 
-        public bool ProcessEvent(Event eventData)
-        {
-            foreach (IScriptableNode node in this.nodes)
-            {
-                node.ProcessEvent(eventData);
-            }
-
-            switch (eventData.type)
-            {
-                case EventType.MouseDown:
-                {
-                    if (eventData.button == 1
-                        && this.ContextMenu != null)
-                    {
-                        this.ContextMenu.Show(eventData.mousePosition);
-                        return true;
-                    }
-
-                    return false;
-                }
-                
-                case EventType.MouseDrag:
-                {
-                    this.DragScreen(eventData.delta);
-                    return true;
-                }
-
-                default:
-                {
-                    return false;
-                }
-            }
-        }
-
-        private void DragScreen(Vector2 delta)
-        {
-            this.gridOffset += delta;
-
-            if (nodes != null)
-            {
-                for (int i = 0; i < nodes.Count; i++)
-                {
-                    nodes[i].DragWorld(delta);
-                }
-            }
-
-            GUI.changed = true;
-        }
-
-        // -------------------------------------------------------------------
-        // Protected
-        // -------------------------------------------------------------------
         protected void Clear()
         {
             this.nodes.Clear();
@@ -164,9 +156,36 @@
             this.layouterRefreshRequired = true;
         }
 
+        protected virtual void Dispose(bool isDisposing)
+        {
+            if (isDisposing)
+            {
+                if (this.ContextMenu != null)
+                {
+                    this.ContextMenu.Dispose();
+                    this.ContextMenu = null;
+                }
+            }            
+        }
+
         // -------------------------------------------------------------------
         // Private
         // -------------------------------------------------------------------
+        private void DragScreen(Vector2 delta)
+        {
+            this.gridOffset += delta;
+
+            if (nodes != null)
+            {
+                for (int i = 0; i < nodes.Count; i++)
+                {
+                    nodes[i].DragWorld(delta);
+                }
+            }
+
+            GUI.changed = true;
+        }
+        
         private void DrawRect(Rect drawArea, float opacity, Color color)
         {
             Handles.BeginGUI();

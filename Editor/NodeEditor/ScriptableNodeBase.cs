@@ -8,8 +8,6 @@
     {
         private static readonly Vector2 DefaultSize = new Vector2(100, 30);
 
-        private readonly DynamicContextMenu contextMenu;
-
         private bool isBeingDragged;
         
         // -------------------------------------------------------------------
@@ -22,8 +20,6 @@
 
         protected ScriptableNodeBase(Vector2 startPosition, Vector2 initialSize)
         {
-            this.contextMenu = new DynamicContextMenu();
-
             this.EnableDrag = true;
 
             this.NodeRect = new Rect(startPosition, initialSize);
@@ -96,6 +92,8 @@
         // -------------------------------------------------------------------
         // Protected
         // -------------------------------------------------------------------
+        protected DynamicContextMenu ContextMenu;
+        
         protected bool EnableDrag;
 
         protected bool EnableConstrainToView;
@@ -164,7 +162,11 @@
 
                 case 1:
                 {
-                    this.contextMenu.Show(eventData.mousePosition);
+                    if (this.ContextMenu != null)
+                    {
+                        this.ContextMenu.Show(eventData.mousePosition);
+                    }
+
                     return false;
                 }
 

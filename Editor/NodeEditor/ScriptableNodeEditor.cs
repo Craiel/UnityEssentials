@@ -7,8 +7,6 @@
 
     public abstract class ScriptableNodeEditor
     {
-        private readonly DynamicContextMenu generalContextMenu;
-
         private readonly IList<IScriptableNode> nodes;
         private readonly IList<IScriptableNodeConnection> connections;
         
@@ -23,7 +21,6 @@
         // -------------------------------------------------------------------
         protected ScriptableNodeEditor()
         {
-            this.generalContextMenu = new DynamicContextMenu();
             this.nodes = new List<IScriptableNode>();
             this.connections = new List<IScriptableNodeConnection>();
             
@@ -42,6 +39,8 @@
         // -------------------------------------------------------------------
         // Protected
         // -------------------------------------------------------------------
+        protected DynamicContextMenu ContextMenu;
+        
         protected bool BorderEnabled;
         protected float BorderOpacity;
         protected Color BorderColor;
@@ -106,9 +105,10 @@
             {
                 case EventType.MouseDown:
                 {
-                    if (eventData.button == 1)
+                    if (eventData.button == 1
+                        && this.ContextMenu != null)
                     {
-                        this.generalContextMenu.Show(eventData.mousePosition);
+                        this.ContextMenu.Show(eventData.mousePosition);
                         return true;
                     }
 

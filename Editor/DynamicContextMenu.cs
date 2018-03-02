@@ -6,14 +6,14 @@
     using UnityEditor;
     using UnityEngine;
 
-    public class DynamicContextMenu
+    public abstract class DynamicContextMenu
     {
         private readonly IList<ContextOperation> contextOperations;
 
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public DynamicContextMenu()
+        protected DynamicContextMenu()
         {
             this.contextOperations = new List<ContextOperation>();
         }

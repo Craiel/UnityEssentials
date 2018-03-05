@@ -1,8 +1,9 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Logging
+﻿using Acallaris.Core.Setup;
+
+namespace Assets.Scripts.Craiel.Essentials.Logging
 {
     using UnityEngine;
     using IO;
-    using SetupCode;
     using NLog;
     using NLog.Config;
     using NLog.Targets;

@@ -13,6 +13,7 @@
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
+        
         public override void Initialize()
         {
             this.RegisterInController(SceneObjectController.Instance, SceneRootCategory.System, true);

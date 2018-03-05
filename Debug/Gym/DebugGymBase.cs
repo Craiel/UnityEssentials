@@ -5,7 +5,6 @@
     using NLog;
     using NLog.Config;
     using NLog.Targets;
-    using SetupCode;
     using UnityEngine;
 
     public abstract class DebugGymBase : MonoBehaviour

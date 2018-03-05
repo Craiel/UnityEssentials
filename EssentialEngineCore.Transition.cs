@@ -70,7 +70,7 @@
         {
             // Check if we are still on the previous scene
             if (this.activeScene != null 
-                && EqualityComparer<TSceneEnum>.Default.Equals(this.activeScene.Type, this.transitionTarget))
+                && !EqualityComparer<TSceneEnum>.Default.Equals(this.activeScene.Type, this.transitionTarget))
             {
                 // We need to destroy this scene
                 if (this.activeScene.ContinueDestroy(this.transitionStep))

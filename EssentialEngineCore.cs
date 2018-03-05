@@ -1,20 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using Assets.Scripts.Craiel.Audio;
-using Assets.Scripts.Craiel.Essentials;
-using Assets.Scripts.Craiel.Essentials.Enums;
-using Assets.Scripts.Craiel.Essentials.Event;
-using Assets.Scripts.Craiel.Essentials.I18N;
-using Assets.Scripts.Craiel.Essentials.Input;
-using Assets.Scripts.Craiel.Essentials.Logging;
-using Assets.Scripts.Craiel.Essentials.Resource;
-using Assets.Scripts.Craiel.Essentials.Scene;
-using Assets.Scripts.Craiel.GameData;
-using JetBrains.Annotations;
-using NLog;
-
-namespace Assets.Scripts.Craiel.UnityEssentials
+﻿namespace Assets.Scripts.Craiel.UnityEssentials
 {
+    using System;
+    using System.Collections.Generic;
+    using Audio;
+    using Essentials;
+    using Essentials.Enums;
+    using Essentials.Event;
+    using Essentials.I18N;
+    using Essentials.Input;
+    using Essentials.Logging;
+    using Essentials.Resource;
+    using Essentials.Scene;
+    using GameData;
+    using JetBrains.Annotations;
+    using NLog;
+
     public abstract partial class EssentialEngineCore<T, TSceneEnum> : UnitySingletonBehavior<T>
         where T : EssentialEngineCore<T, TSceneEnum>
         where TSceneEnum: struct, IConvertible
@@ -38,7 +38,8 @@ namespace Assets.Scripts.Craiel.UnityEssentials
             // Do localization fairly early so everything can run through it
             LocalizationSystem.InstantiateAndInitialize();
 
-            // Register the root
+            // Bring up the object controller and Register the root
+            SceneObjectController.InstantiateAndInitialize();
             SceneObjectController.Instance.RegisterObjectAsRoot(SceneRootCategory.System, this.gameObject, true);
 
             // LoadFromProto resources all components will need

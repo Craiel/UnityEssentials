@@ -3,19 +3,19 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Collections;
     using UnityEditor;
     using UnityEngine;
 
     public abstract class DynamicContextMenu : IDisposable
     {
-        private readonly IList<ContextOperation> contextOperations;
-
+        private readonly IList<ContextOperation> operations;
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
         protected DynamicContextMenu()
         {
-            this.contextOperations = new List<ContextOperation>();
+            this.operations = new List<ContextOperation>();
         }
 
         // -------------------------------------------------------------------
@@ -23,11 +23,11 @@
         // -------------------------------------------------------------------
         public void Show(Vector2 mousePosition)
         {
-            GenericMenu genericMenu = new GenericMenu();
-            foreach (ContextOperation operation in this.contextOperations)
+            var genericMenu = new GenericMenu();
+
+            foreach (ContextOperation operation in this.operations)
             {
-                var closure = operation;
-                genericMenu.AddItem(operation.Content, false, () => closure.Callback.Invoke());
+                this.AddMenuEntry(genericMenu, operation);
             }
 
             genericMenu.ShowAsContext();
@@ -42,28 +42,26 @@
         // -------------------------------------------------------------------
         // Protected
         // -------------------------------------------------------------------
-        protected void RegisterAction(string title, Action callback, int order = 0, int group = 0)
+        protected void RegisterAction(string title, Action callback, int order = 0, string group = null)
         {
-            var operation = new ContextOperation(order, group, title, callback);
-            this.contextOperations.Add(operation);
-            this.ReorderContextMenu();
+            var operation = new ContextOperation(order, title, group, callback);
+            this.operations.Add(operation);
+            this.ReorderContextMenu(); 
         }
 
         protected void UnregisterAction(Action callback)
         {
-            ContextOperation operation = this.contextOperations.FirstOrDefault(x => x.Callback == callback);
-            if (operation == null)
+            ContextOperation target = this.operations.FirstOrDefault(x => x.Callback == callback);
+            if (target != null)
             {
-                return;
+                this.operations.Remove(target);
+                this.ReorderContextMenu();
             }
-
-            this.contextOperations.Remove(operation);
-            this.ReorderContextMenu();
         }
 
         protected void Clear()
         {
-            this.contextOperations.Clear();
+            this.operations.Clear();
         }
 
         protected virtual void Dispose(bool isDisposing)
@@ -75,24 +73,34 @@
         // -------------------------------------------------------------------
         private void ReorderContextMenu()
         {
-            IList<ContextOperation> orderedOperations = this.contextOperations.OrderBy(x => x.Group).ThenBy(x => x.Order).ToList();
-            this.contextOperations.Clear();
-            this.contextOperations.AddRange(orderedOperations);
+            // No need to include group here, groups are being drawn indidual anyway
+            IList<ContextOperation> ordered = this.operations.OrderBy(x => x.Group).ThenBy(x => x.Order).ToList();
+            this.operations.Clear();
+            this.operations.AddRange(ordered);
+        }
+        
+        private void AddMenuEntry(GenericMenu target, ContextOperation operation)
+        {
+            var content = string.IsNullOrEmpty(operation.Group) 
+                ? new GUIContent(operation.Title)
+                : new GUIContent(string.Format("{0}/{1}", operation.Group, operation.Title));
+            
+            target.AddItem(content, false, () => operation.Callback.Invoke());
         }
 
         private class ContextOperation
         {
-            public ContextOperation(int order, int group, string title, Action callback)
+            public ContextOperation(int order, string title, string group, Action callback)
             {
                 this.Order = order;
+                this.Title = title;
                 this.Group = group;
-                this.Content = new GUIContent(title);
                 this.Callback = callback;
             }
 
             public readonly int Order;
-            public readonly int Group;
-            public readonly GUIContent Content;
+            public readonly string Title;
+            public readonly string Group;
             public readonly Action Callback;
         }
     }

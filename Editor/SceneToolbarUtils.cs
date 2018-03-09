@@ -20,9 +20,9 @@
                     EditorWindow.GetWindow(typeof(DirectoryUtilsWindow), true, "Directory Utils");
                 });
 
-                menu.AddItem(new GUIContent("Search for Components"), false, () =>
+                menu.AddItem(new GUIContent("Search for ComponentFactories"), false, () =>
                 {
-                    EditorWindow.GetWindow(typeof(SearchForComponentsWindow), true, "Search Components");
+                    EditorWindow.GetWindow(typeof(SearchForComponentsWindow), true, "Search ComponentFactories");
                 });
                 
                 menu.ShowAsContext();

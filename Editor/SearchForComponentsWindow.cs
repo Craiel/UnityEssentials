@@ -122,7 +122,7 @@
                     GUILayout.Label("The following components are used by scene objects:");
                     this.DisplayResults(ref this.scroll3, ref this.sceneComponents);
                 }
-                this.showUnused = GUILayout.Toggle(this.showUnused, "Show Unused Components");
+                this.showUnused = GUILayout.Toggle(this.showUnused, "Show Unused ComponentFactories");
                 if (this.showUnused)
                 {
                     GUILayout.Label("The following components are not used by prefabs, by AddComponent, OR in any scene:");

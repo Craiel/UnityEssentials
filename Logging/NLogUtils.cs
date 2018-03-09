@@ -1,6 +1,4 @@
-﻿using Acallaris.Core.Setup;
-
-namespace Assets.Scripts.Craiel.Essentials.Logging
+﻿namespace Assets.Scripts.Craiel.Essentials.Logging
 {
     using UnityEngine;
     using IO;
@@ -25,8 +23,8 @@ namespace Assets.Scripts.Craiel.Essentials.Logging
 
             var fileTarget = new FileTarget
             {
-                ArchiveAboveSize = Constants.LogFileArchiveSize,
-                MaxArchiveFiles = Constants.LogFileArchiveCount,
+                ArchiveAboveSize = EssentialsConstants.LogFileArchiveSize,
+                MaxArchiveFiles = EssentialsConstants.LogFileArchiveCount,
                 KeepFileOpen = true,
                 ConcurrentWrites = true,
                 ArchiveOldFileOnStartup = true

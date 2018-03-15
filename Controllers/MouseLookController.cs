@@ -1,7 +1,9 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Controllers
+﻿using InputControl = Craiel.UnityEssentials.Input.InputControl;
+using InputHandler = Craiel.UnityEssentials.Input.InputHandler;
+
+namespace Craiel.UnityEssentials.Controllers
 {
     using Contracts;
-    using Input;
     using UnityEngine;
 
     public class MouseLookController : MonoBehaviour
@@ -98,7 +100,7 @@
             var xRotation = Quaternion.AngleAxis(-this.mouseAbsolute.y, targetOrientation * Vector3.right);
             this.transform.localRotation = xRotation * targetOrientation;
 
-            var yRotation = Quaternion.AngleAxis(this.mouseAbsolute.x, transform.InverseTransformDirection(Vector3.up));
+            var yRotation = Quaternion.AngleAxis(this.mouseAbsolute.x, this.transform.InverseTransformDirection(Vector3.up));
             this.transform.localRotation *= yRotation;
         }
     }

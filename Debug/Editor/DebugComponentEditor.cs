@@ -1,7 +1,7 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Debug.Editor
+﻿namespace Craiel.UnityEssentials.Debug.Editor
 {
-    using Essentials.Editor.UserInterface;
     using UnityEditor;
+    using UnityEssentials.Editor.UserInterface;
 
     public abstract class DebugComponentEditor : Editor
     {

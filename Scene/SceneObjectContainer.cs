@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Scene
+﻿namespace Craiel.UnityEssentials.Scene
 {
     using System.Collections.Generic;
     using NLog;

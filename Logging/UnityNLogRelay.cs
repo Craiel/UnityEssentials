@@ -1,7 +1,7 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Logging
+﻿namespace Craiel.UnityEssentials.Logging
 {
     using NLog;
-
+    using Singletons;
     using UnityEngine;
 
     public class UnityNLogRelay : UnitySingleton<UnityNLogRelay>

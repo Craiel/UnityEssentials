@@ -1,8 +1,7 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Event
+﻿namespace Craiel.UnityEssentials.Event
 {
     using System;
     using System.Reflection;
-    using Contracts;
 
     internal class BaseEventTargetCollection<T>
         where T : class

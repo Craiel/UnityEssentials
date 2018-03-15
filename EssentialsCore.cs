@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Craiel.Essentials
+﻿namespace Craiel.UnityEssentials
 {
     using System;
     using System.Linq;
@@ -16,11 +16,11 @@
 
         private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
 
-        public static readonly CarbonDirectory AssetsPath = new CarbonDirectory("Assets");
+        public static readonly ManagedDirectory AssetsPath = new ManagedDirectory("Assets");
 
-        public static readonly CarbonDirectory DefaultScenesPath = AssetsPath.ToDirectory("Scenes");
+        public static readonly ManagedDirectory DefaultScenesPath = AssetsPath.ToDirectory("Scenes");
 
-        private static CarbonDirectory dataPath;
+        private static ManagedDirectory dataPath;
 
         // -------------------------------------------------------------------
         // Constructor
@@ -31,7 +31,7 @@
 
             DefaultInputState = InputStateDefault.Instance;
 
-            CoreScenes = new CarbonFile[0];
+            CoreScenes = new ManagedFile[0];
             
             ScenesPath = DefaultScenesPath;
 
@@ -45,14 +45,14 @@
 
         public static float LocalizationSaveInterval { get; set; }
 
-        public static CarbonFile[] CoreScenes { get; set; }
+        public static ManagedFile[] CoreScenes { get; set; }
 
-        public static CarbonDirectory DataPath
+        public static ManagedDirectory DataPath
         {
-            get { return dataPath ?? (dataPath = new CarbonDirectory(Application.dataPath)); }
+            get { return dataPath ?? (dataPath = new ManagedDirectory(Application.dataPath)); }
         }
 
-        public static CarbonDirectory ScenesPath { get; set; }
+        public static ManagedDirectory ScenesPath { get; set; }
 
         // -------------------------------------------------------------------
         // Private

@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Formatting
+﻿namespace Craiel.UnityEssentials.Formatting
 {
     using System;
     using System.Collections.Generic;
@@ -6,8 +6,7 @@
     using System.Text.RegularExpressions;
     using System.Threading;
     using Contracts;
-    using Essentials;
-    using global::NLog;
+    using NLog;
 
     // Formats a string using a dictionary approach
     public class Formatter : IFormatter

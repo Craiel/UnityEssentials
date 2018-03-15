@@ -1,10 +1,10 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Resource
+﻿namespace Craiel.UnityEssentials.Resource
 {
     using System.Collections.Generic;
     using System.Threading;
     using Enums;
-    using Essentials;
-    using global::NLog;
+    using NLog;
+    using Singletons;
 
     // Made to load resources from Application.streamingAssetsPath and other WWW accessible places
     public class ResourceStreamProvider : UnitySingleton<ResourceStreamProvider>

@@ -1,8 +1,8 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Debug.Gym
+﻿namespace Craiel.UnityEssentials.Debug.Gym
 {
-    using GDX.AI.Sharp.Contracts;
-    using GDX.AI.Sharp.Pool;
+    using Contracts;
     using Input;
+    using Pool;
     using Resource;
     using UnityEngine;
 

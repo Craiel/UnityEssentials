@@ -1,10 +1,12 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.I18N
+﻿using ManagedDirectory = Craiel.UnityEssentials.IO.ManagedDirectory;
+using ManagedFile = Craiel.UnityEssentials.IO.ManagedFile;
+
+namespace Craiel.UnityEssentials.I18N
 {
     using System.Collections.Generic;
     using System.Globalization;
     using System.Threading;
-    using global::NLog;
-    using IO;
+    using NLog;
     using UnityEngine;
 
     public static class Localization
@@ -33,7 +35,7 @@
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        public static CarbonDirectory Root { get; private set; }
+        public static ManagedDirectory Root { get; private set; }
 
         public static CultureInfo CurrentCulture
         {
@@ -53,7 +55,7 @@
             }
         }
 
-        public static void SetRoot(CarbonDirectory newRoot)
+        public static void SetRoot(ManagedDirectory newRoot)
         {
             Root = newRoot;
             ReloadDictionaries();
@@ -119,7 +121,7 @@
         // -------------------------------------------------------------------
         // Private
         // -------------------------------------------------------------------
-        private static void LoadDictionary(CultureInfo info, CarbonFile source = null)
+        private static void LoadDictionary(CultureInfo info, ManagedFile source = null)
         {
             CheckDictionary(info);
             if (source == null)
@@ -139,7 +141,7 @@
             Dictionaries[info] = JsonUtility.FromJson<LocalizationStringDictionary>(dictionaryData);
         }
 
-        private static void SaveDictionary(CultureInfo info, CarbonFile target = null)
+        private static void SaveDictionary(CultureInfo info, ManagedFile target = null)
         {
             if (target == null)
             {

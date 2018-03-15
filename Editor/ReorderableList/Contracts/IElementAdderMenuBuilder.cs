@@ -1,7 +1,7 @@
-namespace Assets.Scripts.Craiel.Essentials.Editor.ReorderableList.Contracts
+namespace Craiel.UnityEssentials.Editor.ReorderableList.Contracts
 {
 	using System;
-	
+
 	public interface IElementAdderMenuBuilder<TContext>
 	{
 		void SetContractType(Type contractType);

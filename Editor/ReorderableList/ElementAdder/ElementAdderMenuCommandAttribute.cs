@@ -1,6 +1,5 @@
-namespace Assets.Scripts.Craiel.Essentials.Editor.ReorderableList.ElementAdder
+namespace Craiel.UnityEssentials.Editor.ReorderableList.ElementAdder
 {
-	
 	using System;
 
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = false)]

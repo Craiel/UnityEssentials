@@ -1,7 +1,9 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Debug.Gym
+﻿using InputHandler = Craiel.UnityEssentials.Input.InputHandler;
+using InputStateDebug = Craiel.UnityEssentials.Input.InputStateDebug;
+
+namespace Craiel.UnityEssentials.Debug.Gym
 {
     using System.Collections.Generic;
-    using Input;
     using UnityEngine;
 
     public class DebugGymSelectorBase<T> : DebugGymBase
@@ -72,7 +74,7 @@
 
         public bool HasActiveSelection
         {
-            get { return HasSelection(this.ActiveGroup); }
+            get { return this.HasSelection(this.ActiveGroup); }
         }
 
         public bool HasSelection(int group)
@@ -93,7 +95,7 @@
 
         public IList<T> GetActiveSelection()
         {
-            return GetSelection(this.ActiveGroup);
+            return this.GetSelection(this.ActiveGroup);
         }
 
         public IList<T> GetSelection(int group)
@@ -296,7 +298,7 @@
             RaycastHit rayResult;
             if (Physics.Raycast(ray.origin, ray.direction, out rayResult, this.SelectDistance, this.RayLayerMask, QueryTriggerInteraction.Collide))
             {
-                newTarget = GetRayCastResult(rayResult);
+                newTarget = this.GetRayCastResult(rayResult);
                 if (newTarget == null)
                 {
                     // No change

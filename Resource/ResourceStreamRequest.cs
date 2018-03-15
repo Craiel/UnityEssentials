@@ -1,7 +1,7 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Resource
+﻿namespace Craiel.UnityEssentials.Resource
 {
     using Contracts;
-    using global::NLog;
+    using NLog;
     using UnityEngine;
 
     public class ResourceStreamRequest : IResourceRequest

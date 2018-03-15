@@ -1,6 +1,8 @@
-namespace Assets.Scripts.Craiel.Essentials.Contracts
+using InputStateAxisMapping = Craiel.UnityEssentials.Input.InputStateAxisMapping;
+using InputStateKeyMapping = Craiel.UnityEssentials.Input.InputStateKeyMapping;
+
+namespace Craiel.UnityEssentials.Contracts
 {
-    using Input;
     using UnityEngine;
 
     public interface IInputState

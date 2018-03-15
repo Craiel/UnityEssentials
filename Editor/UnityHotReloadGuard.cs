@@ -1,5 +1,6 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Editor
+﻿namespace Craiel.UnityEssentials.Editor
 {
+    using Singletons;
     using UnityEditor;
 
     [InitializeOnLoad]

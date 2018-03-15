@@ -1,9 +1,10 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Editor
+﻿using CollectionExtensions = Craiel.UnityEssentials.Extensions.CollectionExtensions;
+
+namespace Craiel.UnityEssentials.Editor
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Collections;
     using UnityEditor;
     using UnityEngine;
 
@@ -76,7 +77,7 @@
             // No need to include group here, groups are being drawn indidual anyway
             IList<ContextOperation> ordered = this.operations.OrderBy(x => x.Group).ThenBy(x => x.Order).ToList();
             this.operations.Clear();
-            this.operations.AddRange(ordered);
+            CollectionExtensions.AddRange(this.operations, ordered);
         }
         
         private void AddMenuEntry(GenericMenu target, ContextOperation operation)

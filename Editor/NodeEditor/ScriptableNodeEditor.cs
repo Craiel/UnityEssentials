@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Editor.NodeEditor
+﻿namespace Craiel.UnityEssentials.Editor.NodeEditor
 {
     using System;
     using System.Collections.Generic;
@@ -175,11 +175,11 @@
         {
             this.gridOffset += delta;
 
-            if (nodes != null)
+            if (this.nodes != null)
             {
-                for (int i = 0; i < nodes.Count; i++)
+                for (int i = 0; i < this.nodes.Count; i++)
                 {
-                    nodes[i].DragWorld(delta);
+                    this.nodes[i].DragWorld(delta);
                 }
             }
 

@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Event.Editor
+﻿namespace Craiel.UnityEssentials.Event.Editor
 {
     using System;
     using Contracts.Editor;

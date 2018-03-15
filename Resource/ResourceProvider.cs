@@ -1,11 +1,11 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Resource
+﻿namespace Craiel.UnityEssentials.Resource
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Enums;
-    using Essentials;
-    using global::NLog;
+    using NLog;
+    using Singletons;
     using UnityEngine;
 
     public delegate void OnResourceLoadingDelegate(ResourceLoadInfo info);

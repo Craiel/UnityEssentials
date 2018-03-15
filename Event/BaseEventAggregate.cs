@@ -1,8 +1,8 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Event
+﻿namespace Craiel.UnityEssentials.Event
 {
     using System;
     using System.Collections.Generic;
-    
+
     public class BaseEventAggregate<T> : IEventAggregate
         where T : class
     {

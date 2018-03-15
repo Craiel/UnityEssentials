@@ -1,7 +1,7 @@
-namespace Assets.Scripts.Craiel.Essentials.Editor.ReorderableList.ElementAdder
+namespace Craiel.UnityEssentials.Editor.ReorderableList.ElementAdder
 {
 	using System;
-	using Assets.Scripts.Craiel.Essentials.Editor.ReorderableList.Contracts;
+	using Contracts;
 
 	public static class ElementAdderMenuBuilder
 	{

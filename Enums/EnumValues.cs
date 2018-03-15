@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Enums
+﻿namespace Craiel.UnityEssentials.Enums
 {
     using System;
     using System.Collections.Generic;

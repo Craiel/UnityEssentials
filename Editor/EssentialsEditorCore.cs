@@ -1,10 +1,11 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Editor
+﻿using IEssentialEditorConfig = Craiel.UnityEssentials.Contracts.IEssentialEditorConfig;
+
+namespace Craiel.UnityEssentials.Editor
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using Contracts;
 
     public static class EssentialsEditorCore
     {

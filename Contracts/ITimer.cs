@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Contracts
+﻿namespace Craiel.UnityEssentials.Contracts
 {
     public interface ITimer
     {

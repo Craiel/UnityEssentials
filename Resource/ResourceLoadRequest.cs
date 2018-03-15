@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Resource
+﻿namespace Craiel.UnityEssentials.Resource
 {
     using System;
     using Contracts;

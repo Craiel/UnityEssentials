@@ -1,11 +1,11 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Resource
+﻿namespace Craiel.UnityEssentials.Resource
 {
     using System;
     using System.Collections.Generic;
     using Enums;
-    using Essentials;
-    using global::NLog;
     using IO;
+    using NLog;
+    using Singletons;
     using UnityEngine;
 
     public delegate void OnBundleLoadingDelegate(BundleLoadInfo key);
@@ -16,7 +16,7 @@
         private static readonly global::NLog.Logger Logger = LogManager.GetCurrentClassLogger();
 
         private readonly IDictionary<BundleLoadInfo, AssetBundle> bundles;
-        private readonly IDictionary<BundleLoadInfo, CarbonFile> bundleFiles;
+        private readonly IDictionary<BundleLoadInfo, ManagedFile> bundleFiles;
 
         private readonly IDictionary<BundleKey, BundleLoadInfo> loadInfoMap;
 
@@ -30,7 +30,7 @@
         public BundleProvider()
         {
             this.bundles = new Dictionary<BundleLoadInfo, AssetBundle>();
-            this.bundleFiles = new Dictionary<BundleLoadInfo, CarbonFile>();
+            this.bundleFiles = new Dictionary<BundleLoadInfo, ManagedFile>();
             this.loadInfoMap = new Dictionary<BundleKey, BundleLoadInfo>();
 
             this.currentPendingLoads = new Queue<BundleLoadInfo>();
@@ -56,7 +56,7 @@
 
         public BundleLoadRequest CurrentRequest { get; private set; }
 
-        public void RegisterBundle(BundleKey key, CarbonFile file, BundleLoadFlags flags = BundleLoadFlags.None)
+        public void RegisterBundle(BundleKey key, ManagedFile file, BundleLoadFlags flags = BundleLoadFlags.None)
         {
             if (this.loadInfoMap.ContainsKey(key))
             {
@@ -83,7 +83,7 @@
             this.bundles[info] = bundle;
         }
 
-        public void RegisterLazyBundle(BundleKey key, CarbonFile file, BundleLoadFlags flags = BundleLoadFlags.None)
+        public void RegisterLazyBundle(BundleKey key, ManagedFile file, BundleLoadFlags flags = BundleLoadFlags.None)
         {
             if (this.loadInfoMap.ContainsKey(key))
             {
@@ -132,7 +132,7 @@
             return this.history;
         }
 
-        public BundleKey? GetBundleKey(CarbonFile file)
+        public BundleKey? GetBundleKey(ManagedFile file)
         {
             foreach (BundleLoadInfo info in this.bundles.Keys)
             {
@@ -181,7 +181,7 @@
                     return true;
                 }
 
-                CarbonFile file = this.bundleFiles[info];
+                ManagedFile file = this.bundleFiles[info];
 
                 this.CurrentRequest = new BundleLoadRequest(info, file);
                 
@@ -222,7 +222,7 @@
             return true;
         }
 
-        private void DoRegisterBundle(BundleLoadInfo info, CarbonFile file)
+        private void DoRegisterBundle(BundleLoadInfo info, ManagedFile file)
         {
             this.bundles.Add(info, null);
             this.bundleFiles.Add(info, file);

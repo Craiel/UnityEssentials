@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Craiel.Essentials
+﻿namespace Craiel.UnityEssentials
 {
     public static class EssentialsConstants
     {

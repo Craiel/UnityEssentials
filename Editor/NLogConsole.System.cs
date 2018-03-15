@@ -1,10 +1,10 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Editor
+﻿using NLogInterceptor = Craiel.UnityEssentials.Logging.NLogInterceptor;
+using NLogInterceptorEvent = Craiel.UnityEssentials.Logging.NLogInterceptorEvent;
+
+namespace Craiel.UnityEssentials.Editor
 {
-    using Logging;
     using NLog;
-
     using UnityEditor;
-
     using UnityEngine;
 
     public partial class NLogConsole

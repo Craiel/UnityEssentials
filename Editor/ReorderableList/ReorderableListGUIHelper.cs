@@ -1,4 +1,4 @@
-namespace Assets.Scripts.Craiel.Essentials.Editor.ReorderableList
+namespace Craiel.UnityEssentials.Editor.ReorderableList
 {
 	using System;
 	using System.Reflection;

@@ -1,12 +1,12 @@
-namespace Assets.Scripts.Craiel.Essentials.Input
+namespace Craiel.UnityEssentials.Input
 {
     using System;
     using System.Collections.Generic;
     using Contracts;
     using Enums;
-    using Essentials;
     using NLog;
     using Scene;
+    using Singletons;
 
     public class InputHandler : UnitySingletonBehavior<InputHandler>
     {

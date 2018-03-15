@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Contracts.Editor
+﻿namespace Craiel.UnityEssentials.Contracts.Editor
 {
     public interface IEditorEvent
     {

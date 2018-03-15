@@ -1,13 +1,13 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Contracts
-{
-    using IO;
+﻿using ManagedFile = Craiel.UnityEssentials.IO.ManagedFile;
 
+namespace Craiel.UnityEssentials.Contracts
+{
     public interface IJsonConfig<T>
     {
         T Current { get; set; }
 
-        bool Load(CarbonFile file);
-        bool Save(CarbonFile file = null);
+        bool Load(ManagedFile file);
+        bool Save(ManagedFile file = null);
 
         void Reset();
     }

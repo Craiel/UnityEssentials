@@ -1,7 +1,12 @@
+using IReorderableListAdaptor = Craiel.UnityEssentials.Editor.ReorderableList.Contracts.IReorderableListAdaptor;
+using ReorderableListControl = Craiel.UnityEssentials.Editor.ReorderableList.ReorderableListControl;
+using ReorderableListFlags = Craiel.UnityEssentials.Editor.ReorderableList.ReorderableListFlags;
+using ReorderableListStyles = Craiel.UnityEssentials.Editor.ReorderableList.ReorderableListStyles;
+using SerializedPropertyAdaptor = Craiel.UnityEssentials.Editor.ReorderableList.SerializedPropertyAdaptor;
+
 namespace Assets.Scripts.Craiel.Essentials.Editor.ReorderableList
 {
 	using System.Collections.Generic;
-	using Assets.Scripts.Craiel.Essentials.Editor.ReorderableList.Contracts;
 	using UnityEditor;
 	using UnityEngine;
 

@@ -1,9 +1,9 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Threading
+﻿namespace Craiel.UnityEssentials.Threading
 {
     using System;
     using System.Diagnostics;
     using System.Threading;
-    using global::NLog;
+    using NLog;
 
     public delegate bool EngineThreadUpdateDelegate(EngineTime time);
 

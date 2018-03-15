@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Threading
+﻿namespace Craiel.UnityEssentials.Threading
 {
     public struct SynchronizationDataLock<T>
     {

@@ -1,7 +1,8 @@
-namespace Assets.Scripts.Craiel.Essentials.Editor
+using ManagedDirectory = Craiel.UnityEssentials.IO.ManagedDirectory;
+
+namespace Craiel.UnityEssentials.Editor
 {
     using System.Collections.Generic;
-    using IO;
     using UnityEditor;
     using UnityEngine;
 
@@ -9,7 +10,7 @@ namespace Assets.Scripts.Craiel.Essentials.Editor
     {
         private const float DirectoryLabelHeight = 21;
 
-        private readonly List<CarbonDirectory> directoryList = new List<CarbonDirectory>();
+        private readonly List<ManagedDirectory> directoryList = new List<ManagedDirectory>();
 
         private Vector2 scrollPosition;
         private string delayedNotificationMessage;
@@ -81,12 +82,12 @@ namespace Assets.Scripts.Craiel.Essentials.Editor
                         {
                             GUIContent folderContent = EditorGUIUtility.IconContent("Folder Icon");
 
-                            foreach (CarbonDirectory directory in this.directoryList)
+                            foreach (ManagedDirectory directory in this.directoryList)
                             {
                                 UnityEngine.Object assetObj = AssetDatabase.LoadAssetAtPath("Assets", typeof(UnityEngine.Object));
                                 if (null != assetObj)
                                 {
-                                    folderContent.text = directory.ToRelative<CarbonDirectory>(DirectoryUtils.DataPath).GetPath();
+                                    folderContent.text = directory.ToRelative<ManagedDirectory>(DirectoryUtils.DataPath).GetPath();
                                     GUILayout.Label(folderContent, GUILayout.Height(DirectoryLabelHeight));
                                 }
                             }

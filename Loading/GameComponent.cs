@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Loading
+﻿namespace Craiel.UnityEssentials.Loading
 {
     using System;
     using System.Collections.Generic;

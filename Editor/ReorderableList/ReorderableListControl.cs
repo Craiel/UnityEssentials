@@ -1,11 +1,11 @@
-namespace Assets.Scripts.Craiel.Essentials.Editor.ReorderableList
+namespace Craiel.UnityEssentials.Editor.ReorderableList
 {
 	using System;
 	using System.Collections.Generic;
-	using Assets.Scripts.Craiel.Essentials.Editor.ReorderableList.Contracts;
+	using Assets.Scripts.Craiel.Essentials.Editor.ReorderableList;
+	using Contracts;
 	using UnityEditor;
 	using UnityEngine;
-	using MathUtils = GDX.AI.Sharp.Mathematics.MathUtils;
 
 	public class ReorderableListControl
 	{
@@ -785,7 +785,7 @@ namespace Assets.Scripts.Craiel.Essentials.Editor.ReorderableList
 			}
 
 			// Make space for element index.
-			if (Math.Abs(this.indexLabelWidth) > MathUtils.Epsilon)
+			if (Math.Abs(this.indexLabelWidth) > Craiel.UnityEssentials.Utils.EssentialMathUtils.Epsilon)
 			{
 				itemContentPosition.width -= this.indexLabelWidth;
 

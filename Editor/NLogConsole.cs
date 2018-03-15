@@ -1,16 +1,17 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Editor
+﻿using NLogInterceptor = Craiel.UnityEssentials.Logging.NLogInterceptor;
+using NLogInterceptorEvent = Craiel.UnityEssentials.Logging.NLogInterceptorEvent;
+
+namespace Craiel.UnityEssentials.Editor
 {
     using System.Collections.Generic;
-    using Logging;
     using NLog;
     using NLog.Config;
     using UnityEditor;
-
     using UnityEngine;
 
     public partial class NLogConsole : EditorWindow
     {
-        private readonly IList<CountedLog> renderList = new List<CountedLog>();
+        private readonly IList<NLogConsole.CountedLog> renderList = new List<NLogConsole.CountedLog>();
 
         private Texture2D errorIcon;
         private Texture2D warningIcon;
@@ -54,7 +55,7 @@
 
         private Vector2 drawPos;
 
-        private DrawingContext drawingContext = new DrawingContext();
+        private NLogConsole.DrawingContext drawingContext = new NLogConsole.DrawingContext();
 
         // -------------------------------------------------------------------
         // Public

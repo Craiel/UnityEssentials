@@ -1,10 +1,5 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Debug.Gym
+﻿namespace Craiel.UnityEssentials.Debug.Gym
 {
-    using IO;
-    using Logging;
-    using NLog;
-    using NLog.Config;
-    using NLog.Targets;
     using UnityEngine;
 
     public abstract class DebugGymBase : MonoBehaviour

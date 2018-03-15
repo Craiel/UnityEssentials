@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Resource
+﻿namespace Craiel.UnityEssentials.Resource
 {
     using System.IO;
     using Enums;
@@ -21,7 +21,7 @@
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public BundleLoadRequest(BundleLoadInfo info, CarbonFile file)
+        public BundleLoadRequest(BundleLoadInfo info, ManagedFile file)
         {
             this.Info = info;
             this.File = file;
@@ -32,7 +32,7 @@
         // -------------------------------------------------------------------
         public BundleLoadInfo Info { get; private set; }
 
-        public CarbonFile File { get; private set; }
+        public ManagedFile File { get; private set; }
         
         public void LoadImmediate()
         {

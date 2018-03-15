@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Editor.NodeEditor
+﻿namespace Craiel.UnityEssentials.Editor.NodeEditor
 {
     using System;
     using System.Collections.Generic;

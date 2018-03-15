@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Loading
+﻿namespace Craiel.UnityEssentials.Loading
 {
     public delegate void IntervalTriggerDelegate(float currentTime, IntervalTrigger trigger);
 

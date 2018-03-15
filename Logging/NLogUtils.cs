@@ -1,11 +1,11 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Logging
+﻿namespace Craiel.UnityEssentials.Logging
 {
-    using UnityEngine;
     using IO;
     using NLog;
     using NLog.Config;
     using NLog.Targets;
-    
+    using UnityEngine;
+
     public static class NLogUtils
     {
         public static void InitializeDefaultConfig()
@@ -32,7 +32,7 @@
 
             config.AddTarget("file", fileTarget);
 
-            var target = new CarbonDirectory(Application.persistentDataPath);
+            var target = new ManagedDirectory(Application.persistentDataPath);
             target.Create();
 
             UnityEngine.Debug.Log("NLog Path: " + target);

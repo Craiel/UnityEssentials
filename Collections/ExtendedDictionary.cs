@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Collections
+﻿namespace Craiel.UnityEssentials.Collections
 {
     using System;
     using System.Collections;

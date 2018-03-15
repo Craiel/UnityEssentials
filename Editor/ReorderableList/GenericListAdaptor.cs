@@ -1,8 +1,9 @@
-namespace Assets.Scripts.Craiel.Essentials.Editor.ReorderableList
+namespace Craiel.UnityEssentials.Editor.ReorderableList
 {
 	using System;
 	using System.Collections.Generic;
-	using Assets.Scripts.Craiel.Essentials.Editor.ReorderableList.Contracts;
+	using Assets.Scripts.Craiel.Essentials.Editor.ReorderableList;
+	using Contracts;
 	using UnityEngine;
 
 	public class GenericListAdaptor<T> : IReorderableListAdaptor

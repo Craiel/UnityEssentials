@@ -1,10 +1,10 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Scene
+﻿namespace Craiel.UnityEssentials.Scene
 {
     using System.Collections.Generic;
     using Enums;
-    using Essentials;
+    using Singletons;
     using UnityEngine;
-    
+
     public class SceneObjectController : UnitySingleton<SceneObjectController>
     {
         private const string RootName = "Scene";

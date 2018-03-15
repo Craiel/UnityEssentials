@@ -1,8 +1,8 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Editor.NodeEditor
+﻿namespace Craiel.UnityEssentials.Editor.NodeEditor
 {
     using System;
-    using GDX.AI.Sharp.Mathematics;
     using UnityEngine;
+    using Utils;
 
     public abstract class ScriptableNodeBase : IScriptableNode
     {
@@ -102,8 +102,8 @@
 
         protected void SetSize(float width, float height)
         {
-            if (Math.Abs(this.NodeRect.width - width) < MathUtils.Epsilon 
-                && Math.Abs(this.NodeRect.height - height) < MathUtils.Epsilon)
+            if (Math.Abs(this.NodeRect.width - width) < EssentialMathUtils.Epsilon 
+                && Math.Abs(this.NodeRect.height - height) < EssentialMathUtils.Epsilon)
             {
                 return;
             }

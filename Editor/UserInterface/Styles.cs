@@ -1,5 +1,4 @@
-
-namespace Assets.Scripts.Craiel.Essentials.Editor.UserInterface
+namespace Craiel.UnityEssentials.Editor.UserInterface
 {
     using UnityEditor;
     using UnityEngine;

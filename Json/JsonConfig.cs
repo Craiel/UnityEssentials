@@ -1,9 +1,9 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Json
+﻿namespace Craiel.UnityEssentials.Json
 {
     using System;
     using Contracts;
-    using global::NLog;
     using IO;
+    using NLog;
     using UnityEngine;
     using Debug = System.Diagnostics.Debug;
 
@@ -15,22 +15,22 @@
     public class JsonConfig<T> : IJsonConfig<T>
         where T : class
     {
-        private CarbonFile configFile;
+        private ManagedFile configFile;
         
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
         public T Current { get; set; }
 
-        public virtual bool Load(CarbonFile file)
+        public virtual bool Load(ManagedFile file)
         {
             this.configFile = file;
             return this.LoadConfig(this.configFile);
         }
 
-        public virtual bool Save(CarbonFile file = null)
+        public virtual bool Save(ManagedFile file = null)
         {
-            CarbonFile targetFile = file ?? this.configFile;
+            ManagedFile targetFile = file ?? this.configFile;
             Debug.Assert(targetFile != null);
 
             try
@@ -62,7 +62,7 @@
         // -------------------------------------------------------------------
         // Private
         // -------------------------------------------------------------------
-        private bool LoadConfig(CarbonFile file)
+        private bool LoadConfig(ManagedFile file)
         {
             if (file.Exists)
             {

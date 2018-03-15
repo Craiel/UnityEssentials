@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.IO
+﻿namespace Craiel.UnityEssentials.IO
 {
     using System.IO;
     using System.Text;

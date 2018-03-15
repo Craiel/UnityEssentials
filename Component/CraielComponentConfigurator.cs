@@ -1,8 +1,9 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Component
+﻿using ICraielComponentConfig = Craiel.UnityEssentials.Contracts.ICraielComponentConfig;
+
+namespace Craiel.UnityEssentials.Component
 {
     using System;
     using System.Linq;
-    using Contracts;
     using NLog;
 
     internal class CraielComponentCoreStatic

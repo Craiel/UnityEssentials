@@ -1,9 +1,8 @@
-namespace Assets.Scripts.Craiel.Essentials.Editor.ReorderableList.ElementAdder
+namespace Craiel.UnityEssentials.Editor.ReorderableList.ElementAdder
 {
-
 	using System;
 	using System.Collections.Generic;
-	using Assets.Scripts.Craiel.Essentials.Editor.ReorderableList.Contracts;
+	using Contracts;
 	using UnityEditor;
 	using UnityEngine;
 

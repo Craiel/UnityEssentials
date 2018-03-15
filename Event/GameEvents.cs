@@ -1,10 +1,11 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Event
+﻿using SceneObjectController = Craiel.UnityEssentials.Scene.SceneObjectController;
+
+namespace Craiel.UnityEssentials.Event
 {
     using System;
     using Contracts;
     using Enums;
-    using Essentials;
-    using Scene;
+    using Singletons;
 
     public class GameEvents : UnitySingletonBehavior<GameEvents>
     {

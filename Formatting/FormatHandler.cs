@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Formatting
+﻿namespace Craiel.UnityEssentials.Formatting
 {
     using System;
 

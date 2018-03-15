@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Event
+﻿namespace Craiel.UnityEssentials.Event
 {
     using System;
 

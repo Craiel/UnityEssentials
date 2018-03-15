@@ -1,16 +1,17 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Editor
+﻿using CollectionExtensions = Craiel.UnityEssentials.Extensions.CollectionExtensions;
+using NLogInterceptor = Craiel.UnityEssentials.Logging.NLogInterceptor;
+using NLogInterceptorEvent = Craiel.UnityEssentials.Logging.NLogInterceptorEvent;
+using UnityStackTraceException = Craiel.UnityEssentials.Logging.UnityStackTraceException;
+
+namespace Craiel.UnityEssentials.Editor
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using Logging;
     using NLog;
-
     using UnityEditor;
-
     using UnityEngine;
-
     using UserInterface;
 
     public partial class NLogConsole
@@ -127,8 +128,8 @@
             // When collapsed, count up the unique elements and use those to display
             if (collapse)
             {
-                var collapsedLines = new Dictionary<string, CountedLog>();
-                var collapsedLinesList = new List<CountedLog>();
+                var collapsedLines = new Dictionary<string, NLogConsole.CountedLog>();
+                var collapsedLinesList = new List<NLogConsole.CountedLog>();
 
                 for (var i = NLogInterceptor.Instance.Events.Count - 1; i > 0; i--)
                 {
@@ -137,14 +138,14 @@
                     {
                         var matchString = string.Concat(logEvent.Message, "!$", logEvent.Level, "!$", logEvent.LoggerName);
 
-                        CountedLog countedLog;
+                        NLogConsole.CountedLog countedLog;
                         if (collapsedLines.TryGetValue(matchString, out countedLog))
                         {
                             countedLog.Count++;
                         }
                         else
                         {
-                            countedLog = new CountedLog(logEvent, 1);
+                            countedLog = new NLogConsole.CountedLog(logEvent, 1);
                             collapsedLines.Add(matchString, countedLog);
                             collapsedLinesList.Add(countedLog);
                             if (this.limitMaxLines && collapsedLinesList.Count > RenderLineLimit)
@@ -177,7 +178,7 @@
                     if (!FilterLogLevel(logEvent) && !FilterLog(logEvent))
                     {
                         var content = this.GetLogLineGUIContent(logEvent);
-                        this.renderList.Add(new CountedLog(logEvent, 1));
+                        this.renderList.Add(new NLogConsole.CountedLog(logEvent, 1));
                         var logLineSize = logLineStyle.CalcSize(content);
                         logListMaxWidth = Mathf.Max(logListMaxWidth, logLineSize.x);
                         logListLineHeight = Mathf.Max(logListLineHeight, logLineSize.y);
@@ -193,9 +194,9 @@
             logListMaxWidth += collapseBadgeMaxWidth;
 
             // Have to reverse the render list if we limit the max line count
-            IList<CountedLog> reversed = this.renderList.Reverse().ToList();
+            IList<NLogConsole.CountedLog> reversed = this.renderList.Reverse().ToList();
             this.renderList.Clear();
-            this.renderList.AddRange(reversed);
+            CollectionExtensions.AddRange(this.renderList, reversed);
         }
         
         private void DrawLogList(float height)

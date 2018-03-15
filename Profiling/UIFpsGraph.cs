@@ -1,4 +1,4 @@
-namespace Assets.Scripts.Craiel.Essentials.Profiling
+namespace Craiel.UnityEssentials.Profiling
 {
     using System;
     using System.Collections;

@@ -1,9 +1,10 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Logging
+﻿namespace Craiel.UnityEssentials.Logging
 {
     using System;
     using System.Collections.Generic;
     using NLog;
-    
+    using Singletons;
+
     public class NLogInterceptor : UnitySingleton<NLogInterceptor>
     {
         // -------------------------------------------------------------------

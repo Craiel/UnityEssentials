@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Enums
+﻿namespace Craiel.UnityEssentials.Enums
 {
     public enum SceneTransitionStep
     {

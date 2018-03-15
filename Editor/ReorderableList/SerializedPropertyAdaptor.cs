@@ -1,10 +1,10 @@
-namespace Assets.Scripts.Craiel.Essentials.Editor.ReorderableList
+namespace Craiel.UnityEssentials.Editor.ReorderableList
 {
 	using System;
-	using Assets.Scripts.Craiel.Essentials.Editor.ReorderableList.Contracts;
+	using Assets.Scripts.Craiel.Essentials.Editor;
+	using Contracts;
 	using UnityEditor;
 	using UnityEngine;
-	using MathUtils = GDX.AI.Sharp.Mathematics.MathUtils;
 
 	public class SerializedPropertyAdaptor : IReorderableListAdaptor
 	{
@@ -122,7 +122,7 @@ namespace Assets.Scripts.Craiel.Essentials.Editor.ReorderableList
 
 		public virtual float GetItemHeight(int index)
 		{
-			return Math.Abs(this.FixedItemHeight) > MathUtils.Epsilon
+			return Math.Abs(this.FixedItemHeight) > Craiel.UnityEssentials.Utils.EssentialMathUtils.Epsilon
 					? this.FixedItemHeight
 					: EditorGUI.GetPropertyHeight(this[index], GUIContent.none, false);
 		}

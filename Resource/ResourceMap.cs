@@ -1,8 +1,8 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Resource
+﻿namespace Craiel.UnityEssentials.Resource
 {
     using System;
     using System.Collections.Generic;
-    using global::NLog;
+    using NLog;
 
     internal static class ResourceMapStatic
     {

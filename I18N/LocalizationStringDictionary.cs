@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.I18N
+﻿namespace Craiel.UnityEssentials.I18N
 {
     using System.Collections.Generic;
 

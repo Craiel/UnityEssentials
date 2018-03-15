@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Craiel.Essentials
+﻿namespace Craiel.UnityEssentials
 {
     using System;
     using System.Diagnostics;
@@ -20,15 +20,15 @@
 
         public static string AssemblyName { get; private set; }
 
-        public static CarbonDirectory Path { get; private set; }
+        public static ManagedDirectory Path { get; private set; }
 
-        public static CarbonDirectory WorkingDirectory { get; private set; }
+        public static ManagedDirectory WorkingDirectory { get; private set; }
 
-        public static CarbonDirectory SystemDirectory { get; private set; }
+        public static ManagedDirectory SystemDirectory { get; private set; }
 
         private static void UpdateRuntimeInfo()
         {
-            WorkingDirectory = new CarbonDirectory(System.IO.Directory.GetCurrentDirectory());
+            WorkingDirectory = new ManagedDirectory(System.IO.Directory.GetCurrentDirectory());
 
             if (ProcessName == null)
             {
@@ -47,7 +47,7 @@
                 }
             }
 
-            SystemDirectory = new CarbonDirectory(Environment.GetFolderPath(Environment.SpecialFolder.System));
+            SystemDirectory = new ManagedDirectory(Environment.GetFolderPath(Environment.SpecialFolder.System));
         }
     }
 }

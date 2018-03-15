@@ -1,7 +1,8 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Debug
+﻿using GizmoUtils = Craiel.UnityEssentials.Utils.GizmoUtils;
+
+namespace Craiel.UnityEssentials.Debug
 {
     using System.Text;
-    using Craiel.Essentials;
     using UnityEngine;
 
     public abstract class DebugComponent : MonoBehaviour

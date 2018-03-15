@@ -1,13 +1,16 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Editor
+﻿using CollectionExtensions = Craiel.UnityEssentials.Extensions.CollectionExtensions;
+using ManagedDirectory = Craiel.UnityEssentials.IO.ManagedDirectory;
+using ManagedFile = Craiel.UnityEssentials.IO.ManagedFile;
+
+namespace Craiel.UnityEssentials.Editor
 {
     using System.Collections.Generic;
-    using IO;
     using UnityEditor;
     using UnityEngine;
 
     public class UnityBuildContext
     {
-        private readonly IList<CarbonFile> additionalScenesToInclude;
+        private readonly IList<ManagedFile> additionalScenesToInclude;
 
         // -------------------------------------------------------------------
         // Constructor
@@ -25,8 +28,8 @@
 
             this.IncludeCoreScenes = true;
             
-            this.ScenesToIncludeInBuild = new List<CarbonFile>();
-            this.additionalScenesToInclude = new List<CarbonFile>();
+            this.ScenesToIncludeInBuild = new List<ManagedFile>();
+            this.additionalScenesToInclude = new List<ManagedFile>();
 
             this.SetStartupScene("Init");
         }
@@ -39,23 +42,23 @@
         public BuildTarget BuildTarget { get; set; }
         public BuildTargetGroup BuildTargetGroup { get; set; }
 
-        public CarbonDirectory TargetDirectory { get; set; }
+        public ManagedDirectory TargetDirectory { get; set; }
 
-        public CarbonFile TargetFileName { get; set; }
+        public ManagedFile TargetFileName { get; set; }
 
-        public CarbonFile StaticDataFile { get; set; }
+        public ManagedFile StaticDataFile { get; set; }
 
-        public CarbonDirectory SceneBasePath { get; set; }
+        public ManagedDirectory SceneBasePath { get; set; }
 
-        public CarbonFile StartupScene { get; set; }
+        public ManagedFile StartupScene { get; set; }
 
         public bool IncludeCoreScenes { get; set; }
         
-        public IList<CarbonFile> ScenesToIncludeInBuild { get; private set; }
+        public IList<ManagedFile> ScenesToIncludeInBuild { get; private set; }
 
         public void SetTargetName(string name)
         {
-            this.TargetFileName = new CarbonFile(name + ".exe");
+            this.TargetFileName = new ManagedFile(name + ".exe");
         }
 
         public void SetStartupScene(string name)
@@ -64,7 +67,7 @@
             this.RefreshScenesToInclude();
         }
 
-        public void IncludeScene(CarbonFile file)
+        public void IncludeScene(ManagedFile file)
         {
             this.additionalScenesToInclude.Add(file);
             this.RefreshScenesToInclude();
@@ -77,10 +80,10 @@
 
             if (this.IncludeCoreScenes)
             {
-                this.ScenesToIncludeInBuild.AddRange(EssentialsCore.CoreScenes);
+                CollectionExtensions.AddRange(this.ScenesToIncludeInBuild, EssentialsCore.CoreScenes);
             }
 
-            this.ScenesToIncludeInBuild.AddRange(this.additionalScenesToInclude);
+            CollectionExtensions.AddRange(this.ScenesToIncludeInBuild, this.additionalScenesToInclude);
         }
     }
 }

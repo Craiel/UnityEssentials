@@ -1,7 +1,8 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Editor
+﻿namespace Craiel.UnityEssentials.Editor
 {
     using System;
     using System.Collections.Generic;
+    using Assets.Scripts.Craiel.Essentials.Editor;
     using UnityEditor;
     using UnityEngine;
 

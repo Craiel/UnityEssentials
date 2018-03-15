@@ -1,4 +1,6 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Resource
+﻿using HashUtils = Craiel.UnityEssentials.Utils.HashUtils;
+
+namespace Craiel.UnityEssentials.Resource
 {
     public struct BundleKey
     {

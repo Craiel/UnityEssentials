@@ -1,10 +1,14 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Controllers
+﻿using GizmoUtils = Craiel.UnityEssentials.Utils.GizmoUtils;
+using InputControl = Craiel.UnityEssentials.Input.InputControl;
+using InputControlState = Craiel.UnityEssentials.Input.InputControlState;
+using InputHandler = Craiel.UnityEssentials.Input.InputHandler;
+
+namespace Craiel.UnityEssentials.Controllers
 {
     using System;
     using Contracts;
-    using GDX.AI.Sharp.Mathematics;
-    using Input;
     using UnityEngine;
+    using Utils;
 
     public class FreeMovementController : MonoBehaviour
     {
@@ -65,13 +69,13 @@
             }
 
             float zMovement = InputHandler.Instance.GetControl(InputMoveX).Value;
-            if (Math.Abs(zMovement) > MathUtils.Epsilon)
+            if (Math.Abs(zMovement) > EssentialMathUtils.Epsilon)
             {
                 this.transform.position += this.transform.forward * this.Speed * zMovement;
             }
 
             float xMovement = InputHandler.Instance.GetControl(InputMoveZ).Value;
-            if (Math.Abs(xMovement) > MathUtils.Epsilon)
+            if (Math.Abs(xMovement) > EssentialMathUtils.Epsilon)
             {
                 this.transform.position += this.transform.right * this.Speed * xMovement;
             }
@@ -79,7 +83,7 @@
             InputControlState jumpControl = InputHandler.Instance.GetControl(InputRise);
             if (jumpControl.IsHeld)
             {
-                transform.Translate(Vector3.up * this.Speed * 0.5f);
+                this.transform.Translate(Vector3.up * this.Speed * 0.5f);
             }
         }
 

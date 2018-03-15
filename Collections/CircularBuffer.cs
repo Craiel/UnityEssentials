@@ -1,107 +1,182 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Collections
+﻿namespace Craiel.UnityEssentials.Collections
 {
     using System;
 
     public class CircularBuffer<T>
     {
-        private static readonly DataEntry Invalid = new DataEntry { Valid = false };
+        private T[] items;
 
-        private readonly DataEntry[] buffer;
-        private readonly ulong length;
-        private ulong nextFree;
+        private int head;
+        private int tail;
 
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public CircularBuffer(ulong length)
+
+        /// <summary>
+        /// Creates a <see cref="CircularBuffer{T}"/>
+        /// </summary>
+        /// <param name="initialCapacity">the initial capacity of this circular buffer</param>
+        /// <param name="resizable">whether this buffer is resizable or has fixed capacity</param>
+        public CircularBuffer(int initialCapacity = 16, bool resizable = true)
         {
-            this.buffer = new DataEntry[length];
-            this.length = length;
-            this.nextFree = 0;
-            for (ulong k = 0; k < length; k++)
-            {
-                this.buffer[k].Valid = false;
-            }
+            this.items = new T[initialCapacity];
+            this.Resizable = resizable;
         }
 
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        public bool HaveValue(ulong index)
+        public bool Resizable { get; set; }
+
+        public bool IsEmpty
         {
-            return this.IsIndexInRange(index) && this.buffer[this.IndexToId(index)].Valid;
+            get
+            {
+                return this.Size == 0;
+            }
         }
 
-        public T Get(ulong index)
+        public bool IsFull
         {
-            if (!this.HaveValue(index))
+            get
             {
-                throw new ArgumentOutOfRangeException();
+                return this.Size == this.items.Length;
             }
-
-            return this.buffer[this.IndexToId(index)].Data;
         }
 
-        public void Set(ulong index, T value)
+        public int Size { get; private set; }
+
+        /// <summary>
+        /// Adds the given item to the tail of this circular buffer
+        /// </summary>
+        /// <param name="item">the item to add</param>
+        /// <returns> <code>true</code> if the item has been successfully added to this circular buffer; <code>false</code> otherwise</returns>
+        public bool Store(T item)
         {
-            if (this.IsIndexInRange(index))
+            if (this.Size == this.items.Length)
             {
-                this.buffer[this.IndexToId(index)] = new DataEntry(value);
-                return;
+                if (!this.Resizable)
+                {
+                    return false;
+                }
+
+                this.Resize((int)Math.Max(8, this.items.Length * 1.75f));
             }
 
-            if (index == this.nextFree)
+            this.Size++;
+            this.items[this.tail++] = item;
+            if (this.tail == this.items.Length)
             {
-                this.Add(value);
-                return;
+                this.tail = 0;
             }
 
-            ulong startIndex = this.nextFree;
-            ulong stopIndex = Math.Min(index, this.nextFree + this.length) - 1;
-            for (ulong k = startIndex; k <= stopIndex; k++)
-            {
-                this.buffer[this.IndexToId(k)] = Invalid;
-            }
-
-            this.buffer[this.IndexToId(index)] = new DataEntry(value);
-            this.nextFree = index + 1;
+            return true;
         }
 
-        public ulong Add(T value)
+        /// <summary>
+        /// Removes and returns the item at the head of this circular buffer (if any).
+        /// </summary>
+        /// <returns>the item just removed or <code>default(T)</code> if this circular buffer is empty</returns>
+        public T Read()
         {
-            ulong id = this.IndexToId(this.nextFree);
-            this.buffer[id] = new DataEntry(value);
-            this.nextFree++;
-            return this.nextFree - 1;
+            if (this.Size > 0)
+            {
+                this.Size--;
+                T item = this.items[this.head];
+
+                // Avoid keeping useless references
+                this.items[this.head] = default(T);
+
+                if (++this.head == this.items.Length)
+                {
+                    this.head = 0;
+                }
+
+                return item;
+            }
+
+            return default(T);
+        }
+
+        /// <summary>
+        /// Removes all items from this circular buffer
+        /// </summary>
+        public void Clear()
+        {
+            if (this.tail > this.head)
+            {
+                int i = this.head;
+                int n = this.tail;
+                do
+                {
+                    this.items[i++] = default(T);
+                }
+                while (i < n);
+            }
+            else if (this.Size > 0)
+            {
+                // NOTE: when head == tail the buffer can be empty or full
+                int i = this.head;
+                int n = this.items.Length;
+                do
+                {
+                    this.items[i++] = default(T);
+                }
+                while (i < n);
+
+                i = 0;
+                n = this.tail;
+                do
+                {
+                    this.items[i++] = default(T);
+                }
+                while (i < n);
+            }
+
+            this.head = 0;
+            this.tail = 0;
+            this.Size = 0;
+        }
+
+        /// <summary>
+        /// Increases the size of the backing array (if necessary) to accommodate the specified number of additional items. 
+        /// Useful before adding many items to avoid multiple backing array resizes
+        /// </summary>
+        /// <param name="additionalCapacity">the number of additional items</param>
+        public void EnsureCapacity(int additionalCapacity)
+        {
+            int newCapacity = this.Size + additionalCapacity;
+            if (this.items.Length < newCapacity)
+            {
+                this.Resize(newCapacity);
+            }
         }
 
         // -------------------------------------------------------------------
         // Private
         // -------------------------------------------------------------------
-        private bool IsIndexInRange(ulong index)
+
+        /// <summary>
+        /// Creates a new backing array with the specified capacity containing the current items
+        /// </summary>
+        /// <param name="newCapacity">the new capacity</param>
+        private void Resize(int newCapacity)
         {
-            return this.nextFree - this.length <= index && index < this.nextFree;
-        }
-
-        private ulong IndexToId(ulong index)
-        {
-            return index % this.length;
-        }
-
-        // -------------------------------------------------------------------
-        // Data Struct
-        // -------------------------------------------------------------------
-        private struct DataEntry
-        {
-            public readonly T Data;
-
-            public bool Valid;
-
-            public DataEntry(T value)
+            T[] newItems = new T[newCapacity];
+            if (this.tail > this.head)
             {
-                this.Valid = true;
-                this.Data = value;
+                Array.Copy(this.items, this.head, newItems, 0, this.Size);
             }
+            else
+            {
+                Array.Copy(this.items, this.head, newItems, 0, this.items.Length - this.head);
+                Array.Copy(this.items, 0, newItems, this.items.Length - this.head, this.tail);
+            }
+
+            this.head = 0;
+            this.tail = this.Size;
+            this.items = newItems;
         }
     }
 }

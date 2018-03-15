@@ -1,9 +1,9 @@
-namespace Assets.Scripts.Craiel.Essentials.I18N
+namespace Craiel.UnityEssentials.I18N
 {
     using System.Globalization;
-    using Essentials;
     using IO;
     using NLog;
+    using Singletons;
     using UnityEngine;
 
     public class LocalizationSystem : UnitySingletonBehavior<LocalizationSystem>
@@ -32,7 +32,7 @@ namespace Assets.Scripts.Craiel.Essentials.I18N
         {
             base.Initialize();
 
-            Localization.SetRoot(new CarbonDirectory(Application.persistentDataPath));
+            Localization.SetRoot(new ManagedDirectory(Application.persistentDataPath));
         }
 
         public void SetCulture(CultureInfo culture)

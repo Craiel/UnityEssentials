@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Debug
+﻿namespace Craiel.UnityEssentials.Debug
 {
     using UnityEngine;
 

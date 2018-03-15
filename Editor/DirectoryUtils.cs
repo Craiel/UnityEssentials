@@ -1,9 +1,13 @@
-namespace Assets.Scripts.Craiel.Essentials.Editor
+using ManagedDirectory = Craiel.UnityEssentials.IO.ManagedDirectory;
+using ManagedDirectoryResult = Craiel.UnityEssentials.IO.ManagedDirectoryResult;
+using ManagedFile = Craiel.UnityEssentials.IO.ManagedFile;
+using ManagedFileResult = Craiel.UnityEssentials.IO.ManagedFileResult;
+
+namespace Craiel.UnityEssentials.Editor
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using IO;
     using NLog;
     using UnityEditor;
     using UnityEngine;
@@ -11,7 +15,7 @@ namespace Assets.Scripts.Craiel.Essentials.Editor
     [InitializeOnLoad]
     public class DirectoryUtils : UnityEditor.AssetModificationProcessor
     {
-        public static readonly CarbonDirectory DataPath = new CarbonDirectory(Application.dataPath);
+        public static readonly ManagedDirectory DataPath = new ManagedDirectory(Application.dataPath);
 
         // return: Is this directory empty?
         private const string CleanOnSaveKey = "k1";
@@ -40,7 +44,7 @@ namespace Assets.Scripts.Craiel.Essentials.Editor
         {
             if (CleanOnSaveEnabled)
             {
-                List<CarbonDirectory> emptyDirectories = new List<CarbonDirectory>();
+                List<ManagedDirectory> emptyDirectories = new List<ManagedDirectory>();
                 FillEmptyDirList(emptyDirectories);
                 if (emptyDirectories.Count > 0)
                 {
@@ -58,19 +62,19 @@ namespace Assets.Scripts.Craiel.Essentials.Editor
             return paths;
         }
 
-        public static void FillEmptyDirList(List<CarbonDirectory> target)
+        public static void FillEmptyDirList(List<ManagedDirectory> target)
         {
-            var assetDir = new CarbonDirectory(Application.dataPath);
+            var assetDir = new ManagedDirectory(Application.dataPath);
 
             WalkDirectoryTree(target, assetDir);
         }
 
-        public static void DeleteAllEmptyDirAndMeta(List<CarbonDirectory> directoryList)
+        public static void DeleteAllEmptyDirAndMeta(List<ManagedDirectory> directoryList)
         {
-            CarbonDirectory currentDirectory = new CarbonDirectory(System.IO.Directory.GetCurrentDirectory());
-            foreach (CarbonDirectory info in directoryList)
+            ManagedDirectory currentDirectory = new ManagedDirectory(System.IO.Directory.GetCurrentDirectory());
+            foreach (ManagedDirectory info in directoryList)
             {
-                CarbonDirectory relative = info.ToRelative<CarbonDirectory>(currentDirectory);
+                ManagedDirectory relative = info.ToRelative<ManagedDirectory>(currentDirectory);
                 AssetDatabase.MoveAssetToTrash(relative.GetUnityPath());
             }
 
@@ -80,7 +84,7 @@ namespace Assets.Scripts.Craiel.Essentials.Editor
         // -------------------------------------------------------------------
         // Private
         // -------------------------------------------------------------------
-        private static bool CheckDirectoryEmpty(List<CarbonDirectory> target, CarbonDirectory directory, bool areSubDirectoriesEmpty)
+        private static bool CheckDirectoryEmpty(List<ManagedDirectory> target, ManagedDirectory directory, bool areSubDirectoriesEmpty)
         {
             bool isDirEmpty = areSubDirectoriesEmpty && !DirectoryHasFile(directory);
             if (isDirEmpty)
@@ -92,12 +96,12 @@ namespace Assets.Scripts.Craiel.Essentials.Editor
         }
         
         // return: Is this directory empty?
-        private static bool WalkDirectoryTree(List<CarbonDirectory> target, CarbonDirectory root)
+        private static bool WalkDirectoryTree(List<ManagedDirectory> target, ManagedDirectory root)
         {
-            CarbonDirectoryResult[] subDirectories = root.GetDirectories();
+            ManagedDirectoryResult[] subDirectories = root.GetDirectories();
 
             bool areSubDirsEmpty = true;
-            foreach (CarbonDirectoryResult result in subDirectories)
+            foreach (ManagedDirectoryResult result in subDirectories)
             {
                 if (!WalkDirectoryTree(target, result.Absolute))
                 {
@@ -109,11 +113,11 @@ namespace Assets.Scripts.Craiel.Essentials.Editor
             return isRootEmpty;
         }
 
-        private static bool DirectoryHasFile(CarbonDirectory directory)
+        private static bool DirectoryHasFile(ManagedDirectory directory)
         {
             try
             {
-                CarbonFileResult[] files = directory.GetFiles();
+                ManagedFileResult[] files = directory.GetFiles();
                 return files.Any(x => !IsMetaFile(x.Absolute));
             }
             catch (Exception e)
@@ -124,7 +128,7 @@ namespace Assets.Scripts.Craiel.Essentials.Editor
             return false;
         }
         
-        private static bool IsMetaFile(CarbonFile file)
+        private static bool IsMetaFile(ManagedFile file)
         {
             return file.Extension.Equals(".meta", StringComparison.OrdinalIgnoreCase);
         }

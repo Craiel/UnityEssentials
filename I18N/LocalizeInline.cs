@@ -1,4 +1,4 @@
-using Assets.Scripts.Craiel.Essentials.I18N;
+using Craiel.UnityEssentials.I18N;
 
 // ReSharper disable once CheckNamespace
 public class _

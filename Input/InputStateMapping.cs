@@ -1,4 +1,4 @@
-﻿namespace Assets.Scripts.Craiel.Essentials.Input
+﻿namespace Craiel.UnityEssentials.Input
 {
     using System;
     using Enums;

@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using Audio;
     using Essentials;
     using Essentials.Enums;
     using Essentials.Event;
@@ -11,7 +10,6 @@
     using Essentials.Logging;
     using Essentials.Resource;
     using Essentials.Scene;
-    using GameData;
     using JetBrains.Annotations;
     using NLog;
 
@@ -47,10 +45,7 @@
 
             // First some main systems
             GameEvents.InstantiateAndInitialize();
-            GameRuntimeData.InstantiateAndInitialize();
             InputHandler.InstantiateAndInitialize();
-            AudioSystem.InstantiateAndInitialize();
-            AudioAreaSystem.InstantiateAndInitialize();
 
             try
             {

@@ -264,7 +264,7 @@ namespace Craiel.UnityEssentials.Msg
             telegram.Receiver = receiver;
             telegram.Message = message;
             telegram.ExtraInfo = extraInfo;
-            telegram.ReturnReceiptStatus = needReturnReceipt ? TelegramReturnReceiptStatus.Needed : ReturnReceiptStatus.Unneeded;
+            telegram.ReturnReceiptStatus = needReturnReceipt ? TelegramReturnReceiptStatus.Needed : TelegramReturnReceiptStatus.Unneeded;
 
             // If there is no delay, route telegram immediately
             if (delay <= 0.0f)
@@ -324,8 +324,6 @@ namespace Craiel.UnityEssentials.Msg
         /// </summary>
         public void Update()
         {
-            float currentTime = GDXAI.TimePiece.Time;
-
             // Peek at the queue to see if any telegrams need dispatching.
             // Remove all telegrams from the front of the queue that have gone
             // past their time stamp.
@@ -333,7 +331,7 @@ namespace Craiel.UnityEssentials.Msg
             while ((telegram = this.queue.Peek()) != null)
             {
                 // Exit loop if the telegram is in the future
-                if (telegram.Timestamp > currentTime)
+                if (telegram.Timestamp > Time.time)
                 {
                     break;
                 }
@@ -360,13 +358,12 @@ namespace Craiel.UnityEssentials.Msg
         /// <param name="callback">the callback to pass the messages to</param>
         public void ScanQueue(IPendingMessageCallback callback)
         {
-            float currentTime = GDXAI.TimePiece.Time;
             int queueSize = this.queue.Size;
             for (int i = 0; i < queueSize; i++)
             {
                 Telegram telegram = this.queue.Get(i);
                 callback.Report(
-                    telegram.Timestamp - currentTime,
+                    telegram.Timestamp - Time.time,
                     telegram.Sender,
                     telegram.Receiver,
                     telegram.Message,

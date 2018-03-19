@@ -4,6 +4,7 @@ namespace Craiel.UnityEssentials.Collections
     using System.Collections;
     using System.Collections.Generic;
     using System.Text;
+    using Exceptions;
     using Utils;
 
     /// <summary>
@@ -280,7 +281,7 @@ namespace Craiel.UnityEssentials.Collections
             do
             {
                 // Replace the key and value for one of the hashes.
-                switch (GDXAI.Rand.Next(2))
+                switch (UnityEngine.Random.Range(0, 2))
                 {
                     case 0:
                         evictedKey = key1;

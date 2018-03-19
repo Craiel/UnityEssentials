@@ -3,6 +3,7 @@ namespace Craiel.UnityEssentials.Collections
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using Exceptions;
 
     public class ObjectSetIterator<T> : IEnumerable<T>, IEnumerator<T>
     {

@@ -1,7 +1,6 @@
 namespace Craiel.UnityEssentials.Editor.ReorderableList
 {
 	using System;
-	using Assets.Scripts.Craiel.Essentials.Editor;
 	using Contracts;
 	using UnityEditor;
 	using UnityEngine;

@@ -118,8 +118,8 @@ namespace Craiel.UnityEssentials.Utils
             double v1, v2, s;
             do
             {
-                v1 = 2 * GDXAI.Rand.NextDouble() - 1; // between -1 and 1
-                v2 = 2 * GDXAI.Rand.NextDouble() - 1; // between -1 and 1
+                v1 = 2 * UnityEngine.Random.value - 1; // between -1 and 1
+                v2 = 2 * UnityEngine.Random.value - 1; // between -1 and 1
                 s = v1 * v1 + v2 * v2;
             }
             while (s >= 1 || Math.Abs(s) < DoubleEpsilon);
@@ -132,12 +132,12 @@ namespace Craiel.UnityEssentials.Utils
 
         public static double RandomTriangular(double high)
         {
-            return (GDXAI.Rand.NextDouble() - GDXAI.Rand.NextDouble()) * high;
+            return (UnityEngine.Random.value - UnityEngine.Random.value) * high;
         }
 
         public static double RandomTriangular(double low, double high, double mode)
         {
-            double u = GDXAI.Rand.NextDouble();
+            double u = UnityEngine.Random.value;
             double d = high - low;
             if (u <= (mode - low) / d)
             {
@@ -149,12 +149,12 @@ namespace Craiel.UnityEssentials.Utils
 
         public static float RandomTriangular(float high)
         {
-            return ((float)GDXAI.Rand.NextDouble() - (float)GDXAI.Rand.NextDouble()) * high;
+            return (UnityEngine.Random.value - UnityEngine.Random.value) * high;
         }
 
         public static float RandomTriangular(float low, float high, float mode)
         {
-            float u = (float)GDXAI.Rand.NextDouble();
+            float u = UnityEngine.Random.value;
             float d = high - low;
             if (u <= (mode - low) / d)
             {

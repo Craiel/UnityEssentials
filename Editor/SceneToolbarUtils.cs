@@ -1,6 +1,5 @@
 ﻿namespace Craiel.UnityEssentials.Editor
 {
-    using Assets.Scripts.Craiel.Essentials.Editor;
     using UnityEditor;
     using UnityEngine;
 

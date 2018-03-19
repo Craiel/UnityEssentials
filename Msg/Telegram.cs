@@ -63,7 +63,7 @@ namespace Craiel.UnityEssentials.Msg
             this.Sender = null;
             this.Receiver = null;
             this.Message = 0;
-            this.ReturnReceiptStatus = this.ReturnReceiptStatus.Unneeded;
+            this.ReturnReceiptStatus = TelegramReturnReceiptStatus.Unneeded;
             this.ExtraInfo = null;
             this.Timestamp = 0;
         }

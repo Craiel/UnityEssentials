@@ -2,6 +2,7 @@ namespace Craiel.UnityEssentials.Spatial
 {
     using System;
     using System.Collections.Generic;
+    using Extensions;
     using UnityEngine;
     using Utils;
 

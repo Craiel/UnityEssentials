@@ -25,5 +25,9 @@
 
         public static readonly IList<SceneTransitionStep> SceneTransitionStepValues = Enum.GetValues(typeof(SceneTransitionStep)).Cast<SceneTransitionStep>().ToList();
 
+        public static readonly IList<TelegramReturnReceiptStatus> TelegramReturnReceiptStatusValues = Enum.GetValues(typeof(TelegramReturnReceiptStatus)).Cast<TelegramReturnReceiptStatus>().ToList();
+
+        public static readonly IList<YamlContainerType> YamlContainerTypeValues = Enum.GetValues(typeof(YamlContainerType)).Cast<YamlContainerType>().ToList();
+
     }
 }

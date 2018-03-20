@@ -1,10 +1,9 @@
-﻿using SceneObjectController = Craiel.UnityEssentials.Scene.SceneObjectController;
-
-namespace Craiel.UnityEssentials.Event
+﻿namespace Craiel.UnityEssentials.Event
 {
     using System;
     using Contracts;
     using Enums;
+    using Scene;
     using Singletons;
 
     public class GameEvents : UnitySingletonBehavior<GameEvents>
@@ -36,9 +35,9 @@ namespace Craiel.UnityEssentials.Event
             return this.aggregate.Subscribe(actionDelegate, filterDelegate);
         }
 
-        public void Unsubscribe(BaseEventSubscriptionTicket ticket)
+        public void Unsubscribe(ref BaseEventSubscriptionTicket ticket)
         {
-            this.aggregate.Unsubscribe(ticket);
+            this.aggregate.Unsubscribe(ref ticket);
         }
 
         public void Send<T>(T eventData)

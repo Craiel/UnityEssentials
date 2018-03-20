@@ -7,7 +7,6 @@
     using System.Linq;
     using System.Security.Cryptography;
     using System.Text;
-    using Assets.Scripts.Craiel.Essentials;
 
     public static class HashUtils
     {

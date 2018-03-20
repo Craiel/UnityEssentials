@@ -25,7 +25,7 @@
         public BaseEventSubscriptionTicket Subscribe<TSpecific>(GameEventAction<TSpecific> actionDelegate)
             where TSpecific : T
         {
-            var ticket = new BaseEventSubscriptionTicket(this, typeof(TSpecific), actionDelegate);
+            var ticket = new BaseEventSubscriptionTicket(typeof(TSpecific), actionDelegate);
             this.DoSubscribe(ticket);
             return ticket;
         }
@@ -33,7 +33,7 @@
         public BaseEventSubscriptionTicket Subscribe<TSpecific>(GameEventAction<TSpecific> actionDelegate, Func<TSpecific, bool> filterDelegate)
             where TSpecific : T
         {
-            var ticket = new BaseEventSubscriptionTicket(this, typeof(TSpecific), actionDelegate)
+            var ticket = new BaseEventSubscriptionTicket(typeof(TSpecific), actionDelegate)
                 {
                     FilterDelegate = x => filterDelegate((TSpecific) x)
                 };
@@ -42,15 +42,16 @@
             return ticket;
         }
 
-        public void Unsubscribe(BaseEventSubscriptionTicket ticket)
+        public void Unsubscribe(ref BaseEventSubscriptionTicket ticket)
         {
             this.DoUnsubscribe(ticket);
+            ticket = null;
         }
 
         public void Send<TSpecific>(TSpecific eventData)
             where TSpecific : T
         {
-            this.DoSend<TSpecific>(eventData);
+            this.DoSend(eventData);
         }
 
         // -------------------------------------------------------------------

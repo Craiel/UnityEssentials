@@ -22,9 +22,9 @@
             return Aggregate.Subscribe(actionDelegate, filterDelegate);
         }
 
-        public static void Unsubscribe(BaseEventSubscriptionTicket ticket)
+        public static void Unsubscribe(ref BaseEventSubscriptionTicket ticket)
         {
-            Aggregate.Unsubscribe(ticket);
+            Aggregate.Unsubscribe(ref ticket);
         }
 
         public static void Send<T>(T eventData)

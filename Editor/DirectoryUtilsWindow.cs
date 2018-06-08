@@ -1,4 +1,4 @@
-using ManagedDirectory = Craiel.UnityEssentials.IO.ManagedDirectory;
+using ManagedDirectory = Craiel.UnityEssentials.Runtime.IO.ManagedDirectory;
 
 namespace Craiel.UnityEssentials.Editor
 {

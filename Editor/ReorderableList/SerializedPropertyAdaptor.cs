@@ -2,6 +2,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 {
 	using System;
 	using Contracts;
+	using Runtime.Utils;
 	using UnityEditor;
 	using UnityEngine;
 
@@ -121,7 +122,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 
 		public virtual float GetItemHeight(int index)
 		{
-			return Math.Abs(this.FixedItemHeight) > Craiel.UnityEssentials.Utils.EssentialMathUtils.Epsilon
+			return Math.Abs(this.FixedItemHeight) > EssentialMathUtils.Epsilon
 					? this.FixedItemHeight
 					: EditorGUI.GetPropertyHeight(this[index], GUIContent.none, false);
 		}

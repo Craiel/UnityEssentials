@@ -1,0 +1,10 @@
+{
+    "name": "Craiel.UnityEssentials.Editor",
+    "references": [
+        "Craiel.UnityEssentials.Runtime"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": []
+}

@@ -1,6 +1,6 @@
 ﻿namespace Craiel.UnityEssentials.Editor
 {
-    using Singletons;
+    using Runtime.Singletons;
     using UnityEditor;
 
     [InitializeOnLoad]

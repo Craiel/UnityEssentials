@@ -1,8 +1,8 @@
 ﻿namespace Craiel.UnityEssentials.Editor.NodeEditor
 {
     using System;
+    using Runtime.Utils;
     using UnityEngine;
-    using Utils;
 
     public abstract class ScriptableNodeBase : IScriptableNode
     {

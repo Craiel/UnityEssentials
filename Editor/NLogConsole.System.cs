@@ -1,5 +1,5 @@
-﻿using NLogInterceptor = Craiel.UnityEssentials.Logging.NLogInterceptor;
-using NLogInterceptorEvent = Craiel.UnityEssentials.Logging.NLogInterceptorEvent;
+﻿using NLogInterceptor = Craiel.UnityEssentials.Runtime.Logging.NLogInterceptor;
+using NLogInterceptorEvent = Craiel.UnityEssentials.Runtime.Logging.NLogInterceptorEvent;
 
 namespace Craiel.UnityEssentials.Editor
 {

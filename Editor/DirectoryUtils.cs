@@ -1,7 +1,7 @@
-using ManagedDirectory = Craiel.UnityEssentials.IO.ManagedDirectory;
-using ManagedDirectoryResult = Craiel.UnityEssentials.IO.ManagedDirectoryResult;
-using ManagedFile = Craiel.UnityEssentials.IO.ManagedFile;
-using ManagedFileResult = Craiel.UnityEssentials.IO.ManagedFileResult;
+using ManagedDirectory = Craiel.UnityEssentials.Runtime.IO.ManagedDirectory;
+using ManagedDirectoryResult = Craiel.UnityEssentials.Runtime.IO.ManagedDirectoryResult;
+using ManagedFile = Craiel.UnityEssentials.Runtime.IO.ManagedFile;
+using ManagedFileResult = Craiel.UnityEssentials.Runtime.IO.ManagedFileResult;
 
 namespace Craiel.UnityEssentials.Editor
 {

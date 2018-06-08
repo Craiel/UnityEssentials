@@ -1,4 +1,4 @@
-﻿using IEssentialEditorConfig = Craiel.UnityEssentials.Contracts.IEssentialEditorConfig;
+﻿using IEssentialEditorConfig = Craiel.UnityEssentials.Runtime.Contracts.IEssentialEditorConfig;
 
 namespace Craiel.UnityEssentials.Editor
 {

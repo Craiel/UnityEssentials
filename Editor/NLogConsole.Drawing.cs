@@ -1,7 +1,7 @@
-﻿using CollectionExtensions = Craiel.UnityEssentials.Extensions.CollectionExtensions;
-using NLogInterceptor = Craiel.UnityEssentials.Logging.NLogInterceptor;
-using NLogInterceptorEvent = Craiel.UnityEssentials.Logging.NLogInterceptorEvent;
-using UnityStackTraceException = Craiel.UnityEssentials.Logging.UnityStackTraceException;
+﻿using CollectionExtensions = Craiel.UnityEssentials.Runtime.Extensions.CollectionExtensions;
+using NLogInterceptor = Craiel.UnityEssentials.Runtime.Logging.NLogInterceptor;
+using NLogInterceptorEvent = Craiel.UnityEssentials.Runtime.Logging.NLogInterceptorEvent;
+using UnityStackTraceException = Craiel.UnityEssentials.Runtime.Logging.UnityStackTraceException;
 
 namespace Craiel.UnityEssentials.Editor
 {

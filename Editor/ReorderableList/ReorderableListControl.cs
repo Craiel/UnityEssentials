@@ -3,6 +3,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 	using System;
 	using System.Collections.Generic;
 	using Contracts;
+	using Runtime.Utils;
 	using UnityEditor;
 	using UnityEngine;
 
@@ -784,7 +785,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 			}
 
 			// Make space for element index.
-			if (Math.Abs(this.indexLabelWidth) > Craiel.UnityEssentials.Utils.EssentialMathUtils.Epsilon)
+			if (Math.Abs(this.indexLabelWidth) > EssentialMathUtils.Epsilon)
 			{
 				itemContentPosition.width -= this.indexLabelWidth;
 

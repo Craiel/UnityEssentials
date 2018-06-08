@@ -1,4 +1,4 @@
-﻿using CollectionExtensions = Craiel.UnityEssentials.Extensions.CollectionExtensions;
+﻿using CollectionExtensions = Craiel.UnityEssentials.Runtime.Extensions.CollectionExtensions;
 
 namespace Craiel.UnityEssentials.Editor
 {

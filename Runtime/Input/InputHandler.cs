@@ -4,14 +4,11 @@ namespace Craiel.UnityEssentials.Runtime.Input
     using System.Collections.Generic;
     using Contracts;
     using Enums;
-    using NLog;
     using Scene;
     using Singletons;
 
     public class InputHandler : UnitySingletonBehavior<InputHandler>
     {
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-        
         private static readonly IDictionary<InputControl, InputControlState> ControlState;
 
         private readonly Stack<IInputState> stateStack;
@@ -64,14 +61,14 @@ namespace Craiel.UnityEssentials.Runtime.Input
         {
             if (string.IsNullOrEmpty(control.Id))
             {
-                Logger.Error("Input Control invalid!");
+                EssentialsCore.Logger.Error("Input Control invalid!");
                 return;
             }
 
             InputControlState existing;
             if (ControlState.TryGetValue(control, out existing))
             {
-                Logger.Error("Duplicate Input Control: " + control);
+                EssentialsCore.Logger.Error("Duplicate Input Control: " + control);
                 return;
             }
             

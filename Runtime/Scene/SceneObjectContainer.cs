@@ -1,13 +1,10 @@
 ﻿namespace Craiel.UnityEssentials.Runtime.Scene
 {
     using System.Collections.Generic;
-    using NLog;
     using UnityEngine;
 
     public class SceneObjectContainer
     {
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-
         private readonly IDictionary<string, SceneObjectRoot> rootEntries;
 
         // -------------------------------------------------------------------
@@ -81,7 +78,7 @@
 
             if (this.rootEntries.ContainsKey(key))
             {
-                Logger.Error("Root with same key is already registered: {0}", key);
+                EssentialsCore.Logger.Error("Root with same key is already registered: {0}", key);
                 return null;
             }
 

@@ -2,12 +2,9 @@
 {
     using System;
     using Enums;
-    using NLog;
 
     public abstract class InputStateMapping
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
@@ -27,7 +24,7 @@
         {
             if (!target.IsValid() || !InputHandler.Instance.IsRegistered(target))
             {
-                Logger.Error("Invalid target Control");
+                EssentialsCore.Logger.Error("Invalid target Control");
                 return null;
             }
 

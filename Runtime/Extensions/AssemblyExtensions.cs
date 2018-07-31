@@ -6,16 +6,13 @@
     using System.Linq;
     using System.Reflection;
     using IO;
-    using NLog;
 
     public static class AssemblyExtensions
     {
         private const char ResourceDelimiter = '.';
 
         private const string ResourceLocalIndicator = @"__.";
-
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
+        
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
@@ -50,7 +47,7 @@
             Assembly[] assemblies = domain.GetAssemblies();
             if (assemblies.Length <= 0)
             {
-                Logger.Warn("Could not locate any assemblies in domain {0}", domain);
+                EssentialsCore.Logger.Warn("Could not locate any assemblies in domain {0}", domain);
                 return null;
             }
 
@@ -149,7 +146,7 @@
             {
                 if (stream == null)
                 {
-                    Logger.Error("Could not Open Resource Stream: {0}", resourcePath);
+                    EssentialsCore.Logger.Error("Could not Open Resource Stream: {0}", resourcePath);
                     return null;
                 }
                 
@@ -166,7 +163,7 @@
             string[] resources = assembly.GetManifestResourceNames();
             if (resources.Length <= 0)
             {
-                Logger.Warn("No resource to load for {0}", assembly);
+                EssentialsCore.Logger.Warn("No resource to load for {0}", assembly);
                 return null;
             }
 
@@ -220,7 +217,7 @@
                 using (var writer = targetFile.OpenCreate())
                 {
                     writer.Write(resources[file], 0, resources[file].Length);
-                    Logger.Info("Extracted {0} ({1})", targetFile, targetFile.Size);
+                    EssentialsCore.Logger.Info("Extracted {0} ({1})", targetFile, targetFile.Size);
                 }
             }
 

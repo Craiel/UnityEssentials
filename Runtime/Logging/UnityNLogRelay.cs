@@ -1,13 +1,10 @@
 ﻿namespace Craiel.UnityEssentials.Runtime.Logging
 {
-    using NLog;
     using Singletons;
     using UnityEngine;
 
     public class UnityNLogRelay : UnitySingleton<UnityNLogRelay>
     {
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
@@ -27,11 +24,11 @@
                     {
                         if (string.IsNullOrEmpty(stacktrace))
                         {
-                            Logger.Error(message);
+                            EssentialsCore.Logger.Error(message);
                         }
                         else
                         {
-                            Logger.Error(new UnityStackTraceException(stacktrace), message);
+                            EssentialsCore.Logger.Error(new UnityStackTraceException(stacktrace), message);
                         }
 
                         break;
@@ -41,11 +38,11 @@
                     {
                         if (string.IsNullOrEmpty(stacktrace))
                         {
-                            Logger.Warn(message);
+                            EssentialsCore.Logger.Warn(message);
                         }
                         else
                         {
-                            Logger.Warn(new UnityStackTraceException(stacktrace), message);
+                            EssentialsCore.Logger.Warn(new UnityStackTraceException(stacktrace), message);
                         }
 
                         break;
@@ -55,11 +52,11 @@
                     {
                         if (string.IsNullOrEmpty(stacktrace))
                         {
-                            Logger.Info(message);
+                            EssentialsCore.Logger.Info(message);
                         }
                         else
                         {
-                            Logger.Info(new UnityStackTraceException(stacktrace), message);
+                            EssentialsCore.Logger.Info(new UnityStackTraceException(stacktrace), message);
                         }
 
                         break;

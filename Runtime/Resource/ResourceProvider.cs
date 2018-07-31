@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using Enums;
-    using NLog;
     using Singletons;
     using UnityEngine;
 
@@ -16,8 +15,6 @@
         private const int DefaultRequestPoolSize = 30;
 
         private const int MaxConsecutiveSyncCallsInAsync = 20;
-
-        private static readonly global::NLog.Logger Logger = LogManager.GetCurrentClassLogger();
 
         private readonly ResourceMap<ResourceLoadRequest> resourceMap;
 
@@ -84,7 +81,7 @@
             IList<ResourceKey> resources = Instance.AcquireResourcesByType<T>();
             if (resources == null || resources.Count != 1)
             {
-                Logger.Warn("Expected 1 result for {0}", typeof(T));
+                EssentialsCore.Logger.Warn("Expected 1 result for {0}", typeof(T));
                 return null;
             }
 
@@ -152,7 +149,7 @@
         {
             if (this.fallbackResources.ContainsKey(key.Type))
             {
-                Logger.Warn("Duplicate fallback resource registered for type {0}", key.Type);
+                EssentialsCore.Logger.Warn("Duplicate fallback resource registered for type {0}", key.Type);
                 return;
             }
 
@@ -181,7 +178,7 @@
             ResourceReference<T> result;
             if (!this.TryAcquireOrLoadResource(key, out result, flags))
             {
-                Logger.Error("Could not load resource on-demand");
+                EssentialsCore.Logger.Error("Could not load resource on-demand");
             }
 
             return result;
@@ -225,7 +222,7 @@
                 data = this.AcquireFallbackResource<T>();
                 if (data == null)
                 {
-                    Logger.Error("Resource was not loaded or registered: {0}", key);
+                    EssentialsCore.Logger.Error("Resource was not loaded or registered: {0}", key);
                     return null;
                 }
             }
@@ -333,8 +330,8 @@
                     this.DoLoadImmediate(info);
                 }
             }
-            
-            Logger.Info("Immediate! Loaded {0} resources in {1}ms", resourceCount, -1);
+
+            EssentialsCore.Logger.Info("Immediate! Loaded {0} resources in {1}ms", resourceCount, -1);
         }
 
         // -------------------------------------------------------------------
@@ -361,7 +358,7 @@
         {
             if (!(data is T))
             {
-                Logger.Error("Type requested {0} did not match the registered key type {1} for {2}", typeof(T), key.Type, key);
+                EssentialsCore.Logger.Error("Type requested {0} did not match the registered key type {1} for {2}", typeof(T), key.Type, key);
                 return null;
             }
 
@@ -413,7 +410,7 @@
 
             if (data == null)
             {
-                Logger.Warn("Loading {0} returned null data", request.Info.Key);
+                EssentialsCore.Logger.Warn("Loading {0} returned null data", request.Info.Key);
                 return;
             }
 
@@ -438,7 +435,7 @@
                 }
                 catch (Exception e)
                 {
-                    Logger.Error("Failed to instantiate resource {0} on load: {1}", request.Info.Key, e);
+                    EssentialsCore.Logger.Error("Failed to instantiate resource {0} on load: {1}", request.Info.Key, e);
                 }
             }
             

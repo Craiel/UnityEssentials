@@ -2,13 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using NLog;
-
-    internal static class ResourceMapStatic
-    {
-        internal static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-    }
-
+    
     public class ResourceMap<T> where T : class
     {
         private const int KeyLookupLength = 2;
@@ -64,7 +58,7 @@
         {
             if (this.resources.Contains(source))
             {
-                ResourceMapStatic.Logger.Error("Resource {0} was already loaded, can not add as a link");
+                EssentialsCore.Logger.Error("Resource {0} was already loaded, can not add as a link");
                 return;
             }
 
@@ -76,7 +70,7 @@
                 }
                 else
                 {
-                    ResourceMapStatic.Logger.Error("Resource {0} was already linked to {1}, skipping link to {2}", source, this.linkToResource[source], target);
+                    EssentialsCore.Logger.Error("Resource {0} was already linked to {1}, skipping link to {2}", source, this.linkToResource[source], target);
                     return;
                 }
             }
@@ -98,7 +92,7 @@
             if (!this.links.Contains(source))
             {
                 // Link was not registered
-                ResourceMapStatic.Logger.Warn("Unregister link called with non existing key {0}", source);
+                EssentialsCore.Logger.Warn("Unregister link called with non existing key {0}", source);
                 return;
             }
 
@@ -146,7 +140,7 @@
         {
             if (!this.data.ContainsKey(key))
             {
-                ResourceMapStatic.Logger.Warn("Unregister Resource called with non existing key {0}", key);
+                EssentialsCore.Logger.Warn("Unregister Resource called with non existing key {0}", key);
                 return;
             }
 
@@ -240,7 +234,7 @@
         {
             if (depth > KeyLookupMaxDepth)
             {
-                ResourceMapStatic.Logger.Error("ResourceKey lookup exceeded max depth, probably circular resource link!");
+                EssentialsCore.Logger.Error("ResourceKey lookup exceeded max depth, probably circular resource link!");
                 return null;
             }
 

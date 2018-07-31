@@ -3,15 +3,9 @@
     using System;
     using Contracts;
     using IO;
-    using NLog;
     using UnityEngine;
     using Debug = System.Diagnostics.Debug;
-
-    public static class JsonConfigStatic
-    {
-        internal static readonly global::NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-    }
-
+    
     public class JsonConfig<T> : IJsonConfig<T>
         where T : class
     {
@@ -41,7 +35,7 @@
             }
             catch (Exception e)
             {
-                JsonConfigStatic.Logger.Error(e, "Could not save config to {0}", file);
+                EssentialsCore.Logger.Error(e, "Could not save config to {0}", file);
                 return false;
             }
         }
@@ -71,12 +65,12 @@
             }
             else
             {
-                JsonConfigStatic.Logger.Warn("Config {0} does not exist, skipping", file);
+                EssentialsCore.Logger.Warn("Config {0} does not exist, skipping", file);
             }
 
             if (this.Current == null)
             {
-                JsonConfigStatic.Logger.Error("Config is invalid, resetting to default");
+                EssentialsCore.Logger.Error("Config is invalid, resetting to default");
                 this.Current = this.GetDefault();
 
                 string contents = JsonUtility.ToJson(this.Current);

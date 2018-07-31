@@ -2,7 +2,6 @@ namespace Craiel.UnityEssentials.Runtime.Spatial
 {
     using System;
     using System.Collections.Generic;
-    using NLog;
     using UnityEngine;
     using Utils;
 
@@ -11,11 +10,6 @@ namespace Craiel.UnityEssentials.Runtime.Spatial
         internal const int RecursionCheckDepth = 20;
 
         internal const int OctreeFloatPrecision = 4;
-    }
-
-    internal static class OctreeStatic
-    {
-        internal static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
     }
     
     public class Octree<T>
@@ -30,7 +24,7 @@ namespace Craiel.UnityEssentials.Runtime.Spatial
         {
             if (minNodeSize > initialSize)
             {
-                OctreeStatic.Logger.Info("Minimum node size must be bigger or equal initial size: {0} > {1}", minNodeSize, initialSize);
+                EssentialsCore.Logger.Info("Minimum node size must be bigger or equal initial size: {0} > {1}", minNodeSize, initialSize);
                 minNodeSize = initialSize;
             }
 
@@ -77,7 +71,7 @@ namespace Craiel.UnityEssentials.Runtime.Spatial
 #if DEBUG
             if (Math.Abs(objPos.magnitude) > EssentialMathUtils.MaxFloat)
             {
-                OctreeStatic.Logger.Error("Add Operation failed, coordinates are outside of safe range");
+                EssentialsCore.Logger.Error("Add Operation failed, coordinates are outside of safe range");
                 return false;
             }
 #endif
@@ -87,7 +81,7 @@ namespace Craiel.UnityEssentials.Runtime.Spatial
             if (positionVector.x < this.root.Bounds.min.x || positionVector.y < this.root.Bounds.min.y ||
                 positionVector.z < this.root.Bounds.min.z)
             {
-                OctreeStatic.Logger.Error("Object position outside of octree lower bounds!");
+                EssentialsCore.Logger.Error("Object position outside of octree lower bounds!");
                 return false;
             }
             
@@ -106,7 +100,7 @@ namespace Craiel.UnityEssentials.Runtime.Spatial
 
                 if (++recursionCheck > OctreeConstants.RecursionCheckDepth)
                 {
-                    OctreeStatic.Logger.Info("Add Operation exceeded recursion check");
+                    EssentialsCore.Logger.Info("Add Operation exceeded recursion check");
                     return false;
                 }
             }

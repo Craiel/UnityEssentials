@@ -1,19 +1,15 @@
-using VectorExtensions = Craiel.UnityEssentials.Runtime.Extensions.VectorExtensions;
-
 namespace Craiel.UnityEssentials.Runtime.Geometry
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using NLog;
+    using Extensions;
     using UnityEngine;
     using Utils;
 
     public class Mesh : IEnumerable<Triangle3Indexed>
     {
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
@@ -173,7 +169,7 @@ namespace Craiel.UnityEssentials.Runtime.Geometry
                     || triangle.B < 0 || triangle.B >= this.Vertices.Count
                     || triangle.C < 0 || triangle.C >= this.Vertices.Count)
                 {
-                    Logger.Error(" - Invalid Triangle {0} / {1}: {2}", i, this.Triangles.Count, triangle);
+                    EssentialsCore.Logger.Error(" - Invalid Triangle {0} / {1}: {2}", i, this.Triangles.Count, triangle);
                     result = false;
                 }
             }

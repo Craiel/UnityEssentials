@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using Enums;
-    using NLog;
     using Resource;
     using UnityEngine;
     using UnityEngine.SceneManagement;
@@ -13,8 +12,6 @@
     public abstract class BaseScene<TSceneEnum>
         where TSceneEnum: struct, IConvertible
     {
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-
         private readonly IDictionary<string, AsyncOperation> additiveLoadLevelOperations;
 
         private readonly List<PartialSceneLoadingDelegate> pendingLoadingActions;
@@ -125,7 +122,7 @@
             catch (Exception e)
             {
                 this.HadErrors = true;
-                Logger.Error("Error in Load of Scene {0}({1}): {2}", this.GetType(), step, e);
+                EssentialsCore.Logger.Error("Error in Load of Scene {0}({1}): {2}", this.GetType(), step, e);
                 return true;
             }
         }
@@ -176,7 +173,7 @@
             catch (Exception e)
             {
                 this.HadErrors = true;
-                Logger.Error("Error in Destroy of Scene {0}({1}): {2}", this.GetType(), step, e);
+                EssentialsCore.Logger.Error("Error in Destroy of Scene {0}({1}): {2}", this.GetType(), step, e);
                 return true;
             }
         }

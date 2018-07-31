@@ -2,14 +2,11 @@ namespace Craiel.UnityEssentials.Runtime.I18N
 {
     using System.Globalization;
     using IO;
-    using NLog;
     using Singletons;
     using UnityEngine;
 
     public class LocalizationSystem : UnitySingletonBehavior<LocalizationSystem>
     {
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-
         private float lastAutoSave;
         
         // -------------------------------------------------------------------
@@ -19,7 +16,7 @@ namespace Craiel.UnityEssentials.Runtime.I18N
         {
             if (Time.time > this.lastAutoSave + EssentialsCore.LocalizationSaveInterval)
             {
-                Logger.Info("Saving Localization: {0}", Localization.Root);
+                EssentialsCore.Logger.Info("Saving Localization: {0}", Localization.Root);
 
                 this.lastAutoSave = Time.time;
 

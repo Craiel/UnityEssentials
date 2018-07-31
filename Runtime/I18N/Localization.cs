@@ -1,20 +1,15 @@
-﻿using ManagedDirectory = Craiel.UnityEssentials.Runtime.IO.ManagedDirectory;
-using ManagedFile = Craiel.UnityEssentials.Runtime.IO.ManagedFile;
-
-namespace Craiel.UnityEssentials.Runtime.I18N
+﻿namespace Craiel.UnityEssentials.Runtime.I18N
 {
     using System.Collections.Generic;
     using System.Globalization;
     using System.Threading;
-    using NLog;
+    using IO;
     using UnityEngine;
 
     public static class Localization
     {
         private const string SubDirectory = "i18n";
         private const string DictionaryFileName = "strings.json";
-
-        private static readonly global::NLog.Logger Logger = LogManager.GetCurrentClassLogger();
 
         private static readonly IDictionary<CultureInfo, LocalizationStringDictionary> Dictionaries;
 
@@ -105,7 +100,7 @@ namespace Craiel.UnityEssentials.Runtime.I18N
 
         public static void SetString(string key, string value)
         {
-            Logger.Warn("Manual SetString called, prefer using the auto loaded dictionaries!");
+            EssentialsCore.Logger.Warn("Manual SetString called, prefer using the auto loaded dictionaries!");
             CheckDictionary(CurrentCulture);
             LocalizationStringDictionary dictionary = Dictionaries[CurrentCulture];
             if (!dictionary.ContainsKey(key))
@@ -131,11 +126,11 @@ namespace Craiel.UnityEssentials.Runtime.I18N
 
             if (!source.Exists)
             {
-                Logger.Warn("Could not load dictionary for {0}, file not found: {1}", info.Name, source);
+                EssentialsCore.Logger.Warn("Could not load dictionary for {0}, file not found: {1}", info.Name, source);
                 return;
             }
 
-            Logger.Info("Loading Dictionary {0} ({1})", info.Name, source);
+            EssentialsCore.Logger.Info("Loading Dictionary {0} ({1})", info.Name, source);
 
             string dictionaryData = source.ReadAsString();
             Dictionaries[info] = JsonUtility.FromJson<LocalizationStringDictionary>(dictionaryData);

@@ -53,11 +53,11 @@ namespace Craiel.UnityEssentials.Runtime.EngineCore
             if (this.ActiveSceneType.HasValue 
                 && EqualityComparer<TSceneEnum>.Default.Equals(this.ActiveSceneType.Value, type))
             {
-                Logger.Warn("Transition target and active scene are the same, skipping!");
+                EssentialsCore.Logger.Warn("Transition target and active scene are the same, skipping!");
                 return;
             }
 
-            Logger.Info("Transitioning to {0}", type);
+            EssentialsCore.Logger.Info("Transitioning to {0}", type);
 
             if (this.TransitionStarting != null)
             {
@@ -103,7 +103,7 @@ namespace Craiel.UnityEssentials.Runtime.EngineCore
                 this.activeScene.SetData(this.transitionData);
                 this.activeScene.SetLoadMode(this.transitionMode);
 
-                Logger.Info("Activated target scene {0}", this.transitionTarget);
+                EssentialsCore.Logger.Info("Activated target scene {0}", this.transitionTarget);
             }
 
             if (this.activeScene.ContinueLoad(this.transitionStep))
@@ -118,7 +118,7 @@ namespace Craiel.UnityEssentials.Runtime.EngineCore
             }
 
             // We are done transitioning
-            Logger.Info("Transition to {0} completed", this.transitionTarget);
+            EssentialsCore.Logger.Info("Transition to {0} completed", this.transitionTarget);
 
             // Try to free up un-used assets after transition
             UnityEngine.Resources.UnloadUnusedAssets();

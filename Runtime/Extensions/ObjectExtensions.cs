@@ -5,14 +5,9 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Reflection;
-    using NLog;
 
     public static class ObjectExtensions
     {
-#if DEBUG
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-#endif
-
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
@@ -59,7 +54,7 @@
                 if (!valueA.DeepCompare(valueB))
                 {
 #if DEBUG
-                    Logger.Warn("DeepCompare failed on property {0} of {1}", info.Name, compareType.Name);
+                    EssentialsCore.Logger.Warn("DeepCompare failed on property {0} of {1}", info.Name, compareType.Name);
 #endif
 
                     return false;

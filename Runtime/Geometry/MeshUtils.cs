@@ -1,18 +1,14 @@
-using VectorExtensions = Craiel.UnityEssentials.Runtime.Extensions.VectorExtensions;
-
 namespace Craiel.UnityEssentials.Runtime.Geometry
 {
     using System;
     using System.Collections.Generic;
-    using NLog;
+    using Extensions;
     using Spatial;
     using UnityEngine;
     using Utils;
 
     public static class MeshUtils
     {
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
@@ -43,7 +39,7 @@ namespace Craiel.UnityEssentials.Runtime.Geometry
                 if (!IsVertexValid(vertices[indexed.A]) || !IsVertexValid(vertices[indexed.B]) || !IsVertexValid(vertices[indexed.C]))
                 {
                     // This triangle has invalid vertices, ignore
-                    Logger.Warn("- Triangle Vertex out of safe range, skipping!");
+                    EssentialsCore.Logger.Warn("- Triangle Vertex out of safe range, skipping!");
                     continue;
                 }
 
@@ -92,7 +88,7 @@ namespace Craiel.UnityEssentials.Runtime.Geometry
 
             if (cleanVertices.Count != vertices.Count)
             {
-                Logger.Info("- {0} orphan vertices", vertices.Count - cleanVertices.Count);
+                EssentialsCore.Logger.Info("- {0} orphan vertices", vertices.Count - cleanVertices.Count);
             }
         }
 

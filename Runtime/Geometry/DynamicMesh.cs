@@ -1,15 +1,12 @@
 namespace Craiel.UnityEssentials.Runtime.Geometry
 {
     using System.Collections.Generic;
-    using NLog;
     using Spatial;
     using UnityEngine;
     using Utils;
 
     public class DynamicMesh : Geometry.Mesh
     {
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-
         private readonly Octree<MeshSpatialInfo> mergeTree;
 
         // -------------------------------------------------------------------
@@ -45,8 +42,8 @@ namespace Craiel.UnityEssentials.Runtime.Geometry
             bool[] vertexInvalidMap = new bool[vertices.Count];
             uint[] indexMap = new uint[vertices.Count];
             uint[] normalMap = new uint[normals.Count];
-            
-            Logger.Info("- {0} vertices", vertices.Count);
+
+            EssentialsCore.Logger.Info("- {0} vertices", vertices.Count);
             bool check = this.Vertices.Count > 0;
             int skipped = 0;
             for (var i = 0; i < vertices.Count; i++)
@@ -57,7 +54,7 @@ namespace Craiel.UnityEssentials.Runtime.Geometry
                     // Create a zero vertex, we will skip the triangles anyway
                     indexMap[i] = MeshUtils.AddNewVertex(this.Vertices, Vector3.zero, this.mergeTree);
                     vertexInvalidMap[i] = false;
-                    Logger.Warn("- Vertex out of Safe Range: " + finalVertex);
+                    EssentialsCore.Logger.Warn("- Vertex out of Safe Range: " + finalVertex);
                     skipped++;
                     continue;
                 }
@@ -81,10 +78,10 @@ namespace Craiel.UnityEssentials.Runtime.Geometry
 
             if (skipped > 0)
             {
-                Logger.Info("  {0} duplicates", skipped);
+                EssentialsCore.Logger.Info("  {0} duplicates", skipped);
             }
 
-            Logger.Info("- {0} normals", normals.Count);
+            EssentialsCore.Logger.Info("- {0} normals", normals.Count);
             bool checkNormals = this.Normals.Count > 0;
             skipped = 0;
             for (var i = 0; i < normals.Count; i++)
@@ -110,17 +107,17 @@ namespace Craiel.UnityEssentials.Runtime.Geometry
 
             if (skipped > 0)
             {
-                Logger.Info("  {0} duplicates", skipped);
+                EssentialsCore.Logger.Info("  {0} duplicates", skipped);
             }
 
-            Logger.Info("- {0} triangles", triangles.Count);
+            EssentialsCore.Logger.Info("- {0} triangles", triangles.Count);
             for (var i = 0; i < triangles.Count; i++)
             {
                 Triangle3Indexed triangle = triangles[i];
 
                 if (vertexInvalidMap[triangle.A] || vertexInvalidMap[triangle.B] || vertexInvalidMap[triangle.C])
                 {
-                    Logger.Warn("Triangle had invalid index mapping, possibly skipped vertices, skipping triangle");
+                    EssentialsCore.Logger.Warn("Triangle had invalid index mapping, possibly skipped vertices, skipping triangle");
                     continue;
                 }
 

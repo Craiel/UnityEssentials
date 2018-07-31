@@ -1,13 +1,10 @@
 ﻿namespace Craiel.UnityEssentials.Runtime.Resource
 {
     using Contracts;
-    using NLog;
     using UnityEngine;
 
     public class ResourceStreamRequest : IResourceRequest
     {
-        private static readonly global::NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-
         private readonly WWW stream;
 
         // -------------------------------------------------------------------
@@ -39,7 +36,7 @@
 
             if (!string.IsNullOrEmpty(this.stream.error))
             {
-                Logger.Error("ResourceStreamRequest had errors: {0}", this.stream.error);
+                EssentialsCore.Logger.Error("ResourceStreamRequest had errors: {0}", this.stream.error);
                 return null;
             }
 

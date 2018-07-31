@@ -6,14 +6,11 @@
     using System.Text.RegularExpressions;
     using System.Threading;
     using Contracts;
-    using NLog;
 
     // Formats a string using a dictionary approach
     public class Formatter : IFormatter
     {
         private const string FormatterPattern = @"\{([^\}]+)\}";
-
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private static readonly IDictionary<string, object> GlobalCustomDictionary = new Dictionary<string, object>();
 
@@ -132,7 +129,7 @@
                 return ((FormatHandler)handlerValue).Evaluate(parameter);
             }
 
-            Logger.Error("Unknown Handler ({0}) for GetFormatted Value of {1}", handlerType, key);
+            EssentialsCore.Logger.Error("Unknown Handler ({0}) for GetFormatted Value of {1}", handlerType, key);
             return string.Empty;
         }
 

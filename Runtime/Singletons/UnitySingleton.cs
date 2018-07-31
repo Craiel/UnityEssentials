@@ -1,13 +1,7 @@
 ﻿namespace Craiel.UnityEssentials.Runtime.Singletons
 {
     using Contracts;
-    using NLog;
-
-    internal static class UnitySingletonStatic
-    {
-        internal static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-    }
-
+    
     public abstract class UnitySingleton<T> : IUnitySingleton
         where T : class, IUnitySingleton, new()
     {
@@ -51,7 +45,7 @@
 
         public virtual void Initialize()
         {
-            UnitySingletonStatic.Logger.Info("Initializing Singleton {0}", this.GetType());
+            EssentialsCore.Logger.Info("Initializing Singleton {0}", this.GetType());
 
             this.IsInitialized = true;
         }
@@ -66,7 +60,7 @@
 
         public virtual void DestroySingleton()
         {
-            UnitySingletonStatic.Logger.Info("Destroying Singleton {0}", this.GetType());
+            EssentialsCore.Logger.Info("Destroying Singleton {0}", this.GetType());
 
             Instance = null;
         }

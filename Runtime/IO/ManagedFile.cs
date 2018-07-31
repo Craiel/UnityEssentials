@@ -6,12 +6,9 @@
     using System.IO;
     using System.Text;
     using System.Xml;
-    using NLog;
 
     public class ManagedFile : ManagedPath
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
@@ -286,7 +283,7 @@
             }
             catch (Exception e)
             {
-                Logger.Error(e, "Failed to copy file {0} to {1}", this, target);
+                EssentialsCore.Logger.Error(e, "Failed to copy file {0} to {1}", this, target);
             }
 
             return false;

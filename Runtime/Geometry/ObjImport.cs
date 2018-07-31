@@ -1,5 +1,3 @@
-using Geometry_Mesh = Craiel.UnityEssentials.Runtime.Geometry.Mesh;
-
 namespace Craiel.UnityEssentials.Runtime.Geometry
 {
     using System;
@@ -7,13 +5,10 @@ namespace Craiel.UnityEssentials.Runtime.Geometry
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
-    using NLog;
     using UnityEngine;
 
     public static class ObjImport
     {
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-
         private const string CommentIndicator = "#";
 
         private const char PolygonFaceSeparator = '/';
@@ -23,7 +18,7 @@ namespace Craiel.UnityEssentials.Runtime.Geometry
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        public static void Import(Geometry_Mesh target, Stream stream)
+        public static void Import(Mesh target, Stream stream)
         {
             var context = new ParsingContext();
 
@@ -74,14 +69,14 @@ namespace Craiel.UnityEssentials.Runtime.Geometry
         {
             if (context.CurrentSegments.Length < 4)
             {
-                Logger.Error("Invalid Segment count for Geometric Vertex, Expected 4 but got {0}, line {1}", context.CurrentSegments.Length, context.CurrentLineNumber);
+                EssentialsCore.Logger.Error("Invalid Segment count for Geometric Vertex, Expected 4 but got {0}, line {1}", context.CurrentSegments.Length, context.CurrentLineNumber);
                 return;
             }
 
             Vector3 vertex;
             if (!TryParseVector3(context.CurrentSegments[1], context.CurrentSegments[2], context.CurrentSegments[3], out vertex))
             {
-                Logger.Error("Invalid vertex format in line {0}: {1}", context.CurrentLineNumber, context.CurrentLine);
+                EssentialsCore.Logger.Error("Invalid vertex format in line {0}: {1}", context.CurrentLineNumber, context.CurrentLine);
                 return;
             }
 
@@ -92,14 +87,14 @@ namespace Craiel.UnityEssentials.Runtime.Geometry
         {
             if (context.CurrentSegments.Length < 4)
             {
-                Logger.Error("Invalid Segment count for Vertex Normal, Expected 4 but got {0}, line {1}", context.CurrentSegments.Length, context.CurrentLineNumber);
+                EssentialsCore.Logger.Error("Invalid Segment count for Vertex Normal, Expected 4 but got {0}, line {1}", context.CurrentSegments.Length, context.CurrentLineNumber);
                 return;
             }
 
             Vector3 normal;
             if (!TryParseVector3(context.CurrentSegments[1], context.CurrentSegments[2], context.CurrentSegments[3], out normal))
             {
-                Logger.Error("Invalid vertex normal format in line {0}: {1}", context.CurrentLineNumber, context.CurrentLine);
+                EssentialsCore.Logger.Error("Invalid vertex normal format in line {0}: {1}", context.CurrentLineNumber, context.CurrentLine);
                 return;
             }
 
@@ -152,7 +147,7 @@ namespace Craiel.UnityEssentials.Runtime.Geometry
         {
             if (context.CurrentSegments.Length < 4)
             {
-                Logger.Error("Invalid Segment count for Polygon Face, Expected  at least 4 but got {0}, line {1}", context.CurrentSegments.Length, context.CurrentLineNumber);
+                EssentialsCore.Logger.Error("Invalid Segment count for Polygon Face, Expected  at least 4 but got {0}, line {1}", context.CurrentSegments.Length, context.CurrentLineNumber);
                 return;
             }
 

@@ -13,12 +13,12 @@
         public static readonly Color DefaultGizmoColor = Color.black;
         
         public const string ResourcesFolderName = "Resources";
-
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-
+        
         public static readonly ManagedDirectory AssetsPath = new ManagedDirectory("Assets");
 
         public static readonly ManagedDirectory DefaultScenesPath = AssetsPath.ToDirectory("Scenes");
+
+        public static readonly NLog.Logger Logger = LogManager.GetLogger("CRAIEL_ESSENTIALS");
 
         private static ManagedDirectory dataPath;
 

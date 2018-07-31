@@ -3,15 +3,9 @@
     using System;
     using Contracts;
     using Enums;
-    using NLog;
     using Scene;
     using UnityEngine;
-
-    internal static class UnitySingletonBehaviorStatic
-    {
-        internal static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-    }
-
+    
     public abstract class UnitySingletonBehavior<T> : MonoBehaviour, IUnitySingletonBehavior
         where T : UnitySingletonBehavior<T>
     {
@@ -60,12 +54,12 @@
                 }
                 catch (Exception e)
                 {
-                    UnitySingletonBehaviorStatic.Logger.Error("Error trying to add Singleton Component {0}: {1}", typeof(T), e);
+                    EssentialsCore.Logger.Error("Error trying to add Singleton Component {0}: {1}", typeof(T), e);
                 }
 
                 if (instance == null)
                 {
-                    UnitySingletonBehaviorStatic.Logger.Error("Adding Component of type {0} returned null", typeof(T));
+                    EssentialsCore.Logger.Error("Adding Component of type {0} returned null", typeof(T));
                 }
                 
                 // Only attempt Don't destroy if the object has no parent
@@ -115,7 +109,7 @@
 
             if (instance != null && instance != this)
             {
-                UnitySingletonBehaviorStatic.Logger.Error("Duplicate Instance of {0} found, destroying!", this.GetType());
+                EssentialsCore.Logger.Error("Duplicate Instance of {0} found, destroying!", this.GetType());
                 DestroyImmediate(this.gameObject);
             }
         }
@@ -139,7 +133,7 @@
         
         protected void DestroySingleton()
         {
-            UnitySingletonBehaviorStatic.Logger.Info("Destroying Singleton MonoBehavior {0}", this.name);
+            EssentialsCore.Logger.Info("Destroying Singleton MonoBehavior {0}", this.name);
 
             this.OnSingletonDestroying();
 

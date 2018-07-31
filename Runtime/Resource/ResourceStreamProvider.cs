@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using System.Threading;
     using Enums;
-    using NLog;
     using Singletons;
 
     // Made to load resources from Application.streamingAssetsPath and other WWW accessible places
@@ -14,8 +13,6 @@
         private const float DefaultReadTimeout = 10;
 
         private const int MaxConsecutiveSyncCallsInAsync = 20;
-
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private readonly ResourceMap<byte[]> resourceMap;
 
@@ -88,7 +85,7 @@
             {
                 if (key.Bundle != null)
                 {
-                    Logger.Error("Can not stream bundled resources!");
+                    EssentialsCore.Logger.Error("Can not stream bundled resources!");
                     return null;
                 }
 
@@ -96,7 +93,7 @@
                 data = this.resourceMap.GetData(key);
                 if (data == null)
                 {
-                    Logger.Error("Could not load resource on-demand");
+                    EssentialsCore.Logger.Error("Could not load resource on-demand");
                     return null;
                 }
             }
@@ -109,7 +106,7 @@
             byte[] data = this.resourceMap.GetData(key);
             if (data == null)
             {
-                Logger.Error("Resource was not loaded or registered: {0}", key);
+                EssentialsCore.Logger.Error("Resource was not loaded or registered: {0}", key);
                 return null;
             }
 
@@ -160,7 +157,7 @@
                     }
                     else
                     {
-                        Logger.Warn("Load of {0} returned unexpected no data", request.Info.Key);
+                        EssentialsCore.Logger.Warn("Load of {0} returned unexpected no data", request.Info.Key);
                     }
                 }
             }
@@ -218,8 +215,8 @@
                     this.DoLoadImmediate(info);
                 }
             }
-            
-            Logger.Info("Immediate! Loaded {0} resources in {1}ms", resourceCount, -1);
+
+            EssentialsCore.Logger.Info("Immediate! Loaded {0} resources in {1}ms", resourceCount, -1);
         }
 
         // -------------------------------------------------------------------
@@ -239,7 +236,7 @@
                 Thread.Sleep(2);
                 if (UnityEngine.Time.time > time + DefaultReadTimeout)
                 {
-                    Logger.Error("Timeout while reading {0}", info.Key);
+                    EssentialsCore.Logger.Error("Timeout while reading {0}", info.Key);
                     return;
                 }
             }
@@ -251,7 +248,7 @@
         {
             if (data == null)
             {
-                Logger.Warn("Loading {0} returned null data", info.Key);
+                EssentialsCore.Logger.Warn("Loading {0} returned null data", info.Key);
                 return;
             }
 

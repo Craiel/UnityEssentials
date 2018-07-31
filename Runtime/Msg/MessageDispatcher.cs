@@ -5,7 +5,6 @@ namespace Craiel.UnityEssentials.Runtime.Msg
     using Collections;
     using Contracts;
     using Enums;
-    using NLog;
     using Pool;
     using UnityEngine;
 
@@ -14,8 +13,6 @@ namespace Craiel.UnityEssentials.Runtime.Msg
     /// </summary>
     public class MessageDispatcher : ITelegraph
     {
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-
         private static readonly MessageDispatcherPool Pool = new MessageDispatcherPool();
 
         private readonly PriorityQueue<Telegram> queue;
@@ -273,7 +270,7 @@ namespace Craiel.UnityEssentials.Runtime.Msg
                 if (this.DebugEnabled)
                 {
                     float currentTime = Time.time;
-                    Logger.Info("Instant telegram dispatched at time: {0} by {1} for {2}. Message code is " + message, currentTime, sender, receiver);
+                    EssentialsCore.Logger.Info("Instant telegram dispatched at time: {0} by {1} for {2}. Message code is " + message, currentTime, sender, receiver);
                 }
 
                 // Send the telegram to the recipient
@@ -299,11 +296,11 @@ namespace Craiel.UnityEssentials.Runtime.Msg
                 {
                     if (added)
                     {
-                        Logger.Info("Delayed telegram from {0} for {1} recorded at time {2}. Message code is {3}", sender, receiver, currentTime, message);
+                        EssentialsCore.Logger.Info("Delayed telegram from {0} for {1} recorded at time {2}. Message code is {3}", sender, receiver, currentTime, message);
                     }
                     else
                     {
-                        Logger.Info("Delayed telegram from {0} for {1} rejected by the queue. Message code is {2}", sender, receiver, message);
+                        EssentialsCore.Logger.Info("Delayed telegram from {0} for {1} rejected by the queue. Message code is {2}", sender, receiver, message);
                     }
                 }
             }
@@ -336,7 +333,7 @@ namespace Craiel.UnityEssentials.Runtime.Msg
 
                 if (this.DebugEnabled)
                 {
-                    Logger.Info("Queued telegram ready for dispatch: Sent to {0}. Message code is {1}", telegram.Receiver, telegram.Message);
+                    EssentialsCore.Logger.Info("Queued telegram ready for dispatch: Sent to {0}. Message code is {1}", telegram.Receiver, telegram.Message);
                 }
                 
                 // Send the telegram to the recipient
@@ -386,7 +383,7 @@ namespace Craiel.UnityEssentials.Runtime.Msg
                     // Telegram could not be handled
                     if (this.DebugEnabled)
                     {
-                        Logger.Info("Message {0} not handled", telegram.Message);
+                        EssentialsCore.Logger.Info("Message {0} not handled", telegram.Message);
                     }
                 }
             }
@@ -409,7 +406,7 @@ namespace Craiel.UnityEssentials.Runtime.Msg
                 // Telegram could not be handled
                 if (this.DebugEnabled && handledCount == 0)
                 {
-                    Logger.Info("Message {0} not handled", telegram.Message);
+                    EssentialsCore.Logger.Info("Message {0} not handled", telegram.Message);
                 }
             }
 

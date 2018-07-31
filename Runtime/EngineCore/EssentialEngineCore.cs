@@ -1,28 +1,21 @@
-﻿using BundleProvider = Craiel.UnityEssentials.Runtime.Resource.BundleProvider;
-using GameEvents = Craiel.UnityEssentials.Runtime.Event.GameEvents;
-using InputHandler = Craiel.UnityEssentials.Runtime.Input.InputHandler;
-using LocalizationSystem = Craiel.UnityEssentials.Runtime.I18N.LocalizationSystem;
-using NLogUtils = Craiel.UnityEssentials.Runtime.Logging.NLogUtils;
-using ResourceKey = Craiel.UnityEssentials.Runtime.Resource.ResourceKey;
-using ResourceProvider = Craiel.UnityEssentials.Runtime.Resource.ResourceProvider;
-using ResourceStreamProvider = Craiel.UnityEssentials.Runtime.Resource.ResourceStreamProvider;
-using SceneObjectController = Craiel.UnityEssentials.Runtime.Scene.SceneObjectController;
-using SceneRootCategory = Craiel.UnityEssentials.Runtime.Enums.SceneRootCategory;
-
-namespace Craiel.UnityEssentials.Runtime.EngineCore
+﻿namespace Craiel.UnityEssentials.Runtime.EngineCore
 {
     using System;
     using System.Collections.Generic;
+    using Enums;
+    using Event;
+    using I18N;
+    using Input;
     using JetBrains.Annotations;
-    using NLog;
+    using Logging;
+    using Resource;
+    using Scene;
     using Singletons;
 
     public abstract partial class EssentialEngineCore<T, TSceneEnum> : UnitySingletonBehavior<T>
         where T : EssentialEngineCore<T, TSceneEnum>
         where TSceneEnum: struct, IConvertible
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
@@ -30,9 +23,17 @@ namespace Craiel.UnityEssentials.Runtime.EngineCore
         {
             base.Initialize();
 
-            // System components first
-            NLogUtils.InitializeDefaultConfig();
+            // Logging first
+            if (!NLogInterceptor.IsInstanceActive)
+            {
+                NLogInterceptor.InstantiateAndInitialize();
+            }
 
+            UnityNLogRelay.InstantiateAndInitialize();
+
+            NLogUtils.ConfigureNLog(UnityEngine.Application.persistentDataPath, NLogInterceptor.Instance.Target);
+
+            // System components next
             ResourceProvider.InstantiateAndInitialize();
             BundleProvider.InstantiateAndInitialize();
             ResourceStreamProvider.InstantiateAndInitialize();

@@ -3,12 +3,9 @@
     using System;
     using System.Collections.Generic;
     using Contracts;
-    using NLog;
 
     public abstract class ThreadQueuedComponent : IThreadQueueComponent
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
         private static readonly long OperationWarningTimespan = TimeSpan.FromSeconds(2).Ticks;
         private static readonly long OperationErrorTimespan = TimeSpan.FromSeconds(5).Ticks;
 
@@ -96,17 +93,17 @@
 
             if (error > 0)
             {
-                Logger.Error("[{1}] {0} operations in {0} had errors!", error, this.GetType());
+                EssentialsCore.Logger.Error("[{1}] {0} operations in {0} had errors!", error, this.GetType());
             }
 
             if (slowError > 0)
             {
-                Logger.Error("[{1}] {0} operations in {0} took longer then expected!", slowError, this.GetType());
+                EssentialsCore.Logger.Error("[{1}] {0} operations in {0} took longer then expected!", slowError, this.GetType());
             }
 
             if (slowWarning > 0)
             {
-                Logger.Error("[{1}] Operation in {0} took more than 2 seconds to complete", slowWarning, this.GetType());
+                EssentialsCore.Logger.Error("[{1}] Operation in {0} took more than 2 seconds to complete", slowWarning, this.GetType());
             }
         }
     }

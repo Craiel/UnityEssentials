@@ -36,7 +36,7 @@
         {
             if (!this.scenes.ContainsKey(type))
             {
-                Logger.Warn("Scene {0} is not loaded, skipping shutdown", type);
+                EssentialsCore.Logger.Warn("Scene {0} is not loaded, skipping shutdown", type);
                 return;
             }
 
@@ -61,20 +61,20 @@
         {
             if (this.scenes.ContainsKey(type))
             {
-                Logger.Warn("Scene {0} is already loaded, skipping", type);
+                EssentialsCore.Logger.Warn("Scene {0} is already loaded, skipping", type);
                 return null;
             }
 
             Type implementation;
             if (!this.sceneImplementations.TryGetValue(type, out implementation))
             {
-                Logger.Error("Scene {0} has no implementation defined!", type);
+                EssentialsCore.Logger.Error("Scene {0} has no implementation defined!", type);
                 return null;
             }
 
             if (!typeof(BaseScene<TSceneEnum>).IsAssignableFrom(implementation))
             {
-                Logger.Error("Scene implementation {0} is not of type IGameScene!", implementation);
+                EssentialsCore.Logger.Error("Scene implementation {0} is not of type IGameScene!", implementation);
                 return null;
             }
 

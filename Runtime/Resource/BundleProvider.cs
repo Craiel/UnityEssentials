@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using Enums;
     using IO;
-    using NLog;
     using Singletons;
     using UnityEngine;
 
@@ -13,8 +12,6 @@
 
     public class BundleProvider : UnitySingleton<BundleProvider>
     {
-        private static readonly global::NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-
         private readonly IDictionary<BundleLoadInfo, AssetBundle> bundles;
         private readonly IDictionary<BundleLoadInfo, ManagedFile> bundleFiles;
 
@@ -150,7 +147,7 @@
             BundleLoadInfo info;
             if (!this.loadInfoMap.TryGetValue(key, out info))
             {
-                Logger.Error("Bundle was not registered, can not load immediate: {0}", key);
+                EssentialsCore.Logger.Error("Bundle was not registered, can not load immediate: {0}", key);
                 return false;
             }
             

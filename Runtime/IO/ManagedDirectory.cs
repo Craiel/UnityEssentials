@@ -4,13 +4,10 @@
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
-    using NLog;
 
     public class ManagedDirectory : ManagedPath
     {
         public static readonly ManagedDirectory TempDirectory = new ManagedDirectory(System.IO.Path.GetTempPath());
-
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private readonly string trimmedPath;
 
@@ -85,7 +82,7 @@
             {
                 if (filter.Directory == null || filter.Directory.IsNull || !filter.Directory.Exists)
                 {
-                    Logger.Warn("Specified directory is invalid: {0}", filter.Directory);
+                    EssentialsCore.Logger.Warn("Specified directory is invalid: {0}", filter.Directory);
                     continue;
                 }
 
@@ -119,7 +116,7 @@
             {
                 if (filter.Directory.IsNull || !filter.Directory.Exists)
                 {
-                    Logger.Warn("Specified directory is invalid: {0}", filter.Directory);
+                    EssentialsCore.Logger.Warn("Specified directory is invalid: {0}", filter.Directory);
                     continue;
                 }
 
@@ -210,7 +207,7 @@
         {
             if (this.Drive == null)
             {
-                Logger.Warn("GetFreeSpace called with no drive available!");
+                EssentialsCore.Logger.Warn("GetFreeSpace called with no drive available!");
                 return 0;
             }
 
@@ -340,7 +337,7 @@
         {
             if (!this.Exists)
             {
-                Logger.Error("Move called on non-existing source");
+                EssentialsCore.Logger.Error("Move called on non-existing source");
                 return false;
             }
 
@@ -352,7 +349,7 @@
                 }
                 else
                 {
-                    Logger.Error("Can not move directory {0}, target exists: {1}", this, target);
+                    EssentialsCore.Logger.Error("Can not move directory {0}, target exists: {1}", this, target);
                     return false;
                 }
             }
@@ -369,7 +366,7 @@
         {
             if (!this.Exists)
             {
-                Logger.Error("Copy called on non-existing source");
+                EssentialsCore.Logger.Error("Copy called on non-existing source");
                 return 0;
             }
 
@@ -389,7 +386,7 @@
                 ManagedFile targetFile = target.ToFile(file.Relative);
                 if (targetFile.Exists && !overwrite)
                 {
-                    Logger.Error("Copy would fail, target file exist and overwrite is set to false ({0})", targetFile);
+                    EssentialsCore.Logger.Error("Copy would fail, target file exist and overwrite is set to false ({0})", targetFile);
                     return 0;
                 }
             }

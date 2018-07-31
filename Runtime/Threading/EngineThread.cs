@@ -3,15 +3,12 @@
     using System;
     using System.Diagnostics;
     using System.Threading;
-    using NLog;
 
     public delegate bool EngineThreadUpdateDelegate(EngineTime time);
 
     public class EngineThread
     {
         private const int DefaultShutdownTimeout = 100000;
-
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         private static readonly long PerformanceMeasureInterval = Stopwatch.Frequency;   
 
@@ -199,7 +196,7 @@
                         {
                             this.isRunning = false;
                             this.HadErrors = true;
-                            Logger.Error(e);
+                            EssentialsCore.Logger.Error(e);
                         }
                     }
                 }
@@ -210,7 +207,7 @@
                 this.IsThreadFinished = true;
                 this.shutdownEvent.Set();
 
-                Logger.Warn("Engine Thread {0} ({1}) Ended", this.ThreadId, this.ThreadName);
+                EssentialsCore.Logger.Warn("Engine Thread {0} ({1}) Ended", this.ThreadId, this.ThreadName);
             }
         }
 

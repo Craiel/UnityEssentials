@@ -14,9 +14,6 @@
         [SerializeField]
         public GUIStyle ToolBarStyle;
         
-        [SerializeField]
-        public GUIStyle ToolBarStyleSmall;
-
         public virtual void OnEnable()
         {
             Instance = (T)this;
@@ -25,20 +22,9 @@
             {
                 this.ToolBarStyle = new GUIStyle(EditorStyles.toolbarButton)
                 {
-                    imagePosition = ImagePosition.ImageAbove,
-                    fixedHeight = 50,
-                    fixedWidth = 80,
-                    wordWrap = true
-                };
-            }
-
-            if (this.ToolBarStyleSmall == null)
-            {
-                this.ToolBarStyleSmall = new GUIStyle(EditorStyles.toolbarButton)
-                {
                     imagePosition = ImagePosition.ImageOnly,
-                    fixedHeight = 50,
-                    fixedWidth = 50,
+                    fixedHeight = 48,
+                    fixedWidth = 48,
                     wordWrap = false
                 };
             }

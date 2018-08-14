@@ -19,23 +19,34 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 		// -------------------------------------------------------------------
 		static ReorderableListGUIHelper()
 		{
-			var tyGUIClip = Type.GetType("UnityEngine.GUIClip,UnityEngine");
-			if (tyGUIClip != null)
+			Type guiClipType = Type.GetType("UnityEngine.GUIClip,UnityEngine");
+			if (guiClipType != null)
 			{
-				var piVisibleRect = tyGUIClip.GetProperty("visibleRect", BindingFlags.Static | BindingFlags.Public);
-				if (piVisibleRect != null)
+				PropertyInfo visibleRectProperty = guiClipType.GetProperty("visibleRect", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+				if (visibleRectProperty != null)
 				{
-					VisibleRect = (Func<Rect>) Delegate.CreateDelegate(typeof(Func<Rect>), piVisibleRect.GetGetMethod());
+					VisibleRect = (Func<Rect>) Delegate.CreateDelegate(typeof(Func<Rect>), visibleRectProperty.GetGetMethod(true) ?? visibleRectProperty.GetGetMethod(false));
 				}
 			}
 
-			var miFocusTextInControl = typeof(EditorGUI).GetMethod("FocusTextInControl", BindingFlags.Static | BindingFlags.Public);
-			if (miFocusTextInControl == null)
+		    if (VisibleRect == null)
+		    {
+                Debug.LogError("Could not get VisibleRect property getter from GUIClip!");
+                return;
+		    }
+
+			MethodInfo focusTextInControlMethod = typeof(EditorGUI).GetMethod("FocusTextInControl", BindingFlags.Static | BindingFlags.Public);
+			if (focusTextInControlMethod == null)
 			{
-				miFocusTextInControl = typeof(GUI).GetMethod("FocusControl", BindingFlags.Static | BindingFlags.Public);
+				focusTextInControlMethod = typeof(GUI).GetMethod("FocusControl", BindingFlags.Static | BindingFlags.Public);
+			    if (focusTextInControlMethod == null)
+			    {
+                    Debug.LogError("Could not get FocusTextInControl MethodInfo!");
+                    return;
+			    }
 			}
 
-			FocusTextInControl = (Action<string>) Delegate.CreateDelegate(typeof(Action<string>), miFocusTextInControl);
+			FocusTextInControl = (Action<string>) Delegate.CreateDelegate(typeof(Action<string>), focusTextInControlMethod);
 
 			SeparatorColor = EditorGUIUtility.isProSkin
 				? new Color(0.11f, 0.11f, 0.11f)

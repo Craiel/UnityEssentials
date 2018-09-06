@@ -325,5 +325,15 @@ namespace Craiel.UnityEssentials.Runtime.Utils
 
             return primeList;
         }
+
+        public static bool IsMultipleOf(this int x, int n)
+        {
+            return (x % n) == 0;
+        }
+
+        public static bool IsMultipleOf(this uint x, uint n)
+        {
+            return (x % n) == 0;
+        }
     }
 }

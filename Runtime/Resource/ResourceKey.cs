@@ -7,6 +7,8 @@ namespace Craiel.UnityEssentials.Runtime.Resource
 
     public struct ResourceKey
     {
+        public static readonly ResourceKey Invalid = new ResourceKey();
+        
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------

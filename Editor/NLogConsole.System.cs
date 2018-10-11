@@ -1,35 +1,33 @@
-﻿using NLogInterceptor = Craiel.UnityEssentials.Runtime.Logging.NLogInterceptor;
-using NLogInterceptorEvent = Craiel.UnityEssentials.Runtime.Logging.NLogInterceptorEvent;
-
-namespace Craiel.UnityEssentials.Editor
+﻿namespace Craiel.UnityEssentials.Editor
 {
     using NLog;
+    using Runtime.Logging;
     using UnityEditor;
+
     using UnityEngine;
 
     public partial class NLogConsole
     {
+        private const string AllNameFilter = "All";
+        
         // -------------------------------------------------------------------
         // Private
         // -------------------------------------------------------------------
         private bool FilterLog(NLogInterceptorEvent log)
         {
-            if (this.filterRegex == null)
+            if (!string.IsNullOrEmpty(this.nameFilter)
+                && this.nameFilter != AllNameFilter
+                && log.LoggerName != this.nameFilter)
             {
-                return false;
+                return true;
+            }
+            
+            if (this.filterRegex != null && !this.filterRegex.IsMatch(log.Message))
+            {
+                return true;
             }
 
-            if (log.LoggerName == this.nameFilter 
-                || this.nameFilter == "All" 
-                || (this.nameFilter == "No Name" && string.IsNullOrEmpty(log.LoggerName)))
-            {
-                if (this.filterRegex.IsMatch(log.Message))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return false;
         }
 
         private bool FilterLogLevel(NLogInterceptorEvent log)
@@ -51,7 +49,7 @@ namespace Craiel.UnityEssentials.Editor
             showFrameSource = false;
         }
 
-        private void OnPlaymodeStateChanged(PlayModeStateChange change)
+        private void OnPlaymodeStateChanged(PlayModeStateChange stateChange)
         {
             if (!this.wasPlaying && EditorApplication.isPlayingOrWillChangePlaymode)
             {

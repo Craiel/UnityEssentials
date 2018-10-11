@@ -1,18 +1,16 @@
-﻿using NLogInterceptor = Craiel.UnityEssentials.Runtime.Logging.NLogInterceptor;
-using NLogInterceptorEvent = Craiel.UnityEssentials.Runtime.Logging.NLogInterceptorEvent;
-
 namespace Craiel.UnityEssentials.Editor
 {
-    using System.Collections.Generic;
     using NLog;
     using NLog.Config;
+    using Runtime.Logging;
     using UnityEditor;
+
     using UnityEngine;
 
     public partial class NLogConsole : EditorWindow
     {
-        private readonly IList<NLogConsole.CountedLog> renderList = new List<NLogConsole.CountedLog>();
-
+        private readonly DrawingContext drawingContext = new DrawingContext();
+        
         private Texture2D errorIcon;
         private Texture2D warningIcon;
         private Texture2D messageIcon;
@@ -40,6 +38,8 @@ namespace Craiel.UnityEssentials.Editor
         private bool collapse;
         private bool scrollFollowMessages = true;
         private bool limitMaxLines = true;
+        private bool suspendDrawing;
+        private bool pauseUpdate;
         private bool showFrameSource = true;
         private float currentTopPaneHeight = 200;
         private float dividerHeight = 5;
@@ -54,8 +54,6 @@ namespace Craiel.UnityEssentials.Editor
         private string nameFilter;
 
         private Vector2 drawPos;
-
-        private NLogConsole.DrawingContext drawingContext = new NLogConsole.DrawingContext();
 
         // -------------------------------------------------------------------
         // Public
@@ -173,21 +171,20 @@ namespace Craiel.UnityEssentials.Editor
             this.DrawNames();
 
             float logPanelHeight = this.currentTopPaneHeight - this.drawPos.y;
-            
-            this.DrawLogList(logPanelHeight);
 
-            this.drawPos.y += this.dividerHeight;
+            if (!this.suspendDrawing)
+            {
+                this.DrawLogList(logPanelHeight);
 
-            this.DrawLogDetails();
+                this.drawPos.y += this.dividerHeight;
+
+                this.DrawLogDetails();
+            }
 
             // If we're dirty, do a repaint
-            this.hasChanged = false;
-            if (this.forceRepaint)
-            {
-                this.hasChanged = true;
-                this.forceRepaint = false;
-                this.Repaint();
-            }
+            this.hasChanged = true;
+            this.forceRepaint = false;
+            this.Repaint();
         }
     }
 }

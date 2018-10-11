@@ -1,22 +1,25 @@
-﻿using CollectionExtensions = Craiel.UnityEssentials.Runtime.Extensions.CollectionExtensions;
-using NLogInterceptor = Craiel.UnityEssentials.Runtime.Logging.NLogInterceptor;
-using NLogInterceptorEvent = Craiel.UnityEssentials.Runtime.Logging.NLogInterceptorEvent;
-using UnityStackTraceException = Craiel.UnityEssentials.Runtime.Logging.UnityStackTraceException;
-
-namespace Craiel.UnityEssentials.Editor
+﻿namespace Craiel.UnityEssentials.Editor
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using System.Text.RegularExpressions;
+
     using NLog;
+    using Runtime.Extensions;
+    using Runtime.Logging;
     using UnityEditor;
+
     using UnityEngine;
+
     using UserInterface;
 
     public partial class NLogConsole
     {
         private const int RenderLineLimit = 250;
+        
+        private readonly IList<NLogConsole.CountedLog> renderList = new List<NLogConsole.CountedLog>();
         
         // -------------------------------------------------------------------
         // Private
@@ -48,10 +51,16 @@ namespace Craiel.UnityEssentials.Editor
 
             drawPos.x += elementSize.x;
 
-            scrollFollowMessages = GuiUtils.ToggleClamped(this.drawPos, scrollFollowMessages, "Follow", EditorStyles.toolbarButton, out elementSize);
+            this.scrollFollowMessages = GuiUtils.ToggleClamped(this.drawPos, this.scrollFollowMessages, "Follow", EditorStyles.toolbarButton, out elementSize);
             drawPos.x += elementSize.x;
 
             this.limitMaxLines = GuiUtils.ToggleClamped(this.drawPos, this.limitMaxLines, "Limit Lines", EditorStyles.toolbarButton, out elementSize);
+            drawPos.x += elementSize.x;
+            
+            this.suspendDrawing = GuiUtils.ToggleClamped(this.drawPos, this.suspendDrawing, "Suspend Drawing", EditorStyles.toolbarButton, out elementSize);
+            drawPos.x += elementSize.x;
+
+            this.pauseUpdate = GuiUtils.ToggleClamped(this.drawPos, this.pauseUpdate, "Pause Update", EditorStyles.toolbarButton, out elementSize);
             drawPos.x += elementSize.x;
 
             var errorToggleContent = new GUIContent(NLogInterceptor.Instance.GetCount(LogLevel.Error).ToString(), smallErrorIcon);
@@ -90,7 +99,7 @@ namespace Craiel.UnityEssentials.Editor
         
         private void DrawNames()
         {
-            var names = new List<string> { "All", "No Channel" };
+            var names = new List<string> { AllNameFilter };
             names.AddRange(NLogInterceptor.Instance.Names);
 
             int currentNameIndex = 0;
@@ -128,8 +137,8 @@ namespace Craiel.UnityEssentials.Editor
             // When collapsed, count up the unique elements and use those to display
             if (collapse)
             {
-                var collapsedLines = new Dictionary<string, NLogConsole.CountedLog>();
-                var collapsedLinesList = new List<NLogConsole.CountedLog>();
+                var collapsedLines = new Dictionary<string, CountedLog>();
+                var collapsedLinesList = new List<CountedLog>();
 
                 for (var i = NLogInterceptor.Instance.Events.Count - 1; i > 0; i--)
                 {
@@ -138,14 +147,14 @@ namespace Craiel.UnityEssentials.Editor
                     {
                         var matchString = string.Concat(logEvent.Message, "!$", logEvent.Level, "!$", logEvent.LoggerName);
 
-                        NLogConsole.CountedLog countedLog;
+                        CountedLog countedLog;
                         if (collapsedLines.TryGetValue(matchString, out countedLog))
                         {
                             countedLog.Count++;
                         }
                         else
                         {
-                            countedLog = new NLogConsole.CountedLog(logEvent, 1);
+                            countedLog = new CountedLog(logEvent, 1);
                             collapsedLines.Add(matchString, countedLog);
                             collapsedLinesList.Add(countedLog);
                             if (this.limitMaxLines && collapsedLinesList.Count > RenderLineLimit)
@@ -178,7 +187,7 @@ namespace Craiel.UnityEssentials.Editor
                     if (!FilterLogLevel(logEvent) && !FilterLog(logEvent))
                     {
                         var content = this.GetLogLineGUIContent(logEvent);
-                        this.renderList.Add(new NLogConsole.CountedLog(logEvent, 1));
+                        this.renderList.Add(new CountedLog(logEvent, 1));
                         var logLineSize = logLineStyle.CalcSize(content);
                         logListMaxWidth = Mathf.Max(logListMaxWidth, logLineSize.x);
                         logListLineHeight = Mathf.Max(logListLineHeight, logLineSize.y);
@@ -194,9 +203,9 @@ namespace Craiel.UnityEssentials.Editor
             logListMaxWidth += collapseBadgeMaxWidth;
 
             // Have to reverse the render list if we limit the max line count
-            IList<NLogConsole.CountedLog> reversed = this.renderList.Reverse().ToList();
+            IList<CountedLog> reversed = this.renderList.Reverse().ToList();
             this.renderList.Clear();
-            CollectionExtensions.AddRange(this.renderList, reversed);
+            this.renderList.AddRange(reversed);
         }
         
         private void DrawLogList(float height)
@@ -206,7 +215,7 @@ namespace Craiel.UnityEssentials.Editor
             var collapseBadgeStyle = EditorStyles.miniButton;
             
             // If we've been marked dirty, we need to recalculate the elements to be displayed
-            if (this.hasChanged)
+            if (this.hasChanged && !this.pauseUpdate)
             {
                 this.UpdateRenderList();
             }
@@ -288,7 +297,7 @@ namespace Craiel.UnityEssentials.Editor
 
         private GUIContent GetLogLineGUIContent(NLogInterceptorEvent log)
         {
-            string displayString = string.Format("[{0:H:mm:ss.fff}] {1}", log.TimeStamp, log.Message);
+            string displayString = string.Format("{0:H:mm:ss.fff} [{1}] {2}", log.TimeStamp, log.LoggerName, log.Message);
             var content = new GUIContent(displayString, this.GetIconForLog(log));
             return content;
         }
@@ -314,10 +323,10 @@ namespace Craiel.UnityEssentials.Editor
             GuiUtils.LabelClamped(this.drawPos, "Filter Regex", GUI.skin.label, out size);
             drawPos.x += size.x;
             
-            bool clearFilter = false;
             if (GuiUtils.ButtonClamped(this.drawPos, "Clear", GUI.skin.button, out size))
             {
-                clearFilter = true;
+                this.filterRegexText = null;
+                this.filterRegex = null;
 
                 GUIUtility.keyboardControl = 0;
                 GUIUtility.hotControl = 0;
@@ -327,12 +336,6 @@ namespace Craiel.UnityEssentials.Editor
 
             var drawRect = new Rect(drawPos, new Vector2(position.width - drawPos.x, size.y));
             string newFilter = EditorGUI.TextArea(drawRect, this.filterRegexText);
-
-            if (clearFilter)
-            {
-                this.filterRegexText = null;
-                this.filterRegex = null;
-            }
 
             // If the filter has changed, invalidate our currently selected message
             if (this.filterRegexText != newFilter)
@@ -422,18 +425,26 @@ namespace Craiel.UnityEssentials.Editor
             for (int i = 0; i < context.Event.StackTrace.FrameCount; i++)
             {
                 var frame = context.Event.StackTrace.GetFrame(i);
-                var methodName = frame.GetMethod().Name;
-                if (!string.IsNullOrEmpty(methodName))
+                MethodBase method = frame.GetMethod();
+                if (method == null || string.IsNullOrEmpty(method.Name))
                 {
-                    this.DrawStackTraceLine(methodName, context);
+                    this.DrawStackTraceLine("<Unknown>", context);
+                    continue;
+                }
 
-                    if (showFrameSource && i == selectedCallstackFrame)
-                    {
-                        var sourceContent = new GUIContent(frame.ToString());
-                        var sourceSize = context.SourceStyle.CalcSize(sourceContent);
-                        context.ContentHeight += sourceSize.y;
-                        context.ContentWidth = Mathf.Max(sourceSize.x, context.ContentWidth);
-                    }
+                string line = string.Format("[{0}] {1}.{2}()",
+                    frame.GetILOffset().ToString().PadLeft(4, ' '),
+                    method.ReflectedType == null ? "<Unknown>" : method.ReflectedType.FullName,
+                    method.Name);
+                
+                this.DrawStackTraceLine(line, context);
+
+                if (showFrameSource && i == selectedCallstackFrame)
+                {
+                    var sourceContent = new GUIContent(frame.ToString());
+                    var sourceSize = context.SourceStyle.CalcSize(sourceContent);
+                    context.ContentHeight += sourceSize.y;
+                    context.ContentWidth = Mathf.Max(sourceSize.x, context.ContentWidth);
                 }
             }
         }

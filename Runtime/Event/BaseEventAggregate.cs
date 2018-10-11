@@ -44,6 +44,11 @@
 
         public void Unsubscribe(ref BaseEventSubscriptionTicket ticket)
         {
+            if (ticket == null)
+            {
+                return;
+            }
+            
             this.DoUnsubscribe(ticket);
             ticket = null;
         }

@@ -22,21 +22,14 @@
         public delegate void GameEventAction<in TSpecific>(TSpecific eventData)
             where TSpecific : T;
         
-        public BaseEventSubscriptionTicket Subscribe<TSpecific>(GameEventAction<TSpecific> actionDelegate)
+        public BaseEventSubscriptionTicket Subscribe<TSpecific>(GameEventAction<TSpecific> actionDelegate, Func<TSpecific, bool> filterDelegate = null)
             where TSpecific : T
         {
             var ticket = new BaseEventSubscriptionTicket(typeof(TSpecific), actionDelegate);
-            this.DoSubscribe(ticket);
-            return ticket;
-        }
-
-        public BaseEventSubscriptionTicket Subscribe<TSpecific>(GameEventAction<TSpecific> actionDelegate, Func<TSpecific, bool> filterDelegate)
-            where TSpecific : T
-        {
-            var ticket = new BaseEventSubscriptionTicket(typeof(TSpecific), actionDelegate)
-                {
-                    FilterDelegate = x => filterDelegate((TSpecific) x)
-                };
+            if (filterDelegate != null)
+            {
+                ticket.FilterDelegate = x => filterDelegate((TSpecific) x);
+            }
 
             this.DoSubscribe(ticket);
             return ticket;

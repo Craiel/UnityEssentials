@@ -1,6 +1,7 @@
 ﻿namespace Craiel.UnityEssentials.Runtime.Event
 {
     using System;
+    using System.Runtime.CompilerServices;
     using Contracts;
     using Enums;
     using Scene;
@@ -13,7 +14,6 @@
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        
         public override void Initialize()
         {
             this.RegisterInController(SceneObjectController.Instance, SceneRootCategory.System, true);
@@ -23,27 +23,53 @@
             this.aggregate = new BaseEventAggregate<IGameEvent>();
         }
 
-        public BaseEventSubscriptionTicket Subscribe<TSpecific>(BaseEventAggregate<IGameEvent>.GameEventAction<TSpecific> actionDelegate)
-            where TSpecific : IGameEvent
+        public static void Send<T>(T eventData)
+            where T : IGameEvent
         {
-            return this.aggregate.Subscribe(actionDelegate);
+            if (IsInstanceActive)
+            {
+                Instance.DoSend(eventData);
+            }
         }
 
-        public BaseEventSubscriptionTicket Subscribe<TSpecific>(BaseEventAggregate<IGameEvent>.GameEventAction<TSpecific> actionDelegate, Func<TSpecific, bool> filterDelegate)
+        public static void Subscribe<TSpecific>(BaseEventAggregate<IGameEvent>.GameEventAction<TSpecific> actionDelegate, 
+            out BaseEventSubscriptionTicket ticket, 
+            Func<TSpecific, bool> filterDelegate = null)
+            where TSpecific : IGameEvent
+        {
+            ticket = null;
+            if (IsInstanceActive)
+            {
+                ticket = Instance.DoSubscribe(actionDelegate, filterDelegate);
+            }
+        }
+        
+        public static void Unsubscribe(ref BaseEventSubscriptionTicket ticket)
+        {
+            if (IsInstanceActive)
+            {
+                Instance.DoUnsubscribe(ref ticket);
+            }
+        }
+
+        // -------------------------------------------------------------------
+        // Private
+        // -------------------------------------------------------------------
+        private void DoSend<T>(T eventData)
+            where T : IGameEvent
+        {
+            this.aggregate.Send(eventData);
+        }
+        
+        private BaseEventSubscriptionTicket DoSubscribe<TSpecific>(BaseEventAggregate<IGameEvent>.GameEventAction<TSpecific> actionDelegate, Func<TSpecific, bool> filterDelegate)
             where TSpecific : IGameEvent
         {
             return this.aggregate.Subscribe(actionDelegate, filterDelegate);
         }
 
-        public void Unsubscribe(ref BaseEventSubscriptionTicket ticket)
+        private void DoUnsubscribe(ref BaseEventSubscriptionTicket ticket)
         {
             this.aggregate.Unsubscribe(ref ticket);
-        }
-
-        public void Send<T>(T eventData)
-            where T : IGameEvent
-        {
-            this.aggregate.Send(eventData);
         }
     }
 }

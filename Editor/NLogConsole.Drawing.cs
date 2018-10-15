@@ -31,7 +31,6 @@
             Vector2 elementSize;
             if (GuiUtils.ButtonClamped(this.drawPos, "Clear", EditorStyles.toolbarButton, out elementSize))
             {
-                this.forceRepaint = true;
                 NLogInterceptor.Instance.Clear();
             }
 
@@ -44,7 +43,6 @@
             var newCollapse = GuiUtils.ToggleClamped(this.drawPos, this.collapse, "Collapse", EditorStyles.toolbarButton, out elementSize);
             if (newCollapse != this.collapse)
             {
-                this.forceRepaint = true;
                 this.collapse = newCollapse;
                 selectedLogIndex = -1;
             }
@@ -89,7 +87,6 @@
             if (showErrors != this.showError || showWarnings != this.showWarning || showMessages != this.showInfo)
             {
                 ClearSelectedMessage();
-                this.forceRepaint = true;
             }
 
             this.showWarning = showWarnings;
@@ -120,7 +117,6 @@
             {
                 this.nameFilter = names[currentNameIndex];
                 ClearSelectedMessage();
-                this.forceRepaint = true;
             }
 
             drawPos.y += size.y;
@@ -343,7 +339,6 @@
                 ClearSelectedMessage();
                 this.filterRegexText = newFilter;
                 this.filterRegex = new Regex(this.filterRegexText, RegexOptions.IgnoreCase);
-                this.forceRepaint = true;
             }
 
             drawPos.y += size.y;

@@ -32,7 +32,6 @@ namespace Craiel.UnityEssentials.Editor
         private bool showWarning = true;
         private bool showInfo = true;
         private bool hasChanged = true;
-        private bool forceRepaint;
         private bool clearOnPlay = true;
         private bool wasPlaying;
         private bool collapse;
@@ -183,7 +182,6 @@ namespace Craiel.UnityEssentials.Editor
 
             // If we're dirty, do a repaint
             this.hasChanged = true;
-            this.forceRepaint = false;
             this.Repaint();
         }
     }

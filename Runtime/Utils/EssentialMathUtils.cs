@@ -335,5 +335,21 @@ namespace Craiel.UnityEssentials.Runtime.Utils
         {
             return (x % n) == 0;
         }
+
+        public static double GetExponentialResultWithin(float currentAmount, float cost, float exponent, uint currentLevel)
+        {
+            double t1 = currentAmount * (exponent - 1);
+            double t2 = (float)(cost * Math.Pow(exponent, currentLevel));
+            double newBase = (t1 / t2) + 1;
+            return Math.Floor(Math.Log(newBase, exponent));
+        }
+
+        public static double GetExponentialCost(uint currentValue, uint desiredAddition, float cost, float exponent)
+        {
+            double t1 = Math.Pow(exponent, currentValue) *
+                        (Math.Pow(exponent, desiredAddition) - 1);
+            double t2 = exponent - 1;
+            return cost * (t1 / t2);
+        }
     }
 }

@@ -62,13 +62,17 @@
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        public static string Format(this float value, byte decimalDigits = byte.MaxValue, NumberFormattingType type = NumberFormattingType.ShortName)
+        public static string DefaultFormatPrefix;
+        
+        public static string Format(this float value, byte decimalDigits = 0, NumberFormattingType type = NumberFormattingType.ShortName, string customPrefix = null)
         {
             return ((double) value).Format(decimalDigits, type);
         }
         
-        public static string Format(this double value, byte decimalDigits = 0, NumberFormattingType type = NumberFormattingType.ShortName)
+        public static string Format(this double value, byte decimalDigits = 0, NumberFormattingType type = NumberFormattingType.ShortName, string customPrefix = null)
         {
+            string prefix = customPrefix ?? DefaultFormatPrefix ?? string.Empty;
+            
             NumberDefinition? definition = null;
             if (type != NumberFormattingType.Raw)
             {
@@ -82,7 +86,7 @@
 
             if (value < NumberDefinitions[0].value)
             {
-                return string.Format("{0:#,##.##}", value);
+                return string.Format("{0}{1:#,##.##}", prefix, value);
             }
 
             if (definition != null)
@@ -104,24 +108,24 @@
 
             if (definition == null)
             {
-                return string.Format("{0}", value);
+                return string.Format("{0}{1}", prefix, value);
             }
 
             switch (type)
             {
                 case NumberFormattingType.ShortName:
                 {
-                    return string.Format("{0} {1}", value, definition.Value.ShortName);
+                    return string.Format("{0}{1} {2}", prefix, value, definition.Value.ShortName);
                 }
 
                 case NumberFormattingType.FullName:
                 {
-                    return string.Format("{0} {1}", value, definition.Value.FullName);
+                    return string.Format("{0}{1} {2}", prefix, value, definition.Value.FullName);
                 }
 
                 default:
                 {
-                    return value.ToString(CultureInfo.InvariantCulture);
+                    return prefix + value.ToString(CultureInfo.InvariantCulture);
                 }
             }
         }

@@ -1,4 +1,4 @@
-﻿namespace Craiel.UnityEssentials.Runtime.Extensions
+﻿namespace Craiel.UnityEssentials.Runtime.Formatting
 {
     using System;
     using System.Globalization;

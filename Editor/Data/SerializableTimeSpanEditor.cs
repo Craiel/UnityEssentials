@@ -11,7 +11,7 @@ namespace Craiel.UnityEssentials.Editor.Data
         private const int Digits = 4;
         private const float DigitWidth = 12;
         private const float DigitMargin = 18;
-        private const float DigitLabelSize = 14;
+        private const float DigitLabelSize = 20;
         
         // -------------------------------------------------------------------
         // Public
@@ -28,6 +28,14 @@ namespace Craiel.UnityEssentials.Editor.Data
             Rect rect = new Rect(position.x, position.y, position.width, position.height);
             
             rect.width = DigitWidth * Digits;
+            EditorGUI.PropertyField(rect, property.FindPropertyRelative<SerializableTimeSpan>(x => x.Days), new GUIContent(string.Empty, "Days"));
+                
+            rect.x += DigitWidth * Digits;
+            rect.width = DigitLabelSize;
+            EditorGUI.LabelField(rect, "d");
+            
+            rect.x += DigitMargin;
+            rect.width = DigitWidth * Digits;
             EditorGUI.PropertyField(rect, property.FindPropertyRelative<SerializableTimeSpan>(x => x.Hours), new GUIContent(string.Empty, "Hours"));
                 
             rect.x += DigitWidth * Digits;
@@ -38,7 +46,7 @@ namespace Craiel.UnityEssentials.Editor.Data
             rect.width = DigitWidth * Digits;
             EditorGUI.PropertyField(rect, property.FindPropertyRelative<SerializableTimeSpan>(x => x.Minutes), new GUIContent(string.Empty, "Minutes"));
                 
-            rect.x += DigitWidth * 2;
+            rect.x += DigitWidth * Digits;
             rect.width = DigitLabelSize;
             EditorGUI.LabelField(rect, "m");
 
@@ -49,7 +57,7 @@ namespace Craiel.UnityEssentials.Editor.Data
             rect.x += DigitWidth * Digits;
             rect.width = DigitLabelSize;
             EditorGUI.LabelField(rect, "s");
-                
+            
             rect.x += DigitMargin;
             rect.width = DigitWidth * (Digits + 1);
             EditorGUI.PropertyField(rect, property.FindPropertyRelative<SerializableTimeSpan>(x => x.Milliseconds), new GUIContent(string.Empty, "Milliseconds"));

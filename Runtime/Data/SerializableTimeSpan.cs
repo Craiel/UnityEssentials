@@ -49,7 +49,7 @@ namespace Craiel.UnityEssentials.Runtime.Data
 
         public void OnAfterDeserialize()
         {
-            this.TimeSpan = new TimeSpan(this.Days, this.Hours, this.Minutes, this.Milliseconds);
+            this.TimeSpan = new TimeSpan(this.Days, this.Hours, this.Minutes, this.Seconds, this.Milliseconds);
         }
 
         public void OnBeforeSerialize()
@@ -58,6 +58,7 @@ namespace Craiel.UnityEssentials.Runtime.Data
             this.Hours = this.TimeSpan.Hours;
             this.Minutes = this.TimeSpan.Minutes;
             this.Seconds = this.TimeSpan.Seconds;
+            this.Milliseconds = this.TimeSpan.Milliseconds;
         }
     }
 }

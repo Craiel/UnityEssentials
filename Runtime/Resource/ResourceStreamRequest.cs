@@ -1,11 +1,13 @@
 ﻿namespace Craiel.UnityEssentials.Runtime.Resource
 {
+    using System;
     using Contracts;
     using UnityEngine;
+    using UnityEngine.Networking;
 
-    public class ResourceStreamRequest : IResourceRequest
+    public class ResourceStreamRequest : IResourceRequest, IDisposable
     {
-        private readonly WWW stream;
+        private readonly UnityWebRequest stream;
 
         // -------------------------------------------------------------------
         // Constructor
@@ -14,7 +16,8 @@
         {
             this.Info = info;
             
-            this.stream = new WWW(info.Key.Path);
+            this.stream = UnityWebRequest.Get(info.Key.Path);
+            this.stream.SendWebRequest();
         }
 
         // -------------------------------------------------------------------
@@ -40,7 +43,24 @@
                 return null;
             }
 
-            return this.stream.bytes;
+            return this.stream.downloadHandler.data;
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // -------------------------------------------------------------------
+        // Private
+        // -------------------------------------------------------------------
+        private void Dispose(bool isDisposing)
+        {
+            if (isDisposing)
+            {
+                this.stream.Dispose();
+            }
         }
     }
 }

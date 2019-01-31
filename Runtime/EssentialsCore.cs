@@ -15,10 +15,14 @@
         public const string ResourcesFolderName = "Resources";
         
         public static readonly ManagedDirectory AssetsPath = new ManagedDirectory("Assets");
+        
+        public static readonly ManagedDirectory ResourcesPath = AssetsPath.ToDirectory(ResourcesFolderName);
 
         public static readonly ManagedDirectory DefaultScenesPath = AssetsPath.ToDirectory("Scenes");
 
         public static readonly NLog.Logger Logger = LogManager.GetLogger("CRAIEL_ESSENTIALS");
+        
+        public static readonly ManagedDirectory PersistentDataPath = new ManagedDirectory(Application.persistentDataPath);
 
         private static ManagedDirectory dataPath;
 

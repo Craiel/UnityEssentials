@@ -29,5 +29,6 @@
 
         public static readonly IList<YamlContainerType> YamlContainerTypeValues = Enum.GetValues(typeof(YamlContainerType)).Cast<YamlContainerType>().ToList();
 
+        public static readonly IList<GameLanguage> GameLanguageValues = Enum.GetValues(typeof(GameLanguage)).Cast<GameLanguage>().ToList();
     }
 }

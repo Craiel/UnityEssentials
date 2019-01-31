@@ -7,6 +7,10 @@ namespace Craiel.UnityEssentials.Runtime.I18N
 
     public class LocalizationSystem : UnitySingletonBehavior<LocalizationSystem>
     {
+        private const float AutoSaveInterval = 60 * 5;
+        
+        private LocalizationProvider provider;
+
         private float lastAutoSave;
         
         // -------------------------------------------------------------------
@@ -14,28 +18,36 @@ namespace Craiel.UnityEssentials.Runtime.I18N
         // -------------------------------------------------------------------
         public void Update()
         {
-            if (Time.time > this.lastAutoSave + EssentialsCore.LocalizationSaveInterval)
+#if DEBUG
+            if (Time.time > this.lastAutoSave + AutoSaveInterval)
             {
-                EssentialsCore.Logger.Info("Saving Localization: {0}", Localization.Root);
+                EssentialsCore.Logger.Info("Saving Localization: {0}", this.provider.Root);
 
                 this.lastAutoSave = Time.time;
 
                 // TODO: Localization
-                Localization.SaveDictionaries();
+                this.provider.SaveDictionary();
             }
+#endif
         }
 
         public override void Initialize()
         {
             base.Initialize();
 
-            Localization.SetRoot(new ManagedDirectory(Application.persistentDataPath));
+            this.provider = new LocalizationProvider();
+
+#if DEBUG
+            this.provider.SetRoot(new ManagedDirectory(Application.persistentDataPath));
+#endif
+
+            Localization.Initialize(this.provider);
         }
 
         public void SetCulture(CultureInfo culture)
         {
             Localization.CurrentCulture = culture;
-            Localization.ReloadDictionaries();
+            this.provider.ReloadDictionary();
         }
     }
 }

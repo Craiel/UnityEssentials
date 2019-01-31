@@ -1,5 +1,6 @@
 ﻿namespace Craiel.UnityEssentials.Runtime.I18N
 {
+    using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Threading;
@@ -8,152 +9,98 @@
 
     public static class Localization
     {
-        private const string SubDirectory = "i18n";
-        private const string DictionaryFileName = "strings.json";
+        private static readonly HashSet<LocalizationToken> ActiveTokens = new HashSet<LocalizationToken>();
 
-        private static readonly IDictionary<CultureInfo, LocalizationStringDictionary> Dictionaries;
+        private static CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
 
-        private static CultureInfo culture;
-
-        // -------------------------------------------------------------------
-        // Constructor
-        // -------------------------------------------------------------------
-        static Localization()
-        {
-            Dictionaries = new Dictionary<CultureInfo, LocalizationStringDictionary>();
-
-            CurrentCulture = Thread.CurrentThread.CurrentCulture;
-
-            Root = RuntimeInfo.Path;
-        }
+        private static ILocalizationProvider provider;
 
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        public static ManagedDirectory Root { get; private set; }
-
         public static CultureInfo CurrentCulture
         {
             get
             {
-                return culture;
+                return currentCulture;
             }
 
             set
             {
-                culture = value;
-                if (!Thread.CurrentThread.CurrentCulture.Equals(culture))
+                currentCulture = value;
+                if (!Thread.CurrentThread.CurrentCulture.Equals(currentCulture))
                 {
-                    Thread.CurrentThread.CurrentCulture = culture;
-                    Thread.CurrentThread.CurrentUICulture = culture;
+                    Thread.CurrentThread.CurrentCulture = currentCulture;
+                    Thread.CurrentThread.CurrentUICulture = currentCulture;
                 }
             }
         }
 
-        public static void SetRoot(ManagedDirectory newRoot)
+        public static void Initialize(ILocalizationProvider newProvider)
         {
-            Root = newRoot;
-            ReloadDictionaries();
+            provider = newProvider;
         }
 
-        public static string Localized(this string source)
+        public static LocalizationToken CreateToken(string key)
         {
-            return Get(source);
-        }
-
-        public static string Get(string key)
-        {
-            if (!Dictionaries.ContainsKey(CurrentCulture))
+            var result = new LocalizationToken(key);
+            if (ActiveTokens.Contains(result))
             {
-                LoadDictionary(CurrentCulture);
+                EssentialsCore.Logger.Warn("Duplicate Localization token: {0}", key);
             }
             else
             {
-                CheckDictionary(CurrentCulture);
+                ActiveTokens.Add(result);
             }
 
-            LocalizationStringDictionary dictionary = Dictionaries[CurrentCulture];
-            if (!dictionary.ContainsKey(key))
-            {
-                dictionary.Add(key, key);
-            }
-
-            return dictionary[key];
+            return result;
         }
 
-        public static void SaveDictionaries()
+        public static string Get(this LocalizationToken token)
         {
-            foreach (CultureInfo dictionaryCulture in Dictionaries.Keys)
+            if (provider == null || string.IsNullOrEmpty(token.Key))
             {
-                SaveDictionary(dictionaryCulture);
+                return token.Key;
             }
+
+            return provider.GetString(token.Key);
         }
 
-        public static void ReloadDictionaries()
+        public static string GetCaps(this LocalizationToken token)
         {
-            IList<CultureInfo> loadedCultures = new List<CultureInfo>(Dictionaries.Keys);
-            foreach (CultureInfo dictionaryCulture in loadedCultures)
+            if (provider == null || string.IsNullOrEmpty(token.Key))
             {
-                LoadDictionary(dictionaryCulture);
+                return token.Key?.ToUpper();
             }
+
+            return provider.GetString(token.Key).ToUpper(currentCulture);
         }
 
-        public static void SetString(string key, string value)
+        public static string GetFormatted(this LocalizationToken token, params object[] formatParams)
         {
-            EssentialsCore.Logger.Warn("Manual SetString called, prefer using the auto loaded dictionaries!");
-            CheckDictionary(CurrentCulture);
-            LocalizationStringDictionary dictionary = Dictionaries[CurrentCulture];
-            if (!dictionary.ContainsKey(key))
+            if (provider == null)
             {
-                dictionary.Add(key, value);
+                return string.Format(token.Key, formatParams);
             }
-            else
-            {
-                dictionary[key] = value;
-            }
+
+            return string.Format(provider.GetString(token.Key), formatParams);
         }
 
-        // -------------------------------------------------------------------
-        // Private
-        // -------------------------------------------------------------------
-        private static void LoadDictionary(CultureInfo info, ManagedFile source = null)
+        public static string GetDirect(string source)
         {
-            CheckDictionary(info);
-            if (source == null)
+            if (provider == null || string.IsNullOrEmpty(source))
             {
-                source = Root.ToFile(SubDirectory, info.Name, DictionaryFileName);
+                return source;
             }
 
-            if (!source.Exists)
-            {
-                EssentialsCore.Logger.Warn("Could not load dictionary for {0}, file not found: {1}", info.Name, source);
-                return;
-            }
-
-            EssentialsCore.Logger.Info("Loading Dictionary {0} ({1})", info.Name, source);
-
-            string dictionaryData = source.ReadAsString();
-            Dictionaries[info] = JsonUtility.FromJson<LocalizationStringDictionary>(dictionaryData);
+            return provider.GetString(source);
         }
 
-        private static void SaveDictionary(CultureInfo info, ManagedFile target = null)
+        public static string GetEnumTranslation<T>(T value)
+            where T : struct, IComparable
         {
-            if (target == null)
-            {
-                target = Root.ToFile(SubDirectory, info.Name, DictionaryFileName);
-            }
-
-            target.GetDirectory().Create();
-            string dictionaryData = JsonUtility.ToJson(Dictionaries[info]);
-            target.WriteAsString(dictionaryData);
-        }
-
-        private static void CheckDictionary(CultureInfo info)
-        {
-            if (!Dictionaries.ContainsKey(info))
-            {
-                Dictionaries.Add(info, new LocalizationStringDictionary());
-            }
+            // TODO: handle enums properly
+            return GetDirect(value.ToString());
         }
     }
 }

@@ -4,5 +4,16 @@
 
     public class LocalizationStringDictionary : Dictionary<string, string>
     {
+        // -------------------------------------------------------------------
+        // Constructor
+        // -------------------------------------------------------------------
+        public LocalizationStringDictionary()
+        {
+        }
+
+        public LocalizationStringDictionary(LocalizationStringDictionary source)
+            : base(source)
+        {
+        }
     }
 }

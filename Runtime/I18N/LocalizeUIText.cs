@@ -17,7 +17,7 @@ namespace Craiel.UnityEssentials.Runtime.I18N
                 return;
             }
 
-            target.text = Localization.Get(target.text);
+            target.text = Localization.GetDirect(target.text);
         }
     }
 }

@@ -1,10 +1,11 @@
-﻿using SceneTransitionStep = Craiel.UnityEssentials.Runtime.Enums.SceneTransitionStep;
-
-namespace Craiel.UnityEssentials.Runtime.EngineCore
+﻿namespace Craiel.UnityEssentials.Runtime.EngineCore
 {
     using System;
     using System.Collections.Generic;
+    using Enums;
+    using Event;
     using UnityEngine.SceneManagement;
+    using UnityEssentialsUI.Runtime.Events;
 
     public abstract partial class EssentialEngineCore<T, TSceneEnum>
     {
@@ -58,6 +59,8 @@ namespace Craiel.UnityEssentials.Runtime.EngineCore
             }
 
             EssentialsCore.Logger.Info("Transitioning to {0}", type);
+            
+            GameEvents.Send(new EventSceneTransitionStarting(type));
 
             if (this.TransitionStarting != null)
             {
@@ -127,6 +130,8 @@ namespace Craiel.UnityEssentials.Runtime.EngineCore
             this.ActiveSceneType = this.activeScene.Type;
 
             this.InTransition = false;
+            
+            GameEvents.Send(new EventSceneTransitionFinished(this.ActiveSceneType));
 
             if (this.TransitionFinished != null)
             {

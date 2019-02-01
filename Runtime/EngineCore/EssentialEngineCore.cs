@@ -11,6 +11,7 @@
     using Resource;
     using Scene;
     using Singletons;
+    using UnityEssentialsUI.Runtime.Events;
 
     public abstract partial class EssentialEngineCore<T, TSceneEnum> : UnitySingletonBehavior<T>
         where T : EssentialEngineCore<T, TSceneEnum>
@@ -58,6 +59,8 @@
                 this.InitializeGameComponents();
 
                 UnityEngine.Debug.LogWarning("Essential Engine.Initialize() complete");
+                
+                GameEvents.Send(new EventEngineInitialized());
             }
             catch (Exception e)
             {

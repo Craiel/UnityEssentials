@@ -193,16 +193,16 @@ namespace Craiel.UnityEssentials.Runtime.Event.Editor
             {
                 GUILayout.Space(20);
                 
-                GUILayout.Label(string.Format("[{0}] ({1})", eventData.Time.ToShortTimeString(), eventData.ReceiverCount.ToString()));
+                GUILayout.Label(string.Format("[{0}] ({1})", eventData.Time.ToShortTimeString(), eventData.Receivers.Count.ToString()));
             }
             
             GUILayout.FlexibleSpace();
 
             GUILayout.EndHorizontal();
 
-            if (this.displayReceivers && eventData.ReceiverCount > 0)
+            if (this.displayReceivers)
             {
-                foreach (BaseEventSubscriptionTicket receiver in eventData.Receivers)
+                foreach (GameEventReceiverInfo receiver in eventData.Receivers)
                 {
                     if (receiver == null)
                     {
@@ -211,17 +211,19 @@ namespace Craiel.UnityEssentials.Runtime.Event.Editor
                     
                     GUILayout.BeginHorizontal();
                     
-                    GUILayout.Space(40);
-
-                    Type eventType = receiver.TargetDelegate.GetType();
-                    PropertyInfo methodProperty = eventType.GetProperty("Method");
-                    PropertyInfo targetProperty = eventType.GetProperty("Target");
-                    var targetMethod = methodProperty.GetValue(receiver.TargetDelegate, null);
-                    var targetObject = targetProperty.GetValue(receiver.TargetDelegate, null);
+                    GUILayout.Space(40);                  
                     
-                    GUILayout.Label(string.Format("{0}  -  {1}", targetObject, targetMethod));
+                    GUILayout.Label(string.Format("{0}  -  {1}", receiver.TargetName, receiver.MethodName));
             
                     GUILayout.FlexibleSpace();
+                    GUILayout.EndHorizontal();
+                }
+
+                if (eventData.Receivers.Count > 0)
+                {
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Space(60);
+                    GUILayout.Label("  ----  ");
                     GUILayout.EndHorizontal();
                 }
             }
@@ -264,7 +266,7 @@ namespace Craiel.UnityEssentials.Runtime.Event.Editor
                 }
 
                 this.Count++;
-                this.ReceiverCount += issue.ReceiverCount;
+                this.ReceiverCount += issue.Receivers.Count;
                 
                 return issue;
             }
@@ -275,10 +277,19 @@ namespace Craiel.UnityEssentials.Runtime.Event.Editor
             public GameEventInfo(GameEventGroup parent, BaseEventSubscriptionTicket[] receivers)
             {
                 this.Parent = parent;
-                this.Receivers = receivers;
+                
+                this.Receivers = new List<GameEventReceiverInfo>();
                 if (receivers != null)
                 {
-                    this.ReceiverCount = receivers.Count(x => x != null);
+                    for (int i = 0; i < receivers.Length; i++)
+                    {
+                        if (receivers[i] == null)
+                        {
+                            continue;
+                        }
+                        
+                        this.Receivers.Add(new GameEventReceiverInfo(receivers[i]));
+                    }
                 }
                 
                 this.Time = DateTime.Now;
@@ -288,9 +299,22 @@ namespace Craiel.UnityEssentials.Runtime.Event.Editor
 
             public GameEventGroup Parent { get; private set; }
 
-            public BaseEventSubscriptionTicket[] Receivers { get; private set; }
+            public IList<GameEventReceiverInfo> Receivers { get; private set; }
+        }
+
+        private class GameEventReceiverInfo
+        {
+            public GameEventReceiverInfo(BaseEventSubscriptionTicket receiver)
+            {
+                Type eventType = receiver.TargetDelegate.GetType();
+                PropertyInfo methodProperty = eventType.GetProperty("Method");
+                PropertyInfo targetProperty = eventType.GetProperty("Target");
+                this.MethodName = methodProperty.GetValue(receiver.TargetDelegate, null).ToString();
+                this.TargetName = targetProperty.GetValue(receiver.TargetDelegate, null).ToString();
+            }
             
-            public int ReceiverCount { get; private set; }
+            public string MethodName { get; private set; }
+            public string TargetName { get; private set; }
         }
     }
 }

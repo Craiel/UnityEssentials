@@ -1,5 +1,6 @@
 ﻿namespace Craiel.UnityEssentials.Editor
 {
+    using Runtime.Event.Editor;
     using UnityEditor;
     using UnityEngine;
 
@@ -24,6 +25,8 @@
                 {
                     EditorWindow.GetWindow(typeof(SearchForComponentsWindow), true, "Search ComponentFactories");
                 });
+                
+                menu.AddItem(new GUIContent("Game Events Window"), false, GameEventsWindow.OpenWindow);
                 
                 menu.ShowAsContext();
                 Event.current.Use();

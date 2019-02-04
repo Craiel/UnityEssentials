@@ -46,6 +46,10 @@
             
             if (instance == null)
             {
+#if DEBUG
+                EssentialsCore.Logger.Info("SingletonBehavior.Instantiate: {0}", typeof(T).Name);
+#endif
+                
                 GameObject gameObject = new GameObject(typeof(T).Name);
 
                 try
@@ -70,19 +74,6 @@
             }
         }
 
-#if DEBUG
-        public static void InstantiateAndInitializeForUnitTest()
-        {
-            if (Instance != null && Instance.IsInitialized)
-            {
-                return;
-            }
-
-            instance = Activator.CreateInstance<T>();
-            instance.Initialize();
-        }
-#endif
-
         public static void InstantiateAndInitialize()
         {
             if (Instance != null && Instance.IsInitialized)
@@ -102,8 +93,16 @@
 
         public virtual void Awake()
         {
+#if DEBUG
+            EssentialsCore.Logger.Info("SingletonBehavior.Awake: {0}", this.GetType().Name);
+#endif
+            
             if (instance == null && this.AutoInstantiate)
             {
+#if DEBUG
+                EssentialsCore.Logger.Info("SingletonBehavior.AutoInstantiate: {0}", typeof(T).Name);
+#endif
+                
                 instance = (T)this;
             }
 
@@ -116,6 +115,10 @@
 
         public virtual void Initialize()
         {
+#if DEBUG
+            EssentialsCore.Logger.Info("SingletonBehavior.Initialize: {0}", this.GetType().Name);
+#endif
+            
             this.IsInitialized = true;
         }
 
@@ -133,7 +136,9 @@
         
         protected void DestroySingleton()
         {
-            EssentialsCore.Logger.Info("Destroying Singleton MonoBehavior {0}", this.name);
+#if DEBUG
+            EssentialsCore.Logger.Info("SingletonBehavior.Destroy: {0}", this.GetType().Name);
+#endif
 
             this.OnSingletonDestroying();
 

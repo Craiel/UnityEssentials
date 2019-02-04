@@ -18,7 +18,7 @@
 
         // -------------------------------------------------------------------
         // Public
-        // -------------------------------------------------------------------
+        // -------------------------------------------------------------------      
         public delegate void GameEventAction<in TSpecific>(TSpecific eventData)
             where TSpecific : T;
         
@@ -95,6 +95,10 @@
                 {
                     targets.Send(eventData);
                 }
+                
+#if UNITY_EDITOR
+                GameEvents.DebugEventSend?.Invoke(eventData.GetType(), targets?.Targets);
+#endif
             }
         }
     }

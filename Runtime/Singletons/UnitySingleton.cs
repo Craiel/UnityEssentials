@@ -29,6 +29,10 @@
             }
 
             Instance = new T();
+            
+#if DEBUG
+            EssentialsCore.Logger.Info("Singleton.Instantiate: {0}", typeof(T).Name);
+#endif
         }
         
         public static void InstantiateAndInitialize()
@@ -45,7 +49,9 @@
 
         public virtual void Initialize()
         {
-            EssentialsCore.Logger.Info("Initializing Singleton {0}", this.GetType());
+#if DEBUG
+            EssentialsCore.Logger.Info("Singleton.Initialize: {0}", this.GetType().Name);
+#endif
 
             this.IsInitialized = true;
         }
@@ -60,7 +66,9 @@
 
         public virtual void DestroySingleton()
         {
-            EssentialsCore.Logger.Info("Destroying Singleton {0}", this.GetType());
+#if DEBUG
+            EssentialsCore.Logger.Info("Singleton.Destroy: {0}", this.GetType().Name);
+#endif
 
             Instance = null;
         }

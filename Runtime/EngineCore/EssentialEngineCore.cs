@@ -22,6 +22,11 @@
         // -------------------------------------------------------------------
         public override void Initialize()
         {
+            if (EssentialEngineState.IsInitialized)
+            {
+                throw new InvalidOperationException("Engine was already initialized!");
+            }
+            
             base.Initialize();
 
             // Logging first
@@ -59,7 +64,8 @@
                 this.InitializeGameComponents();
 
                 UnityEngine.Debug.LogWarning("Essential Engine.Initialize() complete");
-                
+
+                EssentialEngineState.IsInitialized = true;
                 GameEvents.Send(new EventEngineInitialized());
             }
             catch (Exception e)

@@ -14,6 +14,10 @@
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
+#if UNITY_EDITOR
+        public static Action<Type, BaseEventSubscriptionTicket[]> DebugEventSend;
+#endif
+        
         public override void Initialize()
         {
             this.RegisterInController(SceneObjectController.Instance, SceneRootCategory.System, true);

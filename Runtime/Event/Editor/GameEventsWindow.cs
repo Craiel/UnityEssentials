@@ -186,7 +186,7 @@ namespace Craiel.UnityEssentials.Runtime.Event.Editor
             {
                 GUILayout.Label(new GUIContent(this.infoIcon));
                 
-                GUILayout.Label(string.Format("[{0}] {1} ({2})", eventData.Time.ToShortTimeString(), eventData.Parent.Type, eventData.Parent.ReceiverCount.ToString()));
+                GUILayout.Label(string.Format("[{0}] {1} ({2})", eventData.Time.ToShortTimeString(), eventData.Parent.Type, eventData.Receivers.Count.ToString()));
                 
             }
             else

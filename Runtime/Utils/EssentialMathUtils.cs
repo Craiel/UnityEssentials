@@ -351,5 +351,10 @@ namespace Craiel.UnityEssentials.Runtime.Utils
             double t2 = exponent - 1;
             return cost * (t1 / t2);
         }
+        
+        public static bool Approximately(this Vector3 v1, Vector3 v2)
+        {
+            return Mathf.Approximately(v1.x, v2.x) && Mathf.Approximately(v1.y, v2.y) && Mathf.Approximately(v1.z, v2.z);
+        }
     }
 }

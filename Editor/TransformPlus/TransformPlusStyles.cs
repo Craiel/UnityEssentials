@@ -23,6 +23,8 @@ namespace Craiel.UnityEssentials.Editor.TransformPlus
         public static readonly Color ColorClear = new Color(1, 0.7f, 0.7f);
         public static readonly Color ColorSpace = new Color(0.7f, 1, 1);
         public static readonly Color ColorSnap = new Color(1, 0.7f, 1);
+        public static readonly Color ColorCopy = new Color(0.7f, 1, 0.7f);
+        public static readonly Color ColorPaste = new Color(1, 1, 0.7f);
         
         // -------------------------------------------------------------------
         // Public

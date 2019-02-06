@@ -9,6 +9,10 @@ namespace Craiel.UnityEssentials.Editor.TransformPlus
         private static readonly Vector3 SnapPositionOrigin = Vector3.zero;
         private static readonly Vector3 SnapRotationGrid = new Vector3(90, 90, 90);
         private static readonly Vector3 SnapRotationOrigin = Vector3.zero;
+
+        private static Vector3 positionCopyCache;
+        private static Vector3 rotationCopyCache;
+        private static Vector3 scaleCopyCache;
         
         // -------------------------------------------------------------------
         // Public
@@ -18,6 +22,12 @@ namespace Craiel.UnityEssentials.Editor.TransformPlus
         public static Transform Current { get; private set; }
         
         public static TransformPlusSpace Space { get; set; }
+        
+        public static bool HasPositionCopy { get; private set; }
+        
+        public static bool HasRotationCopy { get; private set; }
+        
+        public static bool HasScaleCopy { get; private set; }
 
         public static Vector3 Position
         {
@@ -135,6 +145,14 @@ namespace Craiel.UnityEssentials.Editor.TransformPlus
             SetCurrent(null);
             
             Space = TransformPlusSpace.Local;
+
+            positionCopyCache = Vector3.zero;
+            rotationCopyCache = Vector3.zero;
+            scaleCopyCache = Vector3.one;
+            
+            HasScaleCopy = false;
+            HasPositionCopy = false;
+            HasRotationCopy = false;
         }
 
         public static void SetPosition(Vector3 newPosition)
@@ -232,6 +250,48 @@ namespace Craiel.UnityEssentials.Editor.TransformPlus
                     // N/A
                     break;
                 }
+            }
+        }
+
+        public static void CopyPosition()
+        {
+            positionCopyCache = Position;
+            HasPositionCopy = true;
+        }
+
+        public static void CopyRotation()
+        {
+            rotationCopyCache = Rotation;
+            HasRotationCopy = true;
+        }
+
+        public static void CopyScale()
+        {
+            scaleCopyCache = Scale;
+            HasScaleCopy = true;
+        }
+
+        public static void PastePosition()
+        {
+            if (HasPositionCopy)
+            {
+                SetPosition(positionCopyCache);
+            }
+        }
+
+        public static void PasteRotation()
+        {
+            if (HasRotationCopy)
+            {
+                SetRotation(rotationCopyCache);
+            }
+        }
+
+        public static void PasteScale()
+        {
+            if (HasScaleCopy)
+            {
+                SetScale(scaleCopyCache);
             }
         }
     }

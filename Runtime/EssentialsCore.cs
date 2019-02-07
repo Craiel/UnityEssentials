@@ -13,6 +13,8 @@
         public static readonly Color DefaultGizmoColor = Color.black;
         
         public const string ResourcesFolderName = "Resources";
+
+        public const string PrefabExtension = ".prefab";
         
         public static readonly ManagedDirectory AssetsPath = new ManagedDirectory("Assets");
         

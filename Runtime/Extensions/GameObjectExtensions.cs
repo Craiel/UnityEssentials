@@ -1,5 +1,6 @@
 ﻿namespace Craiel.UnityEssentials.Runtime.Extensions
 {
+    using System.Collections.Generic;
     using UnityEngine;
 
     public static class GameObjectExtensions
@@ -17,6 +18,20 @@
             }
 
             return gameObject.AddComponent<T>();
+        }
+
+        public static void ReparentChildrenTo(this GameObject gameObject, GameObject target)
+        {
+            IList<GameObject> childObjects = new List<GameObject>();
+            foreach (Transform child in gameObject.transform)
+            {
+                childObjects.Add(child.gameObject);
+            }
+
+            foreach (GameObject childObject in childObjects)
+            {
+                childObject.transform.SetParent(target.transform);
+            }
         }
     }
 }

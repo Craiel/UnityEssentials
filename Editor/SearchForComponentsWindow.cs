@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using Runtime;
     using UnityEditor;
     using UnityEditor.SceneManagement;
     using UnityEngine;
@@ -285,7 +286,8 @@
                             }
                         }
                     }
-                    int indexUnity = asset.IndexOf(".unity", StringComparison.Ordinal);
+                    
+                    int indexUnity = asset.IndexOf(EssentialsConstants.UnitySceneExtension, StringComparison.Ordinal);
                     if (indexUnity != -1)
                     {
                         scenesToLoad.Add(asset);

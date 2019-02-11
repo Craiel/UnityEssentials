@@ -64,7 +64,7 @@ namespace Craiel.UnityEssentials.Editor
 
         public void SetStartupScene(string name)
         {
-            this.StartupScene = this.SceneBasePath.ToFile(name + ".unity");
+            this.StartupScene = this.SceneBasePath.ToFile(name + EssentialsConstants.UnitySceneExtension);
             this.RefreshScenesToInclude();
         }
 

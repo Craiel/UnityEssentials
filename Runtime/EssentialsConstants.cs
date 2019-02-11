@@ -6,5 +6,7 @@
         public const int LogFileArchiveCount = 10;
         
         public const string LocalizationIgnoreString = "XX_";
+
+        public const string UnitySceneExtension = ".unity";
     }
 }

@@ -3,6 +3,7 @@ namespace Craiel.UnityEssentials.Editor
     using System;
     using System.Linq.Expressions;
     using ReorderableList;
+    using ReorderableList.Contracts;
     using UnityEditor;
     using UnityEngine;
     using UserInterface;
@@ -81,12 +82,12 @@ namespace Craiel.UnityEssentials.Editor
             EditorGUILayout.PropertyField(prop, content, includeChildren, options);
         }
 
-        protected virtual void DrawReorderableList<TSource>(string title, Expression<Func<TSource, object>> expression)
+        protected virtual void DrawReorderableList<TSource>(string title, IReorderableListAdaptor adapter)
         {
             if (!this.serializedObject.isEditingMultipleObjects)
             {
                 ReorderableListGUI.Title(title);
-                ReorderableListGUI.ListField(this.serializedObject.FindProperty(expression));
+                ReorderableListGUI.ListField(adapter);
             }
         }
         

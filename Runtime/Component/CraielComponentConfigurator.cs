@@ -1,18 +1,52 @@
 ﻿namespace Craiel.UnityEssentials.Runtime.Component
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
     using Contracts;
 
     public class CraielComponentConfigurator<T>
         where T : class, ICraielComponentConfig
     {
+        private static readonly string[] IgnoredAssemblies = 
+        {
+            "mscorlib",
+            "UnityEngine",
+            "UnityEditor",
+            "Unity.",
+            "System.",
+            "Assembly-",
+            "Mono.",
+            "nunit.",
+            "Demi",
+            "DOTWeen",
+            "Rewired",
+            "NLog",
+            "Jetbrains",
+            "YamlDotNet",
+            "LiteDB",
+            "netstandard",
+            "ExCSS",
+            "Microsoft.",
+            "Accessibility"
+        };
+        
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
         public void Configure()
         {
-            this.Initialize();
+            try
+            {
+                this.Initialize();
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogErrorFormat("Failed to initialize Component Config For {0}: {1}", typeof(T), e);
+                throw;
+            }
+            
         }
         
         // -------------------------------------------------------------------
@@ -21,10 +55,48 @@
         private void Initialize()
         {
             Type configType = typeof(T);
-            var implementations = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(x => x.GetTypes())
-                .Where(x => !x.IsInterface && configType.IsAssignableFrom(x))
-                .ToList();
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            IList<Type> implementations = new List<Type>();
+            foreach (Assembly assembly in assemblies)
+            {
+                bool ignoreAssembly = false;
+                for (var i = 0; i < IgnoredAssemblies.Length; i++)
+                {
+                    if (assembly.FullName.StartsWith(IgnoredAssemblies[i], StringComparison.OrdinalIgnoreCase))
+                    {
+                        ignoreAssembly = true;
+                        break;
+                    }
+                }
+
+                if (ignoreAssembly)
+                {
+                    // UnityEngine.Debug.LogFormat("ComponentConfigure: Ignoring {0}", assembly.FullName);
+                    continue;
+                }
+
+#if DEBUG
+                // UnityEngine.Debug.LogFormat("ComponentConfigure: Scanning {0}", assembly.FullName);
+#endif
+                
+                try
+                {
+                    Type[] candidates = assembly.GetTypes();
+                    foreach (Type candidate in candidates)
+                    {
+                        if (candidate.IsInterface || !configType.IsAssignableFrom(candidate))
+                        {
+                            continue;
+                        }
+                        
+                        implementations.Add(candidate);
+                    }
+                }
+                catch (Exception e)
+                {
+                    UnityEngine.Debug.LogWarningFormat("Failed to GetTypes for Assembly {0}: {1}", assembly, e);
+                }
+            }
 
             if (implementations.Count != 1)
             {

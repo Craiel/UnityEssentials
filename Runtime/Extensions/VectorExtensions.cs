@@ -17,5 +17,15 @@ namespace Craiel.UnityEssentials.Runtime.Extensions
         {
             return new Vector3(value, value, value);
         }
+
+        public static Vector3 ToVector3(this Vector2Int vector)
+        {
+            return new Vector3(vector.x, vector.y);
+        }
+
+        public static Vector3Int ToVector3Int(this Vector2Int vector)
+        {
+            return new Vector3Int(vector.x, vector.y, 0);
+        }
     }
 }

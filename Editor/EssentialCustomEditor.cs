@@ -82,12 +82,15 @@ namespace Craiel.UnityEssentials.Editor
             EditorGUILayout.PropertyField(prop, content, includeChildren, options);
         }
 
-        protected virtual void DrawReorderableList<TSource>(string title, IReorderableListAdaptor adapter)
+        protected virtual void DrawReorderableList<TSource, TAdapter>(string title, Expression<Func<TSource, object>> expression)
+            where TAdapter : IReorderableListAdaptor
         {
             if (!this.serializedObject.isEditingMultipleObjects)
             {
+                SerializedProperty property = this.serializedObject.FindProperty(expression);
+                
                 ReorderableListGUI.Title(title);
-                ReorderableListGUI.ListField(adapter);
+                ReorderableListGUI.ListField((TAdapter)Activator.CreateInstance(typeof(TAdapter), property));
             }
         }
         
@@ -95,8 +98,10 @@ namespace Craiel.UnityEssentials.Editor
         {
             if (!this.serializedObject.isEditingMultipleObjects)
             {
+                SerializedProperty property = this.serializedObject.FindProperty(expression);
+                
                 ReorderableListGUI.Title(title);
-                ReorderableListGUI.ListField(this.serializedObject.FindProperty(expression));
+                ReorderableListGUI.ListField(property);
             }
         }
 

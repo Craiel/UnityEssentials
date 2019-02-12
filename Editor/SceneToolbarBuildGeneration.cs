@@ -8,9 +8,10 @@
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        public override void OnGUi()
+        public override void DrawGUI()
         {
-            base.OnGUi();
+            base.DrawGUI();
+            
             if (GUILayout.Button("Build", "ToolbarDropDown"))
             {
                 var menu = new GenericMenu();

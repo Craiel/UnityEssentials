@@ -22,7 +22,7 @@
 
             SceneView.onSceneGUIDelegate -= OnSceneGUI;
             SceneView.onSceneGUIDelegate += OnSceneGUI;
-            
+
             EditorApplication.playModeStateChanged -= PlaymodeStateChanged;
             EditorApplication.playModeStateChanged += PlaymodeStateChanged;
 
@@ -62,23 +62,32 @@
 
         private static void OnSceneGUI(SceneView sceneView)
         {
-            foreach (var w in Widgets)
+            if (Application.isPlaying)
             {
-                w.OnSceneGUI(sceneView);
+                return;
             }
 
+            foreach (var w in Widgets)
+            {
+                w.DrawSceneGUI(sceneView);
+            }
+
+            DrawToolBar(sceneView);
+        }
+
+        private static void DrawToolBar(SceneView sceneView)
+        {
             Handles.BeginGUI();
             var rect = sceneView.position;
             rect.height = 17;
             rect.x = 0;
-//            rect.y = sceneView.position.height - 34;
             rect.y = 0;
             GUILayout.BeginArea(rect);
             EditorGUILayout.BeginHorizontal("toolbar");
 
             foreach (var w in Widgets)
             {
-                w.OnGUi();
+                w.DrawGUI();
             }
 
             GUILayout.FlexibleSpace();

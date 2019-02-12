@@ -9,18 +9,18 @@
         {
         }
 
-        public virtual void OnSceneGUI(SceneView sceneView)
-        {
-        }
-
         public virtual void PlaymodeStateChanged(PlayModeStateChange stateChange)
         {
 
         }
 
-        public virtual void OnGUi()
+        public virtual void DrawGUI()
         {
             
+        }
+        
+        public virtual void DrawSceneGUI(SceneView sceneView)
+        {
         }
     }
 }

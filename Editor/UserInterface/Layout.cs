@@ -121,6 +121,12 @@ namespace Craiel.UnityEssentials.Editor.UserInterface
             return ButtonIcon(title, icon, GUILayout.ExpandWidth(true));
         }
 
+        public static void SetShortLabelSize()
+        {
+
+            EditorGUIUtility.labelWidth = 100;
+        }
+        
         public static void SetDefaultLabelSize()
         {
 

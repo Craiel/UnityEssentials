@@ -8,5 +8,9 @@
         public const string LocalizationIgnoreString = "XX_";
 
         public const string UnitySceneExtension = ".unity";
+        
+#if UNITY_EDITOR
+        public static readonly bool HasPro = UnityEditorInternal.InternalEditorUtility.HasPro();
+#endif
     }
 }

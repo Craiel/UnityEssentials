@@ -1,11 +1,10 @@
-﻿using IEssentialEditorConfig = Craiel.UnityEssentials.Runtime.Contracts.IEssentialEditorConfig;
-
-namespace Craiel.UnityEssentials.Editor
+﻿namespace Craiel.UnityEssentials.Editor
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using Runtime.Contracts;
 
     public static class EssentialsEditorCore
     {

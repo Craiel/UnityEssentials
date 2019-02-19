@@ -33,5 +33,13 @@
                 childObject.transform.SetParent(target.transform);
             }
         }
+
+        public static void ClearChildren(this GameObject gameObject)
+        {
+            foreach (Transform child in gameObject.transform)
+            {
+                Object.Destroy(child.gameObject);
+            }
+        }
     }
 }

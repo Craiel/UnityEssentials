@@ -49,8 +49,8 @@ namespace Craiel.UnityEssentials.Runtime.EngineCore
         // -------------------------------------------------------------------
         protected T Parent;
 
-        protected void SubscribeEvent<T>(BaseEventAggregate<IGameEvent>.GameEventAction<T> callback)
-            where T : IGameEvent
+        protected void SubscribeEvent<TE>(BaseEventAggregate<IGameEvent>.GameEventAction<TE> callback)
+            where TE : IGameEvent
         {
             GameEvents.Subscribe(callback, out BaseEventSubscriptionTicket ticket);
             

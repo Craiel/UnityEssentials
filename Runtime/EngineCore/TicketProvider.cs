@@ -70,18 +70,36 @@ namespace Craiel.UnityEssentials.Runtime.EngineCore
                 throw new InvalidOperationException("Ticket Management is not configured!");
             }
             
+#if DEBUG
+            //EssentialsCore.Logger.Info("TICKET_MANAGE: {0}", ticket);
+#endif
+            
             this.managedTickets.Add(ticket);
         }
         
         public void Register(T ticket, TD data)
         {
+#if DEBUG
+            //EssentialsCore.Logger.Info("TICKET_REGISTER: {0}", ticket);
+#endif
+            
             this.activeTickets.Add(ticket, data);
             this.dataEntries.Add(data);
         }
 
         public bool Unregister(T ticket)
         {
-            this.dataEntries.Remove(this.activeTickets[ticket]);
+            if (!this.TryGet(ticket, out TD ticketData))
+            {
+                return false;
+            }
+            
+#if DEBUG
+            //EssentialsCore.Logger.Info("TICKET_UNREGISTER: {0}", ticket);
+#endif
+            
+            this.dataEntries.Remove(ticketData);
+            this.managedTickets.Remove(ticket);
             return this.activeTickets.Remove(ticket);
         }
 

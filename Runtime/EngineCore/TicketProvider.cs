@@ -1,15 +1,18 @@
 namespace Craiel.UnityEssentials.Runtime.EngineCore
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
 
-    public class TicketProvider<T, TD>
+    public class TicketProvider<T, TD> : IEnumerable<TD>
         where T : struct
+        where TD : ITicketData
     {
         public delegate bool ManagedTicketCheckDelegate(T ticket);
         public delegate void ManagedTicketFinishedDelegate(ref T ticket);
         
         private readonly IDictionary<T, TD> activeTickets;
+        private readonly IList<TD> dataEntries;
         
         private readonly IList<T> managedTickets;
         private readonly IList<T> ticketTempList;
@@ -17,14 +20,19 @@ namespace Craiel.UnityEssentials.Runtime.EngineCore
         private ManagedTicketCheckDelegate managedTicketFinishCheck;
         private ManagedTicketFinishedDelegate managedTicketFinished;
 
+        private bool updateDataEntries;
+
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public TicketProvider()
+        public TicketProvider(bool updateDataEntries = false)
         {
             this.activeTickets = new Dictionary<T, TD>();
+            this.dataEntries = new List<TD>();
             this.managedTickets = new List<T>();
             this.ticketTempList = new List<T>();
+
+            this.updateDataEntries = updateDataEntries;
         }
 
         // -------------------------------------------------------------------
@@ -44,6 +52,14 @@ namespace Craiel.UnityEssentials.Runtime.EngineCore
 
         public void Update()
         {
+            if (this.updateDataEntries)
+            {
+                for (var i = 0; i < this.dataEntries.Count; i++)
+                {
+                    this.dataEntries[i].Update();
+                }
+            }
+
             this.UpdateManagedTickets();
         }
         
@@ -60,10 +76,12 @@ namespace Craiel.UnityEssentials.Runtime.EngineCore
         public void Register(T ticket, TD data)
         {
             this.activeTickets.Add(ticket, data);
+            this.dataEntries.Add(data);
         }
 
         public bool Unregister(T ticket)
         {
+            this.dataEntries.Remove(this.activeTickets[ticket]);
             return this.activeTickets.Remove(ticket);
         }
 
@@ -73,6 +91,16 @@ namespace Craiel.UnityEssentials.Runtime.EngineCore
             this.managedTicketFinished = onFinished;
             
             this.CanManageTickets = true;
+        }
+        
+        public IEnumerator<TD> GetEnumerator()
+        {
+            return this.dataEntries.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return this.dataEntries.GetEnumerator();
         }
         
         // -------------------------------------------------------------------
@@ -94,6 +122,7 @@ namespace Craiel.UnityEssentials.Runtime.EngineCore
             for (var i = 0; i < this.ticketTempList.Count; i++)
             {
                 this.managedTickets.Remove(this.ticketTempList[i]);
+                this.Unregister(this.ticketTempList[i]);
             }
 
             this.ticketTempList.Clear();

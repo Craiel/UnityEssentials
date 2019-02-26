@@ -31,15 +31,16 @@ namespace Craiel.UnityEssentials.Runtime.TweenLite
             base.Awake();
         }
 
-        public void Start(TweenLiteNode node)
+        public void StartTween(TweenLiteNode node)
         {
             this.activeTweens.Register(node.Ticket, node);
             this.activeTweens.Manage(node.Ticket);
         }
 
-        public void Stop(TweenLiteTicket ticket)
+        public void StopTween(ref TweenLiteTicket ticket)
         {
             this.activeTweens.Unregister(ticket);
+            ticket = TweenLiteTicket.Invalid;
         }
 
         public void Update()

@@ -17,6 +17,11 @@ namespace Craiel.UnityEssentials.Runtime.TweenLite
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
+        public TweenLiteColor(Color start, Color end, TweenLiteColorDelegate callback = null, TweenLiteColorFinishedDelegate finishedCallback = null)
+            : this(start, end, TweenLiteColorMode.All, callback, finishedCallback)
+        {
+        }
+        
         public TweenLiteColor(Color start, Color end, TweenLiteColorMode mode = TweenLiteColorMode.All,
             TweenLiteColorDelegate callback = null, TweenLiteColorFinishedDelegate finishedCallback = null)
         {

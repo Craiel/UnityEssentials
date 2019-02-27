@@ -41,5 +41,31 @@
                 Object.Destroy(child.gameObject);
             }
         }
+        
+        public static T FindInParents<T>(this GameObject gameObject) 
+            where T : Component
+        {
+            if (gameObject == null)
+            {
+                return null;
+            }
+			
+            var candidate = gameObject.GetComponent<T>();
+
+            if (candidate != null)
+            {
+                return candidate;
+            }
+			
+            Transform parent = gameObject.transform.parent;
+			
+            while (parent != null && candidate == null)
+            {
+                candidate = parent.gameObject.GetComponent<T>();
+                parent = parent.parent;
+            }
+			
+            return candidate;
+        }
     }
 }

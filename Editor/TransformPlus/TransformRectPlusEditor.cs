@@ -44,7 +44,7 @@ namespace Craiel.TransformRectPlus
         // -------------------------------------------------------------------
         private void OnSelectionChanged()
         {
-            var target = (RectTransform) Selection.activeObject;
+            var target = Selection.activeObject as RectTransform;
             TransformRectPlus.SetCurrent(target);
         }
         

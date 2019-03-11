@@ -22,6 +22,8 @@ namespace Craiel.UnityEssentials.Editor
             }
             
             this.Draw(typedTarget);
+            
+            this.serializedObject.ApplyModifiedProperties();
         }
 
         // -------------------------------------------------------------------

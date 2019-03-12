@@ -4,7 +4,11 @@
 
     public class SceneToolbarWidget
     {
-
+        // -------------------------------------------------------------------
+        // Public
+        // -------------------------------------------------------------------
+        public bool IsButtonWidget { get; protected set; }
+        
         public virtual void Update()
         {
         }

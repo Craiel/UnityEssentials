@@ -46,15 +46,15 @@
         // -------------------------------------------------------------------
         private static void Update()
         {
-            foreach (var w in Widgets)
+            foreach (SceneToolbarWidget widget in Widgets)
             {
-                w.Update();
+                widget.Update();
             }
         }
 
         private static void PlaymodeStateChanged(PlayModeStateChange playModeStateChange)
         {
-            foreach (var widget in Widgets)
+            foreach (SceneToolbarWidget widget in Widgets)
             {
                 widget.PlaymodeStateChanged(playModeStateChange);
             }
@@ -67,9 +67,9 @@
                 return;
             }
 
-            foreach (var w in Widgets)
+            foreach (SceneToolbarWidget widget in Widgets)
             {
-                w.DrawSceneGUI(sceneView);
+                widget.DrawSceneGUI(sceneView);
             }
 
             DrawToolBar(sceneView);
@@ -85,14 +85,43 @@
             GUILayout.BeginArea(rect);
             EditorGUILayout.BeginHorizontal("toolbar");
 
-            foreach (var w in Widgets)
+            bool hasButtons = false;
+            foreach (SceneToolbarWidget widget in Widgets)
             {
-                w.DrawGUI();
+                if (widget.IsButtonWidget)
+                {
+                    hasButtons = true;
+                    continue;
+                }
+                
+                widget.DrawGUI();
             }
 
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();
             GUILayout.EndArea();
+
+            if (hasButtons)
+            {
+                rect.y = 20;
+                rect.height = 24;
+                GUILayout.BeginArea(rect);
+                EditorGUILayout.BeginHorizontal();
+                
+                foreach (SceneToolbarWidget widget in Widgets)
+                {
+                    if (!widget.IsButtonWidget)
+                    {
+                        continue;
+                    }
+                
+                    widget.DrawGUI();
+                }
+                
+                GUILayout.FlexibleSpace();
+                EditorGUILayout.EndHorizontal();
+                GUILayout.EndArea();
+            }
             Handles.EndGUI();
         }
     }

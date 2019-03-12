@@ -11,6 +11,8 @@ namespace Craiel.UnityEssentials.Editor.UserInterface
             Remove
         }
 
+        private static Color backgroundColorTemp;
+
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
@@ -137,6 +139,17 @@ namespace Craiel.UnityEssentials.Editor.UserInterface
         {
 
             EditorGUIUtility.labelWidth = 300;
+        }
+
+        public static void BeginBackgroundColor(Color color)
+        {
+            backgroundColorTemp = GUI.backgroundColor;
+            GUI.backgroundColor = color;
+        }
+
+        public static void EndBackgroundColor()
+        {
+            GUI.backgroundColor = backgroundColorTemp;
         }
     }
 }

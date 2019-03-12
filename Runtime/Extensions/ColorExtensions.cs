@@ -20,6 +20,12 @@
             return new Color(source[0], source[1], source[2], source[3]);
         }
 
+        public static Color FromRGB(byte r, byte g, byte b)
+        {
+            float maxValue = byte.MaxValue;
+            return new Color(r / maxValue, g / maxValue, b / maxValue);
+        }
+
         public static Color Brighten(this Color color, float factor)
         {
             return new Color((color.r * factor).Clamp(0, 1f),

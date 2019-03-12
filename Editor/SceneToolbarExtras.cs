@@ -6,6 +6,8 @@ namespace Craiel.UnityEssentials.Editor
     public class SceneToolbarExtras : SceneToolbarWidget
     {
         private const int IconSize = 24;
+
+        private GUIStyle guiStyle;
         
         // -------------------------------------------------------------------
         // Constructor
@@ -21,49 +23,52 @@ namespace Craiel.UnityEssentials.Editor
         public override void DrawGUI()
         {
             base.DrawGUI();
-            
-            GUIStyle someGUIStyle = GUI.skin.GetStyle("minibutton");
-            someGUIStyle.padding = new RectOffset(1,1,0,0);
-            someGUIStyle.overflow = new RectOffset(0,0,2,4);
-            someGUIStyle.fixedHeight = IconSize - 4;
-            someGUIStyle.imagePosition = ImagePosition.ImageAbove;
-            
-            GUIContent someGuiContent = new GUIContent();
-            someGuiContent.tooltip = someGuiContent.text = "Render & Project Settings";
-            
-            someGuiContent.text = "";
 
-            someGuiContent.tooltip = "Audio";
-            someGuiContent.image = AssetPreview.GetMiniTypeThumbnail(typeof(AudioClip));
-            if (GUILayout.Button(someGuiContent, someGUIStyle, GUILayout.Width(IconSize)))
+            if (this.guiStyle == null)
+            {
+                this.guiStyle = GUI.skin.GetStyle("minibutton");
+                this.guiStyle.padding = new RectOffset(1, 1, 0, 0);
+                this.guiStyle.overflow = new RectOffset(0, 0, 2, 4);
+                this.guiStyle.fixedHeight = IconSize - 4;
+                this.guiStyle.imagePosition = ImagePosition.ImageAbove;
+            }
+
+            GUIContent guiContent = new GUIContent();
+            guiContent.tooltip = guiContent.text = "Render & Project Settings";
+            
+            guiContent.text = "";
+
+            guiContent.tooltip = "Audio";
+            guiContent.image = AssetPreview.GetMiniTypeThumbnail(typeof(AudioClip));
+            if (GUILayout.Button(guiContent, this.guiStyle, GUILayout.Width(IconSize)))
             {
                 SettingsService.OpenProjectSettings("Project/Audio");
             }
             
-            someGuiContent.tooltip = "Graphics";
-            someGuiContent.image = EditorGUIUtility.Load("icons/d_unityeditor.sceneview.png") as Texture2D;
-            if (GUILayout.Button(someGuiContent, someGUIStyle, GUILayout.Width(IconSize)))
+            guiContent.tooltip = "Graphics";
+            guiContent.image = EditorGUIUtility.Load("icons/d_unityeditor.sceneview.png") as Texture2D;
+            if (GUILayout.Button(guiContent, this.guiStyle, GUILayout.Width(IconSize)))
             {
                 SettingsService.OpenProjectSettings("Project/Graphics");
             }
             
-            someGuiContent.tooltip = "Input";
-            someGuiContent.image = EditorGUIUtility.Load("icons/d_movetool.png") as Texture2D;
-            if (GUILayout.Button(someGuiContent, someGUIStyle, GUILayout.Width(IconSize)))
+            guiContent.tooltip = "Input";
+            guiContent.image = EditorGUIUtility.Load("icons/d_movetool.png") as Texture2D;
+            if (GUILayout.Button(guiContent, this.guiStyle, GUILayout.Width(IconSize)))
             {
                 SettingsService.OpenProjectSettings("Project/Input");
             }
             
-            someGuiContent.tooltip = "Player";
-            someGuiContent.image = EditorGUIUtility.Load("icons/d_unityeditor.gameview.png") as Texture2D;
-            if (GUILayout.Button(someGuiContent, someGUIStyle, GUILayout.Width(IconSize)))
+            guiContent.tooltip = "Player";
+            guiContent.image = EditorGUIUtility.Load("icons/d_unityeditor.gameview.png") as Texture2D;
+            if (GUILayout.Button(guiContent, this.guiStyle, GUILayout.Width(IconSize)))
             {
                 SettingsService.OpenProjectSettings("Project/Player");
             }
             
-            someGuiContent.tooltip = "Quality";
-            someGuiContent.image = EditorGUIUtility.Load("icons/d_viewtoolorbit.png") as Texture2D;
-            if (GUILayout.Button(someGuiContent, someGUIStyle, GUILayout.Width(IconSize)))
+            guiContent.tooltip = "Quality";
+            guiContent.image = EditorGUIUtility.Load("icons/d_viewtoolorbit.png") as Texture2D;
+            if (GUILayout.Button(guiContent, this.guiStyle, GUILayout.Width(IconSize)))
             {
                 SettingsService.OpenProjectSettings("Project/Quality");
             }

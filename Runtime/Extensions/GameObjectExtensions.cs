@@ -2,9 +2,12 @@
 {
     using System.Collections.Generic;
     using UnityEngine;
+    using UnityEngine.SceneManagement;
 
     public static class GameObjectExtensions
     {
+        private static readonly List<GameObject> GameObjectTempList = new List<GameObject>();
+        
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
@@ -22,13 +25,13 @@
 
         public static void ReparentChildrenTo(this GameObject gameObject, GameObject target)
         {
-            IList<GameObject> childObjects = new List<GameObject>();
+            GameObjectTempList.Clear();
             foreach (Transform child in gameObject.transform)
             {
-                childObjects.Add(child.gameObject);
+                GameObjectTempList.Add(child.gameObject);
             }
 
-            foreach (GameObject childObject in childObjects)
+            foreach (GameObject childObject in GameObjectTempList)
             {
                 childObject.transform.SetParent(target.transform);
             }
@@ -36,10 +39,35 @@
 
         public static void ClearChildren(this GameObject gameObject)
         {
+            GameObjectTempList.Clear();
             foreach (Transform child in gameObject.transform)
             {
-                Object.Destroy(child.gameObject);
+                GameObjectTempList.Add(child.gameObject);
             }
+
+            foreach (GameObject child in GameObjectTempList)
+            {
+                Object.Destroy(child);
+            }
+        }
+        
+        public static bool IsInLayer(this GameObject target, string layerName)
+        {
+            return target.layer == LayerMask.NameToLayer(layerName);
+        }
+        
+        public static GameObject CreateEmptyGameObject(string name = null, Transform parent = null, params System.Type[] components)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                name = "New Game Object";
+            }
+
+            var result = new GameObject(name, components);
+            result.transform.SetParent(parent);
+            result.transform.localPosition = Vector3.zero;
+
+            return result;
         }
         
         public static T FindInParents<T>(this GameObject gameObject) 
@@ -66,6 +94,42 @@
             }
 			
             return candidate;
+        }
+        
+        public static GameObject FindGameObject(string name, GameObject root = null)
+        {
+            if (root)
+            {
+                if (root.name == name)
+                {
+                    return root;
+                }
+
+                foreach (Transform child in root.transform)
+                {
+                    GameObject result = FindGameObject(name, child.gameObject);
+                    if (result != null)
+                    {
+                        return result;
+                    }
+                }
+
+                return null;
+            }
+            
+            Scene scene = SceneManager.GetActiveScene();
+            GameObjectTempList.Clear();
+            scene.GetRootGameObjects(GameObjectTempList);
+            foreach (var candidate in GameObjectTempList)
+            {
+                GameObject result = FindGameObject(name, candidate);
+                if (result != null)
+                {
+                    return result;
+                }
+            }
+
+            return null;
         }
     }
 }

@@ -4,8 +4,8 @@
     using System.Collections.Generic;
     using Enums;
     using Event;
+    using Events;
     using UnityEngine.SceneManagement;
-    using UnityEssentialsUI.Runtime.Events;
 
     public abstract partial class EssentialEngineCore<T, TSceneEnum>
     {

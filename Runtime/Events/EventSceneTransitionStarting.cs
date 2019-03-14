@@ -1,6 +1,6 @@
-namespace Craiel.UnityEssentialsUI.Runtime.Events
+namespace Craiel.UnityEssentials.Runtime.Events
 {
-    using UnityEssentials.Runtime.Contracts;
+    using Contracts;
 
     public class EventSceneTransitionStarting : IGameEvent
     {

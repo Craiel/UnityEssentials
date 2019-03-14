@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using Enums;
     using Event;
+    using Events;
     using I18N;
     using Input;
     using JetBrains.Annotations;
@@ -11,7 +12,6 @@
     using Resource;
     using Scene;
     using Singletons;
-    using UnityEssentialsUI.Runtime.Events;
 
     public abstract partial class EssentialEngineCore<T, TSceneEnum> : UnitySingletonBehavior<T>
         where T : EssentialEngineCore<T, TSceneEnum>

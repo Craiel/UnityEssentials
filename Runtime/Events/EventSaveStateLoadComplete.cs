@@ -2,8 +2,7 @@ namespace Craiel.UnityEssentials.Runtime.Events
 {
     using Contracts;
 
-    public class EventEngineInitialized : IGameEvent
+    public class EventSaveStateLoadComplete : IGameEvent
     {
-        
     }
 }

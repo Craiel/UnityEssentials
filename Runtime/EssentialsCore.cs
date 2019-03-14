@@ -25,6 +25,8 @@
         public static readonly NLog.Logger Logger = LogManager.GetLogger("CRAIEL_ESSENTIALS");
         
         public static readonly ManagedDirectory PersistentDataPath = new ManagedDirectory(Application.persistentDataPath);
+        public static readonly ManagedDirectory DefaultSavePath = PersistentDataPath.ToDirectory("Save");
+        public const string DefaultSavePrefix = "esv_";
 
         private static ManagedDirectory dataPath;
 

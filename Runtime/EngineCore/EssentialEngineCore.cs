@@ -56,6 +56,7 @@
 
             // First some main systems
             GameEvents.InstantiateAndInitialize();
+            UIEvents.InstantiateAndInitialize();
             InputHandler.InstantiateAndInitialize();
 
             try

@@ -12,6 +12,7 @@
     using Resource;
     using Scene;
     using Singletons;
+    using TweenLite;
 
     public abstract partial class EssentialEngineCore<T, TSceneEnum> : UnitySingletonBehavior<T>
         where T : EssentialEngineCore<T, TSceneEnum>
@@ -58,6 +59,7 @@
             GameEvents.InstantiateAndInitialize();
             UIEvents.InstantiateAndInitialize();
             InputHandler.InstantiateAndInitialize();
+            TweenLiteSystem.InstantiateAndInitialize();
 
             try
             {

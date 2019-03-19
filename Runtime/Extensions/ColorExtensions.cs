@@ -1,4 +1,5 @@
-﻿namespace Craiel.UnityEssentials.Runtime.Extensions
+﻿// ReSharper disable UnusedMember.Global
+namespace Craiel.UnityEssentials.Runtime.Extensions
 {
     using System;
     using System.Globalization;
@@ -38,6 +39,12 @@
             return new Color((color.r / by).Clamp(0, 1f), 
                 (color.g / by).Clamp(0, 1f), 
                 (color.b / by).Clamp(0, 1f));
+        }
+        
+        public static Color SetAlpha(this Color color, float alpha)
+        {
+            color.a = alpha;
+            return color;
         }
 
         // Note: this is not a proper way to de-saturate, look at HSV implementations for proper ways

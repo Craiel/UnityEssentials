@@ -17,6 +17,23 @@ namespace Craiel.UnityEssentials.Runtime.Utils
         public const double MaxDouble = 9007199254740991;
         public const double MinDouble = 1 - MaxDouble;
 
+        public const double GoldenRatio = 1.6180339887498948482;
+        public const double PlasticConstant = 1.32471795724474602596;
+        public const double Tau = 6.283185307179586;
+        
+        public const double PlanckLength = 1.61622938 * (10 * -35);
+        public const double PlanckTime = 5.3911613 * (10 ^ -44);
+        public const double PlanckTemperature = 1.41680833 * (10 ^ 32);
+        public const double PlanckMass = 4.341 * (10 ^ -9);
+        public const double PlancksConstant = 6.62 * (10 ^ -34);
+
+        public const double GravitationalConstant = 6.6740831 * (10 ^ -11);
+        
+        public const int SpeedOfLight = 299792458;
+        
+        public const long LightYearInMeters = 9460730472580800;
+        public const double LightYearInKilometers = LightYearInMeters / 1000f;
+
         public static readonly double PiOver2 = Math.PI / 2;
         public static readonly double TwoPi = Math.PI * 2;
 

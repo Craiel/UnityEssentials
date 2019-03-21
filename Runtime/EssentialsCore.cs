@@ -13,6 +13,7 @@
         public static readonly Color DefaultGizmoColor = Color.black;
         
         public const string ResourcesFolderName = "Resources";
+        public static readonly int ResourceFolderNameSize = ResourcesFolderName.Length;
 
         public const string PrefabExtension = ".prefab";
         

@@ -66,8 +66,6 @@ namespace Craiel.UnityEssentials.Runtime.Extensions
         {
             int number = int.Parse(colorHexString, NumberStyles.HexNumber);
 
-            Color32 result;
-
             switch (colorHexString.Length)
             {
                 case 8:

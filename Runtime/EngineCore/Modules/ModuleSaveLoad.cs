@@ -103,6 +103,8 @@ namespace Craiel.UnityEssentials.Runtime.EngineCore.Modules
                 EssentialsCore.Logger.Error("Save Prefix was invalid!");
                 return;
             }
+
+            this.savePrefix = newPrefix;
         }
         
         // -------------------------------------------------------------------

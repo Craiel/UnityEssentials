@@ -74,27 +74,34 @@ namespace Craiel.UnityEssentials.Runtime.Utils
         {
             return this.Read(key.ToString(CultureInfo.InvariantCulture), out value);
         }
+        
+        public YamlFluentDeserializer Read(int key, out int value)
+        {
+            return this.Read(key.ToString(CultureInfo.InvariantCulture), out value);
+        }
+        
+        public YamlFluentDeserializer Read(int key, out ushort value)
+        {
+            return this.Read(key.ToString(CultureInfo.InvariantCulture), out value);
+        }
 
         public YamlFluentDeserializer Read(string key, out ushort value)
         {
-            string valueString;
-            this.Read(key, out valueString);
+            this.Read(key, out string valueString);
             value = ushort.Parse(valueString);
             return this;
         }
 
         public YamlFluentDeserializer Read(string key, out int value)
         {
-            string valueString;
-            this.Read(key, out valueString);
+            this.Read(key, out string valueString);
             value = int.Parse(valueString);
             return this;
         }
 
         public YamlFluentDeserializer Read(string key, out string value)
         {
-            YamlNode valueNode;
-            this.Read(key, out valueNode);
+            this.Read(key, out YamlNode valueNode);
             value = ((YamlScalarNode)valueNode).Value;
             return this;
         }

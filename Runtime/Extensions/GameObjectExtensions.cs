@@ -55,8 +55,19 @@
         {
             return target.layer == LayerMask.NameToLayer(layerName);
         }
+
+        public static GameObject CreateEmptyGameObject<T>()
+            where T : Component
+        {
+            return CreateEmptyGameObject(null, components: typeof(T));
+        }
         
-        public static GameObject CreateEmptyGameObject(string name = null, Transform parent = null, params System.Type[] components)
+        public static GameObject CreateEmptyGameObject(params System.Type[] components)
+        {
+            return CreateEmptyGameObject(null, components: components);
+        }
+
+        public static GameObject CreateEmptyGameObject(string name, Transform parent = null, params System.Type[] components)
         {
             if (string.IsNullOrEmpty(name))
             {

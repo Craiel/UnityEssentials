@@ -26,9 +26,20 @@
         public static ManagedDirectory WorkingDirectory { get; private set; }
 
         public static ManagedDirectory SystemDirectory { get; private set; }
+        
+        public static bool RunningFromNUnit { get; private set; }
 
         private static void UpdateRuntimeInfo()
         {
+            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                if (assembly.FullName.ToLowerInvariant().StartsWith("nunit.framework"))
+                {
+                    RunningFromNUnit = true;
+                    break;
+                }
+            }
+            
             WorkingDirectory = new ManagedDirectory(System.IO.Directory.GetCurrentDirectory());
 
             if (ProcessName == null)
@@ -40,7 +51,7 @@
 
             if (AssemblyName == null)
             {
-                Assembly = UnitTest.IsRunningFromNunit ? Assembly.GetExecutingAssembly() : Assembly.GetEntryAssembly();
+                Assembly = RunningFromNUnit ? Assembly.GetExecutingAssembly() : Assembly.GetEntryAssembly();
                 if (Assembly != null)
                 {
                     AssemblyName = System.IO.Path.GetFileName(Assembly.Location);
@@ -49,6 +60,8 @@
             }
 
             SystemDirectory = new ManagedDirectory(Environment.GetFolderPath(Environment.SpecialFolder.System));
+            
+            
         }
     }
 }

@@ -1,0 +1,19 @@
+{
+    "name": "Craiel.UnityEssentials.Tests",
+    "references": [
+        "Craiel.UnityEssentials.Runtime",
+        "Craiel.UnityEssentials.Editor"
+    ],
+    "optionalUnityReferences": [
+        "TestAssemblies"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
+}

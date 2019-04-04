@@ -16,6 +16,9 @@ namespace Craiel.UnityEssentials.Runtime.Utils
         private readonly Stack<YamlNode> parentStack;
         private readonly Stack<int> parentIndexStack;
 
+        private YamlSequenceNode rootNode;
+        private int nextRootNodeIndex;
+
         private YamlDocument activeDocument;
         private int activeDocumentIndex;
 
@@ -60,7 +63,8 @@ namespace Craiel.UnityEssentials.Runtime.Utils
             }
 
             this.ClearParentStack();
-            this.PushParent(this.activeDocument.RootNode);
+            this.rootNode = (YamlSequenceNode)this.activeDocument.RootNode;
+            
             return this;
         }
 
@@ -69,20 +73,29 @@ namespace Craiel.UnityEssentials.Runtime.Utils
             this.SetDocument(this.activeDocumentIndex++);
             return this;
         }
-
+        
         public YamlFluentDeserializer Read(int key, out string value)
         {
-            return this.Read(key.ToString(CultureInfo.InvariantCulture), out value);
+            value = this.DoReadString(key);
+            return this;
+        }
+        
+        public YamlFluentDeserializer Read(string key, out string value)
+        {
+            value = this.DoReadString(key);
+            return this;
         }
         
         public YamlFluentDeserializer Read(int key, out int value)
         {
-            return this.Read(key.ToString(CultureInfo.InvariantCulture), out value);
+            value = this.DoReadInt(key);
+            return this;
         }
         
         public YamlFluentDeserializer Read(int key, out ushort value)
         {
-            return this.Read(key.ToString(CultureInfo.InvariantCulture), out value);
+            value = (ushort)this.DoReadInt(key);
+            return this;
         }
 
         public YamlFluentDeserializer Read(string key, out ushort value)
@@ -99,30 +112,38 @@ namespace Craiel.UnityEssentials.Runtime.Utils
             return this;
         }
 
-        public YamlFluentDeserializer Read(string key, out string value)
-        {
-            this.Read(key, out YamlNode valueNode);
-            value = ((YamlScalarNode)valueNode).Value;
-            return this;
-        }
-
-        public YamlFluentDeserializer Read(string key, out YamlNode value)
+        public int GetElementCount()
         {
             YamlNode node = this.parentStack.Peek();
             switch (node.NodeType)
             {
+                case YamlNodeType.Sequence:
+                {
+                    return ((YamlSequenceNode) node).Children.Count;
+                }
+
                 case YamlNodeType.Mapping:
-                    {
-                        value = this.GetChild(key, (YamlMappingNode)node);
-                        break;
-                    }
+                {
+                    return ((YamlMappingNode) node).Children.Count;
+                }
 
                 default:
-                    {
-                        throw new SerializationException("Read of Map called on invalid parent node");
-                    }
+                {
+                    throw new SerializationException("GetElementCount called on invalid parent node");
+                }
             }
-            
+        }
+        
+        public YamlFluentDeserializer ReadAll(out IList<int> values)
+        {
+            values = new List<int>();
+            int count = this.GetElementCount();
+            for (var i = 0; i < count; i++)
+            {
+                this.Read(i, out int value);
+                values.Add(value);
+            }
+
             return this;
         }
 
@@ -158,24 +179,41 @@ namespace Craiel.UnityEssentials.Runtime.Utils
 
         public void BeginRead()
         {
+            if (this.parentStack.Count == 0)
+            {
+                if (this.rootNode.Children.Count == 0)
+                {
+                    throw new SerializationException("Root node has no children");
+                }
+
+                if (this.nextRootNodeIndex >= this.rootNode.Children.Count)
+                {
+                    throw new SerializationException("End of Document");
+                }
+                
+                this.PushParent(this.rootNode.Children[this.nextRootNodeIndex], this.nextRootNodeIndex);
+                this.nextRootNodeIndex++;
+                return;
+            }
+            
             YamlNode node = this.parentStack.Peek();
             switch (node.NodeType)
             {
                 case YamlNodeType.Sequence:
-                    {
-                        // Get the current sequence position and increment on the stack
-                        int currentIndex = this.parentIndexStack.Pop();
-                        this.parentIndexStack.Push(currentIndex++);
+                {
+                    // Get the current sequence position and increment on the stack
+                    int currentIndex = this.parentIndexStack.Pop();
+                    this.parentIndexStack.Push(currentIndex++);
 
-                        // Add the current index node as the new parent
-                        this.PushParent(((YamlSequenceNode)node).Children[currentIndex]);
-                        break;
-                    }
-
+                    // Add the current index node as the new parent
+                    this.PushParent(((YamlSequenceNode) node).Children[currentIndex]);
+                    break;
+                }
+                
                 default:
-                    {
-                        throw new SerializationException("BeginRead called on invalid parent node");
-                    }
+                {
+                    throw new SerializationException("BeginRead called on invalid parent node");
+                }
             }
         }
 
@@ -209,6 +247,45 @@ namespace Craiel.UnityEssentials.Runtime.Utils
         {
             // NOTE: This line is making a lot of assumptions, we want every one of them to crash, do not add try / catch here
             return mapping.First(x => ((YamlScalarNode)x.Key).Value.Equals(key, StringComparison.Ordinal)).Value;
+        }
+        
+        private string DoReadString(object key)
+        {
+            YamlNode node = this.DoRead(key);
+            return ((YamlScalarNode) node)?.Value;
+        }
+        
+        private int DoReadInt(object key)
+        {
+            YamlNode node = this.DoRead(key);
+            if (node == null)
+            {
+                return 0;
+            }
+            
+            return int.Parse(((YamlScalarNode) node).Value);
+        }
+        
+        private YamlNode DoRead(object key)
+        {
+            YamlNode node = this.parentStack.Peek();
+            switch (node.NodeType)
+            {
+                case YamlNodeType.Sequence:
+                {
+                    return ((YamlSequenceNode) node).Children[(int)key];
+                }
+
+                case YamlNodeType.Mapping:
+                {
+                    return this.GetChild(key.ToString(), (YamlMappingNode) node);
+                }
+
+                default:
+                {
+                    throw new SerializationException("Read of Map called on invalid parent node");
+                }
+            }
         }
     }
 }

@@ -46,7 +46,7 @@ namespace Craiel.UnityEssentials.Runtime.Utils
             this.End();
 
             // Then add the floating node to the document
-            this.AddNodeToParent(key, valueNode);
+            this.AddNodeToParentMap(key, valueNode);
 
             return this;
         }
@@ -83,13 +83,13 @@ namespace Craiel.UnityEssentials.Runtime.Utils
 
         public YamlFluentSerializer Add(string key, string value)
         {
-            this.AddNodeToParent(new YamlScalarNode(key), new YamlScalarNode(value));
+            this.AddNodeToParentMap(new YamlScalarNode(key), new YamlScalarNode(value));
             return this;
         }
 
         public YamlFluentSerializer Add(string value)
         {
-            this.AddNodeToParent(new YamlScalarNode(value));
+            this.AddNodeToParentSequence(new YamlScalarNode(value));
             return this;
         }
 
@@ -127,7 +127,43 @@ namespace Craiel.UnityEssentials.Runtime.Utils
                 dict.Add(pair.Key, pair.Value);
             }
 
-            this.AddNodeToParent(dict);
+            this.AddNodeToParentSequence(dict);
+            return this;
+        }
+
+        public YamlFluentSerializer Begin(string key, YamlContainerType type, bool floatingNode = false)
+        {
+            switch (type)
+            {
+                case YamlContainerType.Dictionary:
+                {
+                    if (floatingNode)
+                    {
+                        this.parentStack.Push(new YamlMappingNode());
+                    }
+                    else
+                    {
+                        this.AddNodeToParentMap(new YamlScalarNode(key), new YamlMappingNode(), true);
+                    }
+
+                    break;
+                }
+
+                case YamlContainerType.List:
+                {
+                    if (floatingNode)
+                    {
+                        this.parentStack.Push(new YamlSequenceNode());
+                    }
+                    else
+                    {
+                        this.AddNodeToParentMap(new YamlScalarNode(key), new YamlSequenceNode(), true);
+                    }
+
+                    break;
+                }
+            }
+
             return this;
         }
 
@@ -143,7 +179,7 @@ namespace Craiel.UnityEssentials.Runtime.Utils
                         }
                         else
                         {
-                            this.AddNodeToParent(new YamlMappingNode(), true);
+                            this.AddNodeToParentSequence(new YamlMappingNode(), true);
                         }
 
                         break;
@@ -157,7 +193,7 @@ namespace Craiel.UnityEssentials.Runtime.Utils
                         }
                         else
                         {
-                            this.AddNodeToParent(new YamlSequenceNode(), true);
+                            this.AddNodeToParentSequence(new YamlSequenceNode(), true);
                         }
 
                         break;
@@ -195,38 +231,14 @@ namespace Craiel.UnityEssentials.Runtime.Utils
         // -------------------------------------------------------------------
         // Private
         // -------------------------------------------------------------------
-        private void AddNodeToParent(YamlNode key, YamlNode value)
+        private void AddNodeToParentMap(YamlNode key, YamlNode entry, bool pushToStack = false)
         {
             YamlNode parent = this.parentStack.Peek();
             switch (parent.NodeType)
             {
                 case YamlNodeType.Mapping:
                     {
-                        ((YamlMappingNode)parent).Add(key, value);
-                        break;
-                    }
-
-                default:
-                    {
-                        throw new SerializationException("Add Node called for unsupported parent: " + parent);
-                    }
-            }
-        }
-
-        private void AddNodeToParent(YamlNode key, bool pushToStack = false)
-        {
-            YamlNode parent = this.parentStack.Peek();
-            switch (parent.NodeType)
-            {
-                case YamlNodeType.Sequence:
-                    {
-                        ((YamlSequenceNode)parent).Add(key);
-                        break;
-                    }
-
-                case YamlNodeType.Mapping:
-                    {
-                        ((YamlMappingNode)parent).Add(key, string.Empty);
+                        ((YamlMappingNode)parent).Add(key, entry);
                         break;
                     }
 
@@ -238,7 +250,30 @@ namespace Craiel.UnityEssentials.Runtime.Utils
 
             if (pushToStack)
             {
-                this.parentStack.Push(key);
+                this.parentStack.Push(entry);
+            }
+        }
+
+        private void AddNodeToParentSequence(YamlNode entry, bool pushToStack = false)
+        {
+            YamlNode parent = this.parentStack.Peek();
+            switch (parent.NodeType)
+            {
+                case YamlNodeType.Sequence:
+                    {
+                        ((YamlSequenceNode)parent).Add(entry);
+                        break;
+                    }
+
+                default:
+                    {
+                        throw new SerializationException("Add Node called for unsupported parent: " + parent);
+                    }
+            }
+
+            if (pushToStack)
+            {
+                this.parentStack.Push(entry);
             }
         }
     }

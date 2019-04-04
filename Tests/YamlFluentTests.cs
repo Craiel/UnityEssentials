@@ -1,5 +1,6 @@
 namespace Craiel.UnityEssentials.Tests
 {
+    using System.Collections.Generic;
     using NUnit.Framework;
     using Runtime.Enums;
     using Runtime.Utils;
@@ -15,7 +16,9 @@ namespace Craiel.UnityEssentials.Tests
             string data = GetSerializedTest(); 
                 
             Assert.NotNull(data);
-            Assert.AreEqual(100, data.Length);
+            Assert.AreEqual(93, data.Length);
+            
+            UnitTestUtils.Log(data);
         }
 
         [Test]
@@ -33,7 +36,14 @@ namespace Craiel.UnityEssentials.Tests
             Assert.AreEqual("TestValue", testStr);
             Assert.AreEqual(123, testInt2);
             
-            deserializer.BeginRead();
+            deserializer.BeginRead("List");
+            Assert.AreEqual(4, deserializer.GetElementCount());
+            deserializer.Read(1, out ushort listEntry);
+            Assert.AreEqual(5, listEntry);
+            deserializer.ReadAll(out IList<int> values);
+            Assert.AreEqual(4, values.Count);
+            Assert.AreEqual(15, values[2]);
+            
             deserializer.EndRead();
             
             deserializer.EndRead();
@@ -49,7 +59,7 @@ namespace Craiel.UnityEssentials.Tests
                     .Add("TestKey", 25)
                     .Add("TestKey2", "TestValue")
                     .Add(88, 123)
-                    .Begin(YamlContainerType.List)
+                    .Begin("List", YamlContainerType.List)
                         .Add(1)
                         .Add(5)
                         .Add(15)

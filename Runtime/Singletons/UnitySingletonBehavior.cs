@@ -67,7 +67,7 @@
                 }
                 
                 // Only attempt Don't destroy if the object has no parent
-                if (gameObject.transform.parent == null)
+                if (gameObject.transform.parent == null && !RuntimeInfo.RunningFromNUnit)
                 {
                     DontDestroyOnLoad(gameObject);
                 }
@@ -142,7 +142,14 @@
 
             this.OnSingletonDestroying();
 
-            Destroy(this.gameObject);
+            if (RuntimeInfo.RunningFromNUnit)
+            {
+                DestroyImmediate(this.gameObject);
+            }
+            else
+            {
+                Destroy(this.gameObject);
+            }
         }
 
         protected virtual void OnSingletonDestroying()

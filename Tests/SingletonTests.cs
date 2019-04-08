@@ -3,7 +3,6 @@ namespace Craiel.UnityEssentials.Tests
     using System.Collections;
     using NUnit.Framework;
     using Runtime.Singletons;
-    using UnityEditor.VersionControl;
     using UnityEngine;
     using UnityEngine.TestTools;
 
@@ -64,11 +63,16 @@ namespace Craiel.UnityEssentials.Tests
             
             var test = new GameObject("Test123");
             var behavior = test.AddComponent<NormalSingletonBehavior>();
-            behavior.AutoInstantiate = true;
-
-            yield return null;
+            Assert.IsNotNull(behavior);
+            Assert.IsFalse(NormalSingletonBehavior.IsInstanceActive);
+            
+            behavior.SetAutoInstantiate();
             
             Assert.IsTrue(NormalSingletonBehavior.IsInstanceActive);
+            
+            NormalSingletonBehavior.Destroy();
+            
+            yield return null;
         }
     }
 

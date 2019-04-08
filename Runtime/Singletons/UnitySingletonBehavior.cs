@@ -6,6 +6,7 @@
     using Scene;
     using UnityEngine;
     
+    [ExecuteInEditMode]
     public abstract class UnitySingletonBehavior<T> : MonoBehaviour, IUnitySingletonBehavior
         where T : UnitySingletonBehavior<T>
     {
@@ -34,6 +35,19 @@
         }
 
         public bool IsInitialized { get; protected set; }
+
+        public void SetAutoInstantiate()
+        {
+            if (!this.AutoInstantiate)
+            {
+                this.AutoInstantiate = true;
+            }
+
+            if (Instance == null)
+            {
+                InstantiateAndInitialize();
+            }
+        }
 
         public static void Instantiate()
         {

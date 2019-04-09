@@ -1,0 +1,29 @@
+namespace Craiel.UnityEssentials.Runtime.Enums
+{
+    public enum SBTType
+    {
+        Unknown,
+        List,
+        Dictionary,
+        String,
+        StringArray,
+        Byte,
+        ByteArray,
+        Short,
+        ShortArray,
+        UShort,
+        UShortArray,
+        Int,
+        IntArray,
+        UInt,
+        UIntArray,
+        Long,
+        LongArray,
+        ULong,
+        ULongArray,
+        Single,
+        SingleArray,
+        Double,
+        DoubleArray
+    }
+}

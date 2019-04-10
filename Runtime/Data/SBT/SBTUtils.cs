@@ -76,17 +76,53 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                 }
 
                 case SBTType.StringArray:
+                {
+                    return new SBTNodeArrayString(type, flags);
+                }
+                
                 case SBTType.ByteArray:
+                {
+                    return new SBTNodeArrayByte(type, flags);
+                }
+                
                 case SBTType.ShortArray:
+                {
+                    return new SBTNodeArrayShort(type, flags);
+                }
+                
                 case SBTType.UShortArray:
+                {
+                    return new SBTNodeArrayUShort(type, flags);
+                }
+                
                 case SBTType.IntArray:
+                {
+                    return new SBTNodeArrayInt(type, flags);
+                }
+                
                 case SBTType.UIntArray:
+                {
+                    return new SBTNodeArrayUInt(type, flags);
+                }
+                
                 case SBTType.LongArray:
+                {
+                    return new SBTNodeArrayLong(type, flags);
+                }
+                
                 case SBTType.ULongArray:
+                {
+                    return new SBTNodeArrayULong(type, flags);
+                }
+                
                 case SBTType.SingleArray:
+                {
+                    return new SBTNodeArraySingle(type, flags);
+                }
+                
                 case SBTType.DoubleArray:
                 {
-                    return new SBTNodeArray(type, flags);
+                    return new SBTNodeArrayDouble(type, flags);
                 }
 
                 case SBTType.List:
@@ -279,6 +315,117 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                     throw new InvalidOperationException("Invalid SimpleType: " + type);
                 }
             }
+        }
+
+        public static byte? GetDataEntrySize(SBTType type)
+        {
+            switch (type)
+            {
+                case SBTType.Byte:
+                {
+                    return sizeof(byte);
+                }
+
+                case SBTType.Short:
+                {
+                    return sizeof(short);
+                }
+
+                case SBTType.UShort:
+                {
+                    return sizeof(ushort);
+                }
+
+                case SBTType.Int:
+                {
+                    return sizeof(int);
+                }
+
+                case SBTType.UInt:
+                {
+                    return sizeof(uint);
+                }
+
+                case SBTType.Long:
+                {
+                    return sizeof(long);
+                }
+
+                case SBTType.ULong:
+                {
+                    return sizeof(ulong);
+                }
+
+                case SBTType.Single:
+                {
+                    return sizeof(float);
+                }
+
+                case SBTType.Double:
+                {
+                    return sizeof(double);
+                }
+
+                default:
+                {
+                    return null;
+                }
+            }
+        }
+
+        public static SBTType GetArrayBaseType(Type type)
+        {
+            if (type == typeof(string))
+            {
+                return SBTType.StringArray;
+            }
+
+            if (type == typeof(byte))
+            {
+                return SBTType.ByteArray;
+            }
+
+            if (type == typeof(short))
+            {
+                return SBTType.ShortArray;
+            }
+
+            if (type == typeof(ushort))
+            {
+                return SBTType.UShortArray;
+            }
+
+            if (type == typeof(int))
+            {
+                return SBTType.IntArray;
+            }
+
+            if (type == typeof(uint))
+            {
+                return SBTType.UIntArray;
+            }
+
+            if (type == typeof(long))
+            {
+                return SBTType.LongArray;
+            }
+
+            if (type == typeof(ulong))
+            {
+                return SBTType.ULongArray;
+            }
+
+            if (type == typeof(float))
+            {
+                return SBTType.SingleArray;
+            }
+
+            if (type == typeof(double))
+            {
+                return SBTType.DoubleArray;
+            }
+            
+            throw new ArgumentException("Type not supported for SBT Array");
         }
     }
 }

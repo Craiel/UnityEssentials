@@ -12,12 +12,6 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
             return target;
         }
         
-        public static SBTNodeArray Add(this SBTNodeArray target, string data)
-        {
-            target.AddEntry(data);
-            return target;
-        }
-        
         public static SBTNodeDictionary Add(this SBTNodeDictionary target, string key, string data, SBTFlags flags = SBTFlags.None)
         {
             target.AddEntry(key, SBTType.String, data, flags);
@@ -27,12 +21,6 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
         public static SBTNodeList Add(this SBTNodeList target, byte data, SBTFlags flags = SBTFlags.None)
         {
             target.AddEntry(SBTType.Byte, data, flags);
-            return target;
-        }
-        
-        public static SBTNodeArray Add(this SBTNodeArray target, byte data)
-        {
-            target.AddEntry(data);
             return target;
         }
         
@@ -48,12 +36,6 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
             return target;
         }
         
-        public static SBTNodeArray Add(this SBTNodeArray target, short data)
-        {
-            target.AddEntry(data);
-            return target;
-        }
-        
         public static SBTNodeDictionary Add(this SBTNodeDictionary target, string key, short data, SBTFlags flags = SBTFlags.None)
         {
             target.AddEntry(key, SBTType.Short, data, flags);
@@ -63,12 +45,6 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
         public static SBTNodeList Add(this SBTNodeList target, ushort data, SBTFlags flags = SBTFlags.None)
         {
             target.AddEntry(SBTType.UShort, data, flags);
-            return target;
-        }
-        
-        public static SBTNodeArray Add(this SBTNodeArray target, ushort data)
-        {
-            target.AddEntry(data);
             return target;
         }
         
@@ -84,12 +60,6 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
             return target;
         }
         
-        public static SBTNodeArray Add(this SBTNodeArray target, int data)
-        {
-            target.AddEntry(data);
-            return target;
-        }
-        
         public static SBTNodeDictionary Add(this SBTNodeDictionary target, string key, int data, SBTFlags flags = SBTFlags.None)
         {
             target.AddEntry(key, SBTType.Int, data, flags);
@@ -99,12 +69,6 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
         public static SBTNodeList Add(this SBTNodeList target, uint data, SBTFlags flags = SBTFlags.None)
         {
             target.AddEntry(SBTType.UInt, data, flags);
-            return target;
-        }
-        
-        public static SBTNodeArray Add(this SBTNodeArray target, uint data)
-        {
-            target.AddEntry(data);
             return target;
         }
         
@@ -120,12 +84,6 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
             return target;
         }
         
-        public static SBTNodeArray Add(this SBTNodeArray target, long data)
-        {
-            target.AddEntry(data);
-            return target;
-        }
-        
         public static SBTNodeDictionary Add(this SBTNodeDictionary target, string key, long data, SBTFlags flags = SBTFlags.None)
         {
             target.AddEntry(key, SBTType.Long, data, flags);
@@ -135,12 +93,6 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
         public static SBTNodeList Add(this SBTNodeList target, ulong data, SBTFlags flags = SBTFlags.None)
         {
             target.AddEntry(SBTType.ULong, data, flags);
-            return target;
-        }
-        
-        public static SBTNodeArray Add(this SBTNodeArray target, ulong data)
-        {
-            target.AddEntry(data);
             return target;
         }
         
@@ -156,12 +108,6 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
             return target;
         }
         
-        public static SBTNodeArray Add(this SBTNodeArray target, float data)
-        {
-            target.AddEntry(data);
-            return target;
-        }
-        
         public static SBTNodeDictionary Add(this SBTNodeDictionary target, string key, float data, SBTFlags flags = SBTFlags.None)
         {
             target.AddEntry(key, SBTType.Single, data, flags);
@@ -171,12 +117,6 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
         public static SBTNodeList Add(this SBTNodeList target, double data, SBTFlags flags = SBTFlags.None)
         {
             target.AddEntry(SBTType.Double, data, flags);
-            return target;
-        }
-        
-        public static SBTNodeArray Add(this SBTNodeArray target, double data)
-        {
-            target.AddEntry(data);
             return target;
         }
         
@@ -206,24 +146,16 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
             return (SBTNodeDictionary)target.AddEntry(key, SBTType.Dictionary);
         }
         
-        public static SBTNodeArray AddArray(this SBTNodeList target, SBTType type)
+        public static SBTNodeArray<T> AddArray<T>(this SBTNodeList target)
         {
-            if (!type.IsArrayType())
-            {
-                throw new ArgumentException("Invalid Array Type: " + type);
-            }
-            
-            return (SBTNodeArray)target.AddEntry(type);
+            SBTType type = SBTUtils.GetArrayBaseType(typeof(T));
+            return (SBTNodeArray<T>)target.AddEntry(type);
         }
         
-        public static SBTNodeArray AddArray(this SBTNodeDictionary target, string key, SBTType type)
+        public static SBTNodeArray<T> AddArray<T>(this SBTNodeDictionary target, string key)
         {
-            if (!type.IsArrayType())
-            {
-                throw new ArgumentException("Invalid Array Type: " + type);
-            }
-            
-            return (SBTNodeArray)target.AddEntry(key, type);
+            SBTType type = SBTUtils.GetArrayBaseType(typeof(T));
+            return (SBTNodeArray<T>)target.AddEntry(key, type);
         }
     }
 }

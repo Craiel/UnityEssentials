@@ -2,6 +2,7 @@ namespace Craiel.UnityEssentials.Tests
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using NUnit.Framework;
     using Runtime.Data.SBT;
     using Runtime.Data.SBT.Nodes;
@@ -163,10 +164,10 @@ namespace Craiel.UnityEssentials.Tests
             nestedDictionary = dData.AddDictionary("NestedDict");
             FillTestDictionary(nestedDictionary);
             
-            var nestedArray = lData.AddArray(SBTType.IntArray);
+            var nestedArray = lData.AddArray<int>();
             FillTestArray(nestedArray);
             
-            nestedArray = dData.AddArray("NestedIntArray", SBTType.Int);
+            nestedArray = dData.AddArray<int>("NestedIntArray");
             FillTestArray(nestedArray);
             
             byte[] lbData = lData.Serialize();
@@ -174,10 +175,10 @@ namespace Craiel.UnityEssentials.Tests
             byte[] dbData = dData.Serialize();
             byte[] dbcData = dData.SerializeCompressed();
             
-            Assert.AreEqual(231, lbData.Length);
-            Assert.AreEqual(177, lbcData.Length);
-            Assert.AreEqual(253, dbData.Length);
-            Assert.AreEqual(193, dbcData.Length);
+            Assert.AreEqual(20242, lbData.Length);
+            Assert.AreEqual(7252, lbcData.Length);
+            Assert.AreEqual(20279, dbData.Length);
+            Assert.AreEqual(7285, dbcData.Length);
             
             var lDataOut = SBTList.Deserialize(lbData);
             var lcDataOut = SBTList.DeserializeCompressed(lbcData);
@@ -195,7 +196,7 @@ namespace Craiel.UnityEssentials.Tests
             var compareDict = dDataOut.ReadDictionary("NestedDict");
             Assert.AreEqual(nestedDictionary.Count, compareDict.Count);
             
-            var compareArray = dDataOut.ReadArray("NestedIntArray");
+            var compareArray = dDataOut.ReadArray<int>("NestedIntArray");
             Assert.AreEqual(nestedArray.Length, compareArray.Length);
         }
         
@@ -204,16 +205,25 @@ namespace Craiel.UnityEssentials.Tests
         {
             var lData = new SBTList();
             
-            var nestedArray = lData.AddArray(SBTType.IntArray);
-            FillTestArray(nestedArray);
+            var nestedArray = lData.AddArray<int>();
+            Assert.AreEqual(2621440, nestedArray.Capacity);
             
-            Assert.AreEqual(50, nestedArray.Length);
+            FillTestArray(nestedArray);
+            nestedArray.Set(123, 999999);
+            
+            Assert.AreEqual(5000, nestedArray.Length);
+
+            var nestedUShortArray = lData.AddArray<ushort>();
+            Assert.AreEqual(5242880, nestedUShortArray.Capacity);
+            
+            nestedUShortArray.AddChecked(15);
+            nestedUShortArray.AddChecked(515);
             
             byte[] lbData = lData.Serialize();
             byte[] lbcData = lData.SerializeCompressed();
             
-            Assert.AreEqual(231, lbData.Length);
-            Assert.AreEqual(177, lbcData.Length);
+            Assert.AreEqual(20031, lbData.Length);
+            Assert.AreEqual(7023, lbcData.Length);
             
             var lDataOut = SBTList.Deserialize(lbData);
             var lcDataOut = SBTList.DeserializeCompressed(lbcData);
@@ -221,13 +231,37 @@ namespace Craiel.UnityEssentials.Tests
             Assert.AreEqual(lData.Count, lDataOut.Count);
             Assert.AreEqual(lData.Count, lcDataOut.Count);
             
-            var compareArray = lDataOut.ReadArray(0);
-            Assert.AreEqual(nestedArray.Length, compareArray.Length);
-            
+            var compareArray = lDataOut.ReadArray<int>(0);
+            Assert.AreEqual(5000, compareArray.Length);
+            Assert.AreEqual(1052, compareArray.Read(1052));
+            Assert.AreEqual(999999, compareArray.Read(123));
             for (var i = 0; i < 50; i++)
             {
                 Assert.AreEqual(i, compareArray.Read(i));
             }
+            
+            var compareUShortArray = lDataOut.ReadArray<ushort>(1);
+            Assert.AreEqual(2, compareUShortArray.Length);
+            Assert.AreEqual(515, compareUShortArray.Read(1));
+        }
+
+        [Test]
+        public static void PerformanceTest()
+        {
+            var baseline = UnitTestUtils.GetPerformanceBaseline();
+            UnitTestUtils.Log("Baseline: {0:N4}", baseline);
+            
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+            for (var i = 0; i < 100; i++)
+            {
+                NestingTest();
+            }
+            
+            stopWatch.Stop();
+            double elapsed = stopWatch.Elapsed.TotalSeconds;
+            UnitTestUtils.Log("Elapsed: {0:N3}, BS: {1:N3}", elapsed, elapsed * baseline);
+            Assert.LessOrEqual(elapsed * baseline, 0.6f);
         }
         
         // -------------------------------------------------------------------
@@ -261,11 +295,12 @@ namespace Craiel.UnityEssentials.Tests
                 .Add(TestDouble);
         }
 
-        private static void FillTestArray(SBTNodeArray target)
+        private static void FillTestArray(SBTNodeArray<int> target)
         {
-            for (var i = 0; i < 50; i++)
+            target.SetCapacity(5000);
+            for (var i = 0; i < 5000; i++)
             {
-                target.AddEntry(i);
+                target.Add(i);
             }
         }
     }

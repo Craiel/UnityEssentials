@@ -115,14 +115,14 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
             return source.Read(key).Flags;
         }
 
-        public static SBTNodeArray ReadArray(this SBTList source, int index)
+        public static SBTNodeArray<T> ReadArray<T>(this SBTList source, int index)
         {
-            return source.Read<SBTNodeArray>(index);
+            return source.Read<SBTNodeArray<T>>(index);
         }
         
-        public static SBTNodeArray ReadArray(this SBTDictionary source, string key)
+        public static SBTNodeArray<T> ReadArray<T>(this SBTDictionary source, string key)
         {
-            return source.Read<SBTNodeArray>(key);
+            return source.Read<SBTNodeArray<T>>(key);
         }
         
         public static SBTNodeList ReadList(this SBTList source, int index)

@@ -4,6 +4,7 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.IO.Compression;
+    using System.Runtime.CompilerServices;
     using System.Text;
     using Enums;
     using Nodes;
@@ -142,6 +143,12 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
             }
         }
         
+        public static string SerializeToString(this ISBTNode node)
+        {
+            byte[] data = node.Serialize();
+            return Convert.ToBase64String(data);
+        }
+        
         public static byte[] Serialize(this ISBTNode node)
         {
             using (var stream = new MemoryStream())
@@ -185,6 +192,11 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                 node.WriteHeader(writer);
                 node.Serialize(writer);
             }
+        }
+        
+        public static ISBTNode Deserialize(string data)
+        {
+            return Deserialize(Convert.FromBase64String(data));
         }
         
         public static ISBTNode Deserialize(byte[] data)

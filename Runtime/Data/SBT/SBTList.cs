@@ -9,6 +9,11 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
+        public static SBTList Deserialize(string data)
+        {
+            return (SBTList)SBTUtils.Deserialize(data);
+        }
+        
         public static SBTList Deserialize(byte[] data)
         {
             return (SBTList)SBTUtils.Deserialize(data);

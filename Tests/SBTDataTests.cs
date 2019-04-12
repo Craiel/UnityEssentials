@@ -263,6 +263,27 @@ namespace Craiel.UnityEssentials.Tests
             UnitTestUtils.Log("Elapsed: {0:N3}, BS: {1:N3}", elapsed, elapsed * baseline);
             Assert.LessOrEqual(elapsed * baseline, 0.6f);
         }
+
+        [Test]
+        public static void StringTest()
+        {
+            var lData = new SBTList();
+            var dData = new SBTDictionary();
+            
+            string lbData = lData.SerializeToString();
+            string dbData = dData.SerializeToString();
+            
+            // Note: Compression with so little data actually produces overhead
+            Assert.AreEqual(139, lbData.Length);
+            Assert.AreEqual(139, dbData.Length);
+            
+            // Deserialize
+            var lDataOut = SBTList.Deserialize(lbData);
+            var dDataOut = SBTDictionary.Deserialize(dbData);
+            
+            Assert.AreEqual(lData.Count, lDataOut.Count);
+            Assert.AreEqual(dData.Count, dDataOut.Count);
+        }
         
         // -------------------------------------------------------------------
         // Private

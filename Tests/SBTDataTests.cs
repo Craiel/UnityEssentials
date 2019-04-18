@@ -246,36 +246,20 @@ namespace Craiel.UnityEssentials.Tests
         }
 
         [Test]
-        public static void PerformanceTest()
-        {
-            var baseline = UnitTestUtils.GetPerformanceBaseline();
-            UnitTestUtils.Log("Baseline: {0:N4}", baseline);
-            
-            var stopWatch = new Stopwatch();
-            stopWatch.Start();
-            for (var i = 0; i < 100; i++)
-            {
-                NestingTest();
-            }
-            
-            stopWatch.Stop();
-            double elapsed = stopWatch.Elapsed.TotalSeconds;
-            UnitTestUtils.Log("Elapsed: {0:N3}, BS: {1:N3}", elapsed, elapsed * baseline);
-            Assert.LessOrEqual(elapsed * baseline, 0.6f);
-        }
-
-        [Test]
         public static void StringTest()
         {
             var lData = new SBTList();
             var dData = new SBTDictionary();
             
+            FillTestList(lData);
+            FillTestDictionary(dData);
+            
             string lbData = lData.SerializeToString();
             string dbData = dData.SerializeToString();
             
             // Note: Compression with so little data actually produces overhead
-            Assert.AreEqual(139, lbData.Length);
-            Assert.AreEqual(139, dbData.Length);
+            Assert.AreEqual(116, lbData.Length);
+            Assert.AreEqual(188, dbData.Length);
             
             // Deserialize
             var lDataOut = SBTList.Deserialize(lbData);

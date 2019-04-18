@@ -4,7 +4,6 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.IO.Compression;
-    using System.Runtime.CompilerServices;
     using System.Text;
     using Enums;
     using Nodes;

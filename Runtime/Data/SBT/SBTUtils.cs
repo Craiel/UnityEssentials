@@ -248,6 +248,20 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                 }
             }
         }
+        
+        public static ISBTNode DeserializeCompressed(Stream stream)
+        {
+            using (var decompressedStream = new MemoryStream())
+            {
+                using (var zipStream = new GZipStream(stream, CompressionMode.Decompress, true))
+                {
+                    zipStream.CopyTo(decompressedStream);
+                }
+
+                decompressedStream.Seek(0, SeekOrigin.Begin);
+                return Deserialize(decompressedStream);
+            }
+        }
 
         public static ISBTNode Deserialize(Stream stream)
         {
@@ -275,7 +289,7 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
 
                     default:
                     {
-                        throw new InvalidDataException("SBT had unexpected root type: {0}" + type);
+                        throw new InvalidDataException("SBT had unexpected root type: " + type);
                     }
                 }
             }

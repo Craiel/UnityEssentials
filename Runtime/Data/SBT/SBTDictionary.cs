@@ -28,5 +28,10 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
         {
             return (SBTDictionary)SBTUtils.Deserialize(source);
         }
+        
+        public static SBTDictionary DeserializeCompressed(Stream source)
+        {
+            return (SBTDictionary)SBTUtils.DeserializeCompressed(source);
+        }
     }
 }

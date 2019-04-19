@@ -6,8 +6,6 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT.Nodes
 
     public struct SBTNodeSingle : ISBTNode
     {
-        
-        
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------

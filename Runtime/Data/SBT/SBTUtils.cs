@@ -6,6 +6,7 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
     using System.IO.Compression;
     using System.Text;
     using Enums;
+    using IO;
     using Nodes;
 
     public static class SBTUtils
@@ -135,6 +136,11 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                     return new SBTNodeDictionary(flags);
                 }
 
+                case SBTType.Stream:
+                {
+                    return new SBTNodeStream();
+                }
+
                 default:
                 {
                     throw new InvalidDataException("Invalid Binary: " + type);
@@ -181,6 +187,26 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                 stream.Seek(0, SeekOrigin.Begin);
                 stream.Read(data, 0, data.Length);
                 return data;
+            }
+        }
+
+        public static void SerializeToFile(this ISBTNode node, ManagedFile target)
+        {
+            target.GetDirectory().Create();
+            using (var stream = target.OpenWrite())
+            {
+                byte[] data = node.Serialize();
+                stream.Write(data, 0, data.Length);
+            }
+        }
+        
+        public static void SerializeToFileCompressed(this ISBTNode node, ManagedFile target)
+        {
+            target.GetDirectory().Create();
+            using (var stream = target.OpenWrite())
+            {
+                byte[] data = node.SerializeCompressed();
+                stream.Write(data, 0, data.Length);
             }
         }
         

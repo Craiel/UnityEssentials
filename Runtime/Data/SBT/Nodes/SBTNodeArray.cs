@@ -102,6 +102,14 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT.Nodes
         {
             this.data[this.nextDataIndex++] = entry;
         }
+        
+        public void Add(T[] entries)
+        {
+            for (var i = 0; i < entries.Length; i++)
+            {
+                this.data[this.nextDataIndex++] = entries[i];
+            }
+        }
 
         public void Set(int index, T entry)
         {

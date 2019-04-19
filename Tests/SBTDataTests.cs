@@ -3,6 +3,9 @@ namespace Craiel.UnityEssentials.Tests
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.IO;
+    using System.Linq;
+    using System.Net.Http.Headers;
     using NUnit.Framework;
     using Runtime.Data.SBT;
     using Runtime.Data.SBT.Nodes;
@@ -21,7 +24,10 @@ namespace Craiel.UnityEssentials.Tests
         private const float TestFloat = 5124.5152f;
         private const double TestDouble = 4141259683476126434361948561251345665.145f;
         
-        private static readonly int[] TestArray = new[] {5, 15, 23, 591, int.MaxValue};
+        private const int StreamTestCount = 100;
+        
+        private static readonly int[] TestArray = {5, 15, 23, 591, int.MaxValue};
+        private static readonly byte[] ByteArrayTestData = {25, 99, 100};
 
         // -------------------------------------------------------------------
         // Public
@@ -246,6 +252,43 @@ namespace Craiel.UnityEssentials.Tests
         }
 
         [Test]
+        public static void StreamTest()
+        {
+            var lData = new SBTList();
+
+            var nestedStream = lData.AddStream();
+            FillTestStream(nestedStream);
+            
+            Assert.AreEqual(700, nestedStream.Length);
+
+            byte[] lbData = lData.Serialize();
+            byte[] lbcData = lData.SerializeCompressed();
+            
+            Assert.AreEqual(712, lbData.Length);
+            Assert.AreEqual(197, lbcData.Length);
+            
+            var lDataOut = SBTList.Deserialize(lbData);
+            var lcDataOut = SBTList.DeserializeCompressed(lbcData);
+            
+            Assert.AreEqual(lData.Count, lDataOut.Count);
+            Assert.AreEqual(lData.Count, lcDataOut.Count);
+
+            var compareStream = lDataOut.ReadStream(0);
+            Assert.AreEqual(700, compareStream.Length);
+            using (var reader = compareStream.BeginRead())
+            {
+                for (var i = 0; i < StreamTestCount; i++)
+                {
+                    int id = reader.ReadInt32();
+                    Assert.AreEqual(i, id);
+
+                    byte[] data = reader.ReadBytes(ByteArrayTestData.Length);
+                    Assert.IsTrue(data.SequenceEqual(ByteArrayTestData));
+                }
+            }
+        }
+
+        [Test]
         public static void StringTest()
         {
             var lData = new SBTList();
@@ -306,6 +349,19 @@ namespace Craiel.UnityEssentials.Tests
             for (var i = 0; i < 5000; i++)
             {
                 target.Add(i);
+            }
+        }
+
+        private static void FillTestStream(SBTNodeStream target)
+        {
+            target.Seek(0, SeekOrigin.Begin);
+            using (var writer = target.BeginWrite())
+            {
+                for (var i = 0; i < StreamTestCount; i++)
+                {
+                    writer.Write(i);
+                    writer.Write(ByteArrayTestData);
+                }
             }
         }
     }

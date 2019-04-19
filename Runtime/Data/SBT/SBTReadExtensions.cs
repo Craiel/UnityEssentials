@@ -144,5 +144,15 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
         {
             return source.Read<SBTNodeDictionary>(key);
         }
+        
+        public static SBTNodeStream ReadStream(this SBTList source, int index)
+        {
+            return source.Read<SBTNodeStream>(index);
+        }
+        
+        public static SBTNodeStream ReadStream(this SBTDictionary source, string key)
+        {
+            return source.Read<SBTNodeStream>(key);
+        }
     }
 }

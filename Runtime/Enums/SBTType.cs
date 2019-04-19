@@ -24,6 +24,7 @@ namespace Craiel.UnityEssentials.Runtime.Enums
         Single,
         SingleArray,
         Double,
-        DoubleArray
+        DoubleArray,
+        Stream
     }
 }

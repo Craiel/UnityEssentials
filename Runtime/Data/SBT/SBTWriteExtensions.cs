@@ -152,10 +152,34 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
             return (SBTNodeArray<T>)target.AddEntry(type);
         }
         
+        public static void AddArray<T>(this SBTNodeList target, T[] values)
+        {
+            SBTType type = SBTUtils.GetArrayBaseType(typeof(T));
+            var array = (SBTNodeArray<T>) target.AddEntry(type);
+            array.Add(values);
+        }
+        
         public static SBTNodeArray<T> AddArray<T>(this SBTNodeDictionary target, string key)
         {
             SBTType type = SBTUtils.GetArrayBaseType(typeof(T));
             return (SBTNodeArray<T>)target.AddEntry(key, type);
+        }
+        
+        public static void AddArray<T>(this SBTNodeDictionary target, string key, T[] values)
+        {
+            SBTType type = SBTUtils.GetArrayBaseType(typeof(T));
+            var array = (SBTNodeArray<T>) target.AddEntry(key, type);
+            array.Add(values);
+        }
+        
+        public static SBTNodeStream AddStream(this SBTNodeList target)
+        {
+            return (SBTNodeStream)target.AddEntry(SBTType.Stream);
+        }
+        
+        public static SBTNodeStream AddStream(this SBTNodeDictionary target, string key)
+        {
+            return (SBTNodeStream)target.AddEntry(key, SBTType.Stream);
         }
     }
 }

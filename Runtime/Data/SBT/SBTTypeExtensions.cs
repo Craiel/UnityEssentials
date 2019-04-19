@@ -22,6 +22,10 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                 case SBTType.ULong:
                 case SBTType.Single:
                 case SBTType.Double:
+                case SBTType.Vector2:
+                case SBTType.Vector3:
+                case SBTType.Quaternion:
+                case SBTType.Color:
                 {
                     return true;
                 }

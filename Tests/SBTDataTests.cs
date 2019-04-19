@@ -10,6 +10,8 @@ namespace Craiel.UnityEssentials.Tests
     using Runtime.Data.SBT;
     using Runtime.Data.SBT.Nodes;
     using Runtime.Enums;
+    using Runtime.Extensions;
+    using UnityEngine;
 
     public static class SBTDataTests
     {
@@ -23,6 +25,11 @@ namespace Craiel.UnityEssentials.Tests
         private const ulong TestULong = 9315125161642661862;
         private const float TestFloat = 5124.5152f;
         private const double TestDouble = 4141259683476126434361948561251345665.145f;
+        
+        private static readonly Vector2 TestVector2 = new Vector2(9.5f, 8.5f);
+        private static readonly Vector3 TestVector3 = new Vector3(123.5f, 515.2f, 999991.5534f);
+        private static readonly Quaternion TestQuaternion = Quaternion.LookRotation(Vector3.left, Vector3.up);
+        private static readonly Color TestColor = new Color(0.2f, 0.6f, 0.1f, 0.2f);
         
         private const int StreamTestCount = 100;
         
@@ -310,6 +317,49 @@ namespace Craiel.UnityEssentials.Tests
             
             Assert.AreEqual(lData.Count, lDataOut.Count);
             Assert.AreEqual(dData.Count, dDataOut.Count);
+        }
+
+        [Test]
+        public static void UnityTest()
+        {
+            var lData = new SBTList();
+            var dData = new SBTDictionary();
+
+            lData.Add(TestVector2);
+            lData.Add(TestVector3);
+            lData.Add(TestQuaternion);
+            lData.Add(TestColor);
+            
+            dData.Add("Vec2", TestVector2);
+            dData.Add("Vec3A", TestVector3);
+            dData.Add("Rotation", TestQuaternion);
+            dData.Add("RotationCMP", TestQuaternion.Compress());
+            dData.Add("MyColor", TestColor);
+            
+            string lbData = lData.SerializeToString();
+            string dbData = dData.SerializeToString();
+            
+            // Note: Compression with so little data actually produces overhead
+            Assert.AreEqual(92, lbData.Length);
+            Assert.AreEqual(160, dbData.Length);
+            
+            // Deserialize
+            var lDataOut = SBTList.Deserialize(lbData);
+            var dDataOut = SBTDictionary.Deserialize(dbData);
+            
+            Assert.AreEqual(lData.Count, lDataOut.Count);
+            Assert.AreEqual(dData.Count, dDataOut.Count);
+            
+            Assert.AreEqual(lData.ReadVector2(0), lData.ReadVector2(0));
+            Assert.AreEqual(lData.ReadVector3(1), lData.ReadVector3(1));
+            Assert.AreEqual(lData.ReadQuaternion(2), lData.ReadQuaternion(2));
+            Assert.AreEqual(lData.ReadColor(3), lData.ReadColor(3));
+            
+            Assert.AreEqual(dData.ReadVector2("Vec2"), dDataOut.ReadVector2("Vec2"));
+            Assert.AreEqual(dData.ReadVector3("Vec3A"), dDataOut.ReadVector3("Vec3A"));
+            Assert.AreEqual(dData.ReadQuaternion("Rotation"), dDataOut.ReadQuaternion("Rotation"));
+            Assert.AreEqual(dData.ReadLong("RotationCMP"), dDataOut.ReadLong("RotationCMP"));
+            Assert.AreEqual(dData.ReadColor("MyColor"), dDataOut.ReadColor("MyColor"));
         }
         
         // -------------------------------------------------------------------

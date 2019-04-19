@@ -3,13 +3,15 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT.Nodes
     using System;
     using System.IO;
     using Enums;
+    using Extensions;
+    using UnityEngine;
 
-    public struct SBTNodeUShort : ISBTNode
+    public class SBTNodeColor : ISBTNode
     {
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public SBTNodeUShort(ushort data, SBTFlags flags = SBTFlags.None)
+        public SBTNodeColor(Color data, SBTFlags flags = SBTFlags.None)
         {
             this.Data = data;
             this.Flags = flags;
@@ -18,13 +20,13 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT.Nodes
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        public readonly ushort Data;
+        public readonly Color Data;
         
         public SBTFlags Flags { get; }
 
         public SBTType Type
         {
-            get { return SBTType.UShort; }
+            get { return SBTType.Color; }
         }
         
         public void Serialize(BinaryWriter writer)

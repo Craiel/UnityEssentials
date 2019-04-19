@@ -6,8 +6,11 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
     using System.IO.Compression;
     using System.Text;
     using Enums;
+    using Extensions;
     using IO;
     using Nodes;
+    using UnityEngine;
+    using CompressionLevel = System.IO.Compression.CompressionLevel;
 
     public static class SBTUtils
     {
@@ -139,6 +142,26 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                 case SBTType.Stream:
                 {
                     return new SBTNodeStream();
+                }
+
+                case SBTType.Vector2:
+                {
+                    return new SBTNodeVector2((Vector2)data, flags);
+                }
+                
+                case SBTType.Vector3:
+                {
+                    return new SBTNodeVector3((Vector3)data, flags);
+                }
+                
+                case SBTType.Quaternion:
+                {
+                    return new SBTNodeQuaternion((Quaternion)data, flags);
+                }
+                
+                case SBTType.Color:
+                {
+                    return new SBTNodeColor((Color)data, flags);
                 }
 
                 default:
@@ -361,6 +384,26 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                     return reader.ReadDouble();
                 }
 
+                case SBTType.Vector2:
+                {
+                    return reader.ReadVector2();
+                }
+
+                case SBTType.Vector3:
+                {
+                    return reader.ReadVector3();
+                }
+
+                case SBTType.Quaternion:
+                {
+                    return reader.ReadQuaternion();
+                }
+
+                case SBTType.Color:
+                {
+                    return reader.ReadColor();
+                }
+
                 default:
                 {
                     throw new InvalidOperationException("Invalid SimpleType: " + type);
@@ -415,6 +458,26 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                 case SBTType.Double:
                 {
                     return sizeof(double);
+                }
+
+                case SBTType.Vector2:
+                {
+                    return sizeof(float) * 2;
+                }
+
+                case SBTType.Vector3:
+                {
+                    return sizeof(float) * 3;
+                }
+
+                case SBTType.Quaternion:
+                {
+                    return sizeof(float) * 4;
+                }
+
+                case SBTType.Color:
+                {
+                    return sizeof(float) * 4;
                 }
 
                 default:

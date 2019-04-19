@@ -34,6 +34,14 @@ namespace Craiel.UnityEssentials.Runtime.Extensions
             writer.Write(quaternion.z);
             writer.Write(quaternion.w);
         }
+
+        public static void Write(this BinaryWriter writer, Color color)
+        {
+            writer.Write(color.r);
+            writer.Write(color.g);
+            writer.Write(color.b);
+            writer.Write(color.a);
+        }
         
         public static Vector3 ReadVector3(this BinaryReader reader)
         {
@@ -67,6 +75,15 @@ namespace Craiel.UnityEssentials.Runtime.Extensions
             Bounds result = new Bounds();
             result.SetMinMax(min, max);
             return result;
+        }
+
+        public static Color ReadColor(this BinaryReader reader)
+        {
+            float r = reader.ReadSingle();
+            float g = reader.ReadSingle();
+            float b = reader.ReadSingle();
+            float a = reader.ReadSingle();
+            return new Color(r, g, b, a);
         }
     }
 }

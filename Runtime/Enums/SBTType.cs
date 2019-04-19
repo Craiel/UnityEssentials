@@ -2,6 +2,7 @@ namespace Craiel.UnityEssentials.Runtime.Enums
 {
     public enum SBTType
     {
+        // Default & Simple Types
         Unknown,
         List,
         Dictionary,
@@ -25,6 +26,12 @@ namespace Craiel.UnityEssentials.Runtime.Enums
         SingleArray,
         Double,
         DoubleArray,
-        Stream
+        Stream,
+        
+        // Unity Extras
+        Vector2,
+        Vector3,
+        Quaternion,
+        Color
     }
 }

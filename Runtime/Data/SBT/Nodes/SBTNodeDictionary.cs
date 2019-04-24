@@ -57,15 +57,22 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT.Nodes
             return this.children[key];
         }
         
-        public T TryRead<T>(string key)
+        public bool TryRead<T>(string key, out T result)
             where T : ISBTNode
         {
-            if (this.children.TryGetValue(key, out ISBTNode result))
+            result = default;
+            if (!this.children.TryGetValue(key, out ISBTNode node))
             {
-                return (T) result;
+                return false;
             }
 
-            return default;
+            if (node is T)
+            {
+                result = (T) node;
+                return true;
+            }
+
+            return false;
         }
 
         public bool Contains(string key)

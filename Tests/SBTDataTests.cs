@@ -117,7 +117,8 @@ namespace Craiel.UnityEssentials.Tests
             Assert.Throws<KeyNotFoundException>(() => lDataOut.ReadDouble("d"));
 
             // Try read
-            Assert.AreEqual(TestULong, lDataOut.TryRead<SBTNodeULong>("ULong").Data);
+            Assert.IsTrue(lDataOut.TryReadULong("ULong", out ulong uLongTryReadData));
+            Assert.AreEqual(TestULong, uLongTryReadData);
             
             // Contains
             Assert.IsTrue(lDataOut.Contains("VeryVeryLongKey"));

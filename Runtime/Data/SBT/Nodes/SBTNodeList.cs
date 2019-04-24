@@ -64,6 +64,25 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT.Nodes
         {
             return this.children[index];
         }
+        
+        public bool TryRead<T>(int index, out T result)
+            where T : ISBTNode
+        {
+            result = default;
+            if (index >= this.children.Count)
+            {
+                return false;
+            }
+
+            ISBTNode node = this.children[index];
+            if (node is T)
+            {
+                result = (T) node;
+                return true;
+            }
+
+            return false;
+        }
 
         public void Serialize(BinaryWriter writer)
         {

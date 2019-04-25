@@ -11,6 +11,7 @@ namespace Craiel.UnityEssentials.Tests
     using Runtime.Data.SBT.Nodes;
     using Runtime.Enums;
     using Runtime.Extensions;
+    using UnityEditor.VersionControl;
     using UnityEngine;
 
     public static class SBTDataTests
@@ -30,6 +31,9 @@ namespace Craiel.UnityEssentials.Tests
         private static readonly Vector3 TestVector3 = new Vector3(123.5f, 515.2f, 999991.5534f);
         private static readonly Quaternion TestQuaternion = Quaternion.LookRotation(Vector3.left, Vector3.up);
         private static readonly Color TestColor = new Color(0.2f, 0.6f, 0.1f, 0.2f);
+        
+        private static readonly DateTime TestTime = new DateTime(1995, 4, 3, 10, 25, 44, 123);
+        private static readonly TimeSpan TestTimeSpan = TimeSpan.FromTicks(813524617346161);
         
         private const int StreamTestCount = 100;
         
@@ -361,6 +365,36 @@ namespace Craiel.UnityEssentials.Tests
             Assert.AreEqual(dData.ReadQuaternion("Rotation"), dDataOut.ReadQuaternion("Rotation"));
             Assert.AreEqual(dData.ReadLong("RotationCMP"), dDataOut.ReadLong("RotationCMP"));
             Assert.AreEqual(dData.ReadColor("MyColor"), dDataOut.ReadColor("MyColor"));
+        }
+
+        [Test]
+        public static void DateTimeTest()
+        {
+            var lData = new SBTList();
+            var dData = new SBTDictionary();
+
+            lData.Add(TestTime);
+            lData.Add(TestTimeSpan);
+
+            dData.Add("Dat", TestTime);
+            dData.Add("TS", TestTimeSpan);
+            
+            string lbData = lData.SerializeToString();
+            string dbData = dData.SerializeToString();
+            
+            // Note: Compression with so little data actually produces overhead
+            Assert.AreEqual(36, lbData.Length);
+            Assert.AreEqual(48, dbData.Length);
+            
+            // Deserialize
+            var lDataOut = SBTList.Deserialize(lbData);
+            var dDataOut = SBTDictionary.Deserialize(dbData);
+            
+            Assert.AreEqual(lData.Count, lDataOut.Count);
+            Assert.AreEqual(dData.Count, dDataOut.Count);
+            
+            Assert.AreEqual(TestTime, lData.ReadDateTime(0));
+            Assert.AreEqual(TestTimeSpan, dData.ReadTimeSpan("TS"));
         }
         
         // -------------------------------------------------------------------

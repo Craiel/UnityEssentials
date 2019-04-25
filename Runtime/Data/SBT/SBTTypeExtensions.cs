@@ -26,6 +26,8 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                 case SBTType.Vector3:
                 case SBTType.Quaternion:
                 case SBTType.Color:
+                case SBTType.DateTime:
+                case SBTType.TimeSpan:
                 {
                     return true;
                 }

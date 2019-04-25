@@ -181,5 +181,29 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
         {
             return (SBTNodeStream)target.AddEntry(key, SBTType.Stream);
         }
+        
+        public static SBTNodeList Add(this SBTNodeList target, DateTime data, SBTFlags flags = SBTFlags.None)
+        {
+            target.AddEntry(SBTType.DateTime, data, flags);
+            return target;
+        }
+        
+        public static SBTNodeDictionary Add(this SBTNodeDictionary target, string key, DateTime data)
+        {
+            target.AddEntry(key, SBTType.DateTime, data);
+            return target;
+        }
+        
+        public static SBTNodeList Add(this SBTNodeList target, TimeSpan data, SBTFlags flags = SBTFlags.None)
+        {
+            target.AddEntry(SBTType.TimeSpan, data, flags);
+            return target;
+        }
+        
+        public static SBTNodeDictionary Add(this SBTNodeDictionary target, string key, TimeSpan data)
+        {
+            target.AddEntry(key, SBTType.TimeSpan, data);
+            return target;
+        }
     }
 }

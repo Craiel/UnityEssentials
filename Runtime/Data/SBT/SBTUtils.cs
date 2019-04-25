@@ -164,6 +164,16 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                     return new SBTNodeColor((Color)data, flags);
                 }
 
+                case SBTType.DateTime:
+                {
+                    return new SBTNodeDateTime((DateTime) data, flags);
+                }
+
+                case SBTType.TimeSpan:
+                {
+                    return new SBTNodeTimeSpan((TimeSpan) data, flags);
+                }
+
                 default:
                 {
                     throw new InvalidDataException("Invalid Binary: " + type);
@@ -404,6 +414,16 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                     return reader.ReadColor();
                 }
 
+                case SBTType.DateTime:
+                {
+                    return reader.ReadDateTime();
+                }
+
+                case SBTType.TimeSpan:
+                {
+                    return reader.ReadTimeSpan();
+                }
+
                 default:
                 {
                     throw new InvalidOperationException("Invalid SimpleType: " + type);
@@ -478,6 +498,12 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                 case SBTType.Color:
                 {
                     return sizeof(float) * 4;
+                }
+
+                case SBTType.DateTime:
+                case SBTType.TimeSpan:
+                {
+                    return sizeof(long);
                 }
 
                 default:

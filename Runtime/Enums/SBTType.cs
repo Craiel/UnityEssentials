@@ -32,6 +32,10 @@ namespace Craiel.UnityEssentials.Runtime.Enums
         Vector2,
         Vector3,
         Quaternion,
-        Color
+        Color,
+        
+        // Time
+        DateTime,
+        TimeSpan
     }
 }

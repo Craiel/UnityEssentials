@@ -1,5 +1,6 @@
 namespace Craiel.UnityEssentials.Runtime.Extensions
 {
+    using System;
     using System.IO;
     using UnityEngine;
 
@@ -41,6 +42,16 @@ namespace Craiel.UnityEssentials.Runtime.Extensions
             writer.Write(color.g);
             writer.Write(color.b);
             writer.Write(color.a);
+        }
+
+        public static void Write(this BinaryWriter writer, DateTime time)
+        {
+            writer.Write(time.Ticks);
+        }
+
+        public static void Write(this BinaryWriter writer, TimeSpan timeSpan)
+        {
+            writer.Write(timeSpan.Ticks);
         }
         
         public static Vector3 ReadVector3(this BinaryReader reader)
@@ -84,6 +95,16 @@ namespace Craiel.UnityEssentials.Runtime.Extensions
             float b = reader.ReadSingle();
             float a = reader.ReadSingle();
             return new Color(r, g, b, a);
+        }
+
+        public static DateTime ReadDateTime(this BinaryReader reader)
+        {
+            return new DateTime(reader.ReadInt64());
+        }
+
+        public static TimeSpan ReadTimeSpan(this BinaryReader reader)
+        {
+            return new TimeSpan(reader.ReadInt64());
         }
     }
 }

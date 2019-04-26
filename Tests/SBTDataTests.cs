@@ -26,6 +26,8 @@ namespace Craiel.UnityEssentials.Tests
         private const ulong TestULong = 9315125161642661862;
         private const float TestFloat = 5124.5152f;
         private const double TestDouble = 4141259683476126434361948561251345665.145f;
+
+        private const string TestNote = "MyCustom Note Is Cool";
         
         private static readonly Vector2 TestVector2 = new Vector2(9.5f, 8.5f);
         private static readonly Vector3 TestVector3 = new Vector3(123.5f, 515.2f, 999991.5534f);
@@ -49,6 +51,8 @@ namespace Craiel.UnityEssentials.Tests
         {
             var lData = new SBTList();
             FillTestList(lData);
+            
+            Assert.AreEqual(TestNote, lData.ReadNote(7));
             
             byte[] lbData = lData.Serialize();
             byte[] lbcData = lData.SerializeCompressed();
@@ -396,6 +400,67 @@ namespace Craiel.UnityEssentials.Tests
             Assert.AreEqual(TestTime, lData.ReadDateTime(0));
             Assert.AreEqual(TestTimeSpan, dData.ReadTimeSpan("TS"));
         }
+
+        [Test]
+        public static void TOMLTest()
+        {
+            var dData = new SBTDictionary();
+            
+            FillTestDictionary(dData);
+            dData.AddArray("TestArray", TestArray);
+            dData.Add("Date", TestTime);
+            dData.Add("TimeSpan", TestTimeSpan);
+            dData.Add("VEC", TestVector3);
+            dData.Add("Color", TestColor);
+            dData.Add("QRTN", TestQuaternion);
+
+            var nested = dData.AddDictionary("NestedDict");
+            FillTestDictionary(nested);
+            
+            nested = nested.AddDictionary("NestedDict2", note: "Testing Nested Dictionaries");
+            FillTestDictionary(nested);
+            nested.AddArray("ARR", TestArray, note: "This is the second nested array");
+
+            var serializer = new SBTTOMLSerializer();
+            dData.Serialize(serializer);
+            string dbData = serializer.GetData();
+            
+            UnitTestUtils.Log(dbData);
+            
+            Assert.AreEqual(1129, dbData.Length);
+            
+            // TODO: Deserialize
+            /*var dDataOut = SBTDictionary.Deserialize(dbData);
+            
+            Assert.AreEqual(dData.Count, dDataOut.Count);*/
+        }
+        
+        /*[Test]
+        public static void JSONTest()
+        {
+            var dData = new SBTDictionary();
+            
+            FillTestDictionary(dData);
+            dData.AddArray("TestArray", TestArray);
+            
+            var nested = dData.AddDictionary("NestedDict");
+            FillTestDictionary(nested);
+            
+            nested = dData.AddDictionary("NestedDict2");
+            FillTestDictionary(nested);
+            nested.AddArray("ARR", TestArray);
+            
+            string dbData = dData.SerializeToString();
+            
+            UnitTestUtils.Log(dbData);
+            
+            Assert.AreEqual(942, dbData.Length);
+            
+            // Deserialize
+            var dDataOut = SBTDictionary.Deserialize(dbData);
+            
+            Assert.AreEqual(dData.Count, dDataOut.Count);
+        }*/
         
         // -------------------------------------------------------------------
         // Private
@@ -409,7 +474,7 @@ namespace Craiel.UnityEssentials.Tests
                 .Add("I", TestInt)
                 .Add("UI", TestUInt)
                 .Add("VeryVeryLongKey", TestLong, SBTFlags.Debug)
-                .Add("ULong", TestULong)
+                .Add("ULong", TestULong, note: "Some other note")
                 .Add("S", TestFloat)
                 .Add("D", TestDouble);
         }
@@ -423,7 +488,7 @@ namespace Craiel.UnityEssentials.Tests
                 .Add(TestInt)
                 .Add(TestUInt)
                 .Add(TestLong)
-                .Add(TestULong, SBTFlags.Debug)
+                .Add(TestULong, SBTFlags.Debug, TestNote)
                 .Add(TestFloat)
                 .Add(TestDouble);
         }

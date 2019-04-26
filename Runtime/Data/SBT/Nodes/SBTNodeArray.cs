@@ -24,10 +24,11 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT.Nodes
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        protected SBTNodeArray(SBTType type, SBTFlags flags)
+        protected SBTNodeArray(SBTType type, SBTFlags flags, string note)
         {
             this.Type = type;
             this.Flags = flags;
+            this.Note = note;
             this.data = new T[0];
             
             this.baseType = type.GetArrayBaseType();
@@ -46,9 +47,11 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT.Nodes
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        public SBTFlags Flags { get; }
-
         public SBTType Type { get; }
+        
+        public SBTFlags Flags { get; }
+        
+        public string Note { get; }
 
         public int Capacity
         {
@@ -103,6 +106,14 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT.Nodes
             this.data[this.nextDataIndex++] = entry;
         }
         
+        public void AddChecked(T[] entries)
+        {
+            for (var i = 0; i < entries.Length; i++)
+            {
+                this.AddChecked(entries[i]);
+            }
+        }
+        
         public void Add(T[] entries)
         {
             for (var i = 0; i < entries.Length; i++)
@@ -130,8 +141,8 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT.Nodes
 
             return this.Read(index);
         }
-
-        public void Serialize(BinaryWriter writer)
+        
+        public void Save(BinaryWriter writer)
         {
             int count = this.Length;
             
@@ -143,7 +154,7 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT.Nodes
             }
         }
 
-        public void Deserialize(BinaryReader reader)
+        public void Load(BinaryReader reader)
         {
             this.SetCapacityLimit(reader.ReadInt32());
             this.nextDataIndex = reader.ReadInt32();

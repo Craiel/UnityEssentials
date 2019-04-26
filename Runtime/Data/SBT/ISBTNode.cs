@@ -7,9 +7,11 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
     {
         SBTFlags Flags { get; }
         
+        string Note { get; }
+        
         SBTType Type { get; }
 
-        void Serialize(BinaryWriter writer);
-        void Deserialize(BinaryReader reader);
+        void Save(BinaryWriter writer);
+        void Load(BinaryReader reader);
     }
 }

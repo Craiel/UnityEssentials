@@ -254,7 +254,7 @@ namespace Craiel.UnityEssentials.Runtime.EngineCore.Modules
                             writer.Write(SaveHeaderInternal, 0, SaveHeaderInternal.Length);
                             writer.Write(SaveVersionInternal);
                             
-                            data.Serialize(writer);
+                            data.Save(writer);
                         }
                     }
 
@@ -318,7 +318,7 @@ namespace Craiel.UnityEssentials.Runtime.EngineCore.Modules
                                 return null;
                             }
                             
-                            result.Deserialize(reader);
+                            result.Load(reader);
                             return result;
                         }
                     }

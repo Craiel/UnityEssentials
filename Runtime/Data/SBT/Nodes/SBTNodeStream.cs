@@ -12,9 +12,10 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT.Nodes
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public SBTNodeStream(SBTFlags flags = SBTFlags.None)
+        public SBTNodeStream(SBTFlags flags = SBTFlags.None, string note = null)
         {
             this.Flags = flags;
+            this.Note = note;
             this.inner = new MemoryStream();
             this.Encoding = Encoding.UTF8;
         }
@@ -25,6 +26,8 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT.Nodes
         public Encoding Encoding { get; set; }
         
         public SBTFlags Flags { get; }
+        
+        public string Note { get; }
 
         public long Length
         {
@@ -36,7 +39,7 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT.Nodes
             get { return SBTType.Stream; }
         }
         
-        public void Serialize(BinaryWriter writer)
+        public void Save(BinaryWriter writer)
         {
             this.inner.Seek(0, SeekOrigin.Begin);
             byte[] data = new byte[this.inner.Length];
@@ -47,7 +50,7 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT.Nodes
             writer.Write(data);
         }
         
-        public void Deserialize(BinaryReader reader)
+        public void Load(BinaryReader reader)
         {
             int length = reader.ReadInt32();
             byte[] data = reader.ReadBytes(length);

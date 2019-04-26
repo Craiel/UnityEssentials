@@ -3,6 +3,7 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT.Nodes
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Text;
     using Enums;
     using SBT;
     using UnityEngine;
@@ -14,11 +15,12 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT.Nodes
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public SBTNodeList(SBTFlags flags = SBTFlags.None)
+        public SBTNodeList(SBTFlags flags = SBTFlags.None, string note = null)
         {
             this.children = new List<ISBTNode>();
             
             this.Flags = flags;
+            this.Note = note;
         }
         
         // -------------------------------------------------------------------
@@ -30,15 +32,17 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT.Nodes
         }
         
         public SBTFlags Flags { get; set; }
+        
+        public string Note { get; }
 
         public SBTType Type
         {
             get { return SBTType.List; }
         }
         
-        public ISBTNode AddEntry(SBTType type, object data = null, SBTFlags flags = SBTFlags.None)
+        public ISBTNode AddEntry(SBTType type, object data = null, SBTFlags flags = SBTFlags.None, string note = null)
         {
-            var node = SBTUtils.GetNode(type, data, flags);
+            var node = SBTUtils.GetNode(type, data, flags, note);
             this.AddEntry(node);
             return node;
         }
@@ -83,19 +87,19 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT.Nodes
 
             return false;
         }
-
-        public void Serialize(BinaryWriter writer)
+        
+        public void Save(BinaryWriter writer)
         {
             writer.Write((ushort)this.children.Count);
             for (var i = 0; i < this.children.Count; i++)
             {
                 ISBTNode child = this.children[i];
                 child.WriteHeader(writer);
-                child.Serialize(writer);
+                child.Save(writer);
             }
         }
         
-        public void Deserialize(BinaryReader reader)
+        public void Load(BinaryReader reader)
         {
             ushort count = reader.ReadUInt16();
             for (var i = 0; i < count; i++)
@@ -113,7 +117,7 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT.Nodes
                 ISBTNode child = SBTUtils.GetNode(type, data, flags);
                 if (!type.IsSimpleType())
                 {
-                    child.Deserialize(reader);
+                    child.Load(reader);
                 }
                 
                 this.AddEntry(child);

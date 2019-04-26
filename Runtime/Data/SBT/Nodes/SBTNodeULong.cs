@@ -11,10 +11,11 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT.Nodes
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public SBTNodeULong(ulong data, SBTFlags flags = SBTFlags.None)
+        public SBTNodeULong(ulong data, SBTFlags flags = SBTFlags.None, string note = null)
         {
             this.Data = data;
             this.Flags = flags;
+            this.Note = note;
         }
         
         // -------------------------------------------------------------------
@@ -23,18 +24,20 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT.Nodes
         public readonly ulong Data;
         
         public SBTFlags Flags { get; }
+        
+        public string Note { get; }
 
         public SBTType Type
         {
             get { return SBTType.ULong; }
         }
         
-        public void Serialize(BinaryWriter writer)
+        public void Save(BinaryWriter writer)
         {
             writer.Write(this.Data);
         }
         
-        public void Deserialize(BinaryReader reader)
+        public void Load(BinaryReader reader)
         {
             throw new InvalidOperationException();
         }

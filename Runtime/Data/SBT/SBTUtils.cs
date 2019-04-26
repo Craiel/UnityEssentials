@@ -4,6 +4,7 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.IO.Compression;
+    using System.Linq;
     using System.Text;
     using Enums;
     using Extensions;
@@ -15,12 +16,14 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
     public static class SBTUtils
     {
         private const int CompressionWarningThreshold = 256;
+
+        public static readonly string SaveIndent = new String(' ', 4); 
         
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
         [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
-        public static ISBTNode GetNode(SBTType type, object data = null, SBTFlags flags = SBTFlags.None)
+        public static ISBTNode GetNode(SBTType type, object data = null, SBTFlags flags = SBTFlags.None, string note = null)
         {
             if (type.IsSimpleType() && data == null)
             {
@@ -31,147 +34,147 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
             {
                 case SBTType.String:
                 {
-                    return new SBTNodeString((string)data, flags);
+                    return new SBTNodeString((string)data, flags, note);
                 }
 
                 case SBTType.Byte:
                 {
-                    return new SBTNodeByte((byte)data, flags);
+                    return new SBTNodeByte((byte)data, flags, note);
                 }
 
                 case SBTType.Short:
                 {
-                    return new SBTNodeShort((short)data, flags);
+                    return new SBTNodeShort((short)data, flags, note);
                 }
 
                 case SBTType.UShort:
                 {
-                    return new SBTNodeUShort((ushort)data, flags);
+                    return new SBTNodeUShort((ushort)data, flags, note);
                 }
 
                 case SBTType.Int:
                 {
-                    return new SBTNodeInt((int)data, flags);
+                    return new SBTNodeInt((int)data, flags, note);
                 }
 
                 case SBTType.UInt:
                 {
-                    return new SBTNodeUInt((uint)data, flags);
+                    return new SBTNodeUInt((uint)data, flags, note);
                 }
 
                 case SBTType.Long:
                 {
-                    return new SBTNodeLong((long)data, flags);
+                    return new SBTNodeLong((long)data, flags, note);
                 }
 
                 case SBTType.ULong:
                 {
-                    return new SBTNodeULong((ulong)data, flags);
+                    return new SBTNodeULong((ulong)data, flags, note);
                 }
 
                 case SBTType.Single:
                 {
-                    return new SBTNodeSingle((float)data, flags);
+                    return new SBTNodeSingle((float)data, flags, note);
                 }
                 
                 case SBTType.Double:
                 {
-                    return new SBTNodeDouble((double)data, flags);
+                    return new SBTNodeDouble((double)data, flags, note);
                 }
 
                 case SBTType.StringArray:
                 {
-                    return new SBTNodeArrayString(type, flags);
+                    return new SBTNodeArrayString(type, flags, note);
                 }
                 
                 case SBTType.ByteArray:
                 {
-                    return new SBTNodeArrayByte(type, flags);
+                    return new SBTNodeArrayByte(type, flags, note);
                 }
                 
                 case SBTType.ShortArray:
                 {
-                    return new SBTNodeArrayShort(type, flags);
+                    return new SBTNodeArrayShort(type, flags, note);
                 }
                 
                 case SBTType.UShortArray:
                 {
-                    return new SBTNodeArrayUShort(type, flags);
+                    return new SBTNodeArrayUShort(type, flags, note);
                 }
                 
                 case SBTType.IntArray:
                 {
-                    return new SBTNodeArrayInt(type, flags);
+                    return new SBTNodeArrayInt(type, flags, note);
                 }
                 
                 case SBTType.UIntArray:
                 {
-                    return new SBTNodeArrayUInt(type, flags);
+                    return new SBTNodeArrayUInt(type, flags, note);
                 }
                 
                 case SBTType.LongArray:
                 {
-                    return new SBTNodeArrayLong(type, flags);
+                    return new SBTNodeArrayLong(type, flags, note);
                 }
                 
                 case SBTType.ULongArray:
                 {
-                    return new SBTNodeArrayULong(type, flags);
+                    return new SBTNodeArrayULong(type, flags, note);
                 }
                 
                 case SBTType.SingleArray:
                 {
-                    return new SBTNodeArraySingle(type, flags);
+                    return new SBTNodeArraySingle(type, flags, note);
                 }
                 
                 case SBTType.DoubleArray:
                 {
-                    return new SBTNodeArrayDouble(type, flags);
+                    return new SBTNodeArrayDouble(type, flags, note);
                 }
 
                 case SBTType.List:
                 {
-                    return new SBTNodeList(flags);
+                    return new SBTNodeList(flags, note);
                 }
 
                 case SBTType.Dictionary:
                 {
-                    return new SBTNodeDictionary(flags);
+                    return new SBTNodeDictionary(flags, note);
                 }
 
                 case SBTType.Stream:
                 {
-                    return new SBTNodeStream();
+                    return new SBTNodeStream(flags, note);
                 }
 
                 case SBTType.Vector2:
                 {
-                    return new SBTNodeVector2((Vector2)data, flags);
+                    return new SBTNodeVector2((Vector2)data, flags, note);
                 }
                 
                 case SBTType.Vector3:
                 {
-                    return new SBTNodeVector3((Vector3)data, flags);
+                    return new SBTNodeVector3((Vector3)data, flags, note);
                 }
                 
                 case SBTType.Quaternion:
                 {
-                    return new SBTNodeQuaternion((Quaternion)data, flags);
+                    return new SBTNodeQuaternion((Quaternion)data, flags, note);
                 }
                 
                 case SBTType.Color:
                 {
-                    return new SBTNodeColor((Color)data, flags);
+                    return new SBTNodeColor((Color)data, flags, note);
                 }
 
                 case SBTType.DateTime:
                 {
-                    return new SBTNodeDateTime((DateTime) data, flags);
+                    return new SBTNodeDateTime((DateTime) data, flags, note);
                 }
 
                 case SBTType.TimeSpan:
                 {
-                    return new SBTNodeTimeSpan((TimeSpan) data, flags);
+                    return new SBTNodeTimeSpan((TimeSpan) data, flags, note);
                 }
 
                 default:
@@ -248,8 +251,13 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
             using (var writer = new BinaryWriter(target, Encoding.UTF8, true))
             {
                 node.WriteHeader(writer);
-                node.Serialize(writer);
+                node.Save(writer);
             }
+        }
+        
+        public static void Serialize(this ISBTNode node, ISBTNodeSerializer target)
+        {
+            target.Serialize(node);
         }
         
         public static ISBTNode Deserialize(string data)
@@ -309,14 +317,14 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                     case SBTType.List:
                     {
                         var result = new SBTList();
-                        result.Deserialize(reader);
+                        result.Load(reader);
                         return result;
                     }
 
                     case SBTType.Dictionary:
                     {
                         var result = new SBTDictionary();
-                        result.Deserialize(reader);
+                        result.Load(reader);
                         return result;
                     }
 

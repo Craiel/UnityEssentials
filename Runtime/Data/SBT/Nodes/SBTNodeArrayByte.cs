@@ -8,8 +8,8 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT.Nodes
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public SBTNodeArrayByte(SBTType type, SBTFlags flags) 
-            : base(type, flags)
+        public SBTNodeArrayByte(SBTType type, SBTFlags flags, string note = null) 
+            : base(type, flags, note)
         {
         }
 

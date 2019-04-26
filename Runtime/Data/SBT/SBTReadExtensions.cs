@@ -115,6 +115,16 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
         {
             return source.Read(key).Flags;
         }
+        
+        public static string ReadNote(this SBTList source, int index)
+        {
+            return source.Read(index).Note;
+        }
+        
+        public static string ReadNote(this SBTDictionary source, string key)
+        {
+            return source.Read(key).Note;
+        }
 
         public static SBTNodeArray<T> ReadArray<T>(this SBTList source, int index)
         {

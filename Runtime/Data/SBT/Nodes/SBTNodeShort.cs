@@ -11,10 +11,11 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT.Nodes
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public SBTNodeShort(short data, SBTFlags flags = SBTFlags.None)
+        public SBTNodeShort(short data, SBTFlags flags = SBTFlags.None, string note = null)
         {
             this.Data = data;
             this.Flags = flags;
+            this.Note = note;
         }
         
         // -------------------------------------------------------------------
@@ -23,18 +24,20 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT.Nodes
         public readonly short Data;
         
         public SBTFlags Flags { get; }
+        
+        public string Note { get; }
 
         public SBTType Type
         {
             get { return SBTType.Short; }
         }
         
-        public void Serialize(BinaryWriter writer)
+        public void Save(BinaryWriter writer)
         {
             writer.Write(this.Data);
         }
         
-        public void Deserialize(BinaryReader reader)
+        public void Load(BinaryReader reader)
         {
             throw new InvalidOperationException();
         }

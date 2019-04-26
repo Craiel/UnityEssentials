@@ -1,7 +1,6 @@
 namespace Craiel.UnityEssentials.Runtime.Data.SBT
 {
     using System.IO;
-    using Enums;
     using Nodes;
 
     public class SBTList : SBTNodeList

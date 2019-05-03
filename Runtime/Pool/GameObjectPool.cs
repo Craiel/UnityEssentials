@@ -26,14 +26,10 @@
         {
             this.Initialize(updateCallback, poolRoot);
 
-            using (var resource = ResourceProvider.Instance.AcquireOrLoadResource<GameObject>(poolPrefabKey))
+            this.prefab = poolPrefabKey.LoadManaged<GameObject>();
+            if (this.prefab == null)
             {
-                if (resource == null || resource.Data == null)
-                {
-                    throw new InvalidOperationException("Resource could not be loaded: " + poolPrefabKey);
-                }
-
-                this.prefab = resource.Data;
+                throw new InvalidOperationException("Resource could not be loaded: " + poolPrefabKey);
             }
         }
         

@@ -172,17 +172,15 @@ namespace Craiel.UnityEssentials.Runtime.I18N
                 return asset != null ? asset.text : null;
             }
 #endif
-            
-            using (var resource = ResourceProvider.Instance.AcquireOrLoadResource<TextAsset>(key))
-            {
-                if (resource == null || resource.Data == null)
-                {
-                    EssentialsCore.Logger.Warn("Could not load dictionary for {0}, file not found", customCulture ?? Localization.CurrentCulture);
-                    return null;
-                }
 
-                return resource.Data.text;
+            var textAsset = key.LoadManaged<TextAsset>();
+            if (textAsset == null)
+            {
+                EssentialsCore.Logger.Warn("Could not load dictionary for {0}, file not found", customCulture ?? Localization.CurrentCulture);
+                return null;
             }
+            
+            return textAsset.text;
         }
 
         // -------------------------------------------------------------------

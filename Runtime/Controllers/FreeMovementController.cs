@@ -1,11 +1,8 @@
-﻿using InputControl = Craiel.UnityEssentials.Runtime.Input.InputControl;
-using InputControlState = Craiel.UnityEssentials.Runtime.Input.InputControlState;
-using InputHandler = Craiel.UnityEssentials.Runtime.Input.InputHandler;
-
-namespace Craiel.UnityEssentials.Runtime.Controllers
+﻿namespace Craiel.UnityEssentials.Runtime.Controllers
 {
     using System;
     using Contracts;
+    using Input;
     using UnityEngine;
     using Utils;
 

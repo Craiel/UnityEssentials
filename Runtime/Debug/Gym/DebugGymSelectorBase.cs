@@ -1,9 +1,7 @@
-﻿using InputHandler = Craiel.UnityEssentials.Runtime.Input.InputHandler;
-using InputStateDebug = Craiel.UnityEssentials.Runtime.Input.InputStateDebug;
-
-namespace Craiel.UnityEssentials.Runtime.Debug.Gym
+﻿namespace Craiel.UnityEssentials.Runtime.Debug.Gym
 {
     using System.Collections.Generic;
+    using Input;
     using UnityEngine;
 
     public class DebugGymSelectorBase<T> : DebugGymBase

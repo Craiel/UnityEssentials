@@ -43,7 +43,7 @@ namespace Craiel.UnityEssentials.Runtime.Controllers
         
         public void Start()
         {
-            // Set target direction to the camera's initial orientation.
+            // Set target direction to the owner's initial orientation.
             this.TargetDirection = this.transform.localRotation.eulerAngles;
         }
 

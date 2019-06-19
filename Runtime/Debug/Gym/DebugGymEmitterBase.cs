@@ -1,5 +1,6 @@
 ﻿namespace Craiel.UnityEssentials.Runtime.Debug.Gym
 {
+    using System;
     using Contracts;
     using Input;
     using Pool;
@@ -7,24 +8,21 @@
     using UnityEngine;
 
     public abstract class DebugGymEmitterBase<T, TN> : DebugGymBase
-        where T : class, IPoolable
+        where T : MonoBehaviour, IPoolable
         where TN : GameObjectPool<T>, new()
     {
         private readonly TN emitterPool;
-
-        private bool isLoaded;
+        
+        private bool isInitialized;
 
         private float lastEmitterTime;
-
-        private readonly ResourceKey emitterKey;
 
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        protected DebugGymEmitterBase(ResourceKey emitterKey)
+        protected DebugGymEmitterBase()
         {
             this.emitterPool = new TN();
-            this.emitterKey = emitterKey;
         }
 
         // -------------------------------------------------------------------
@@ -41,23 +39,20 @@
 
         public void Update()
         {
-            if (!this.isLoaded)
+            if (!this.isInitialized)
             {
-                this.emitterPool.Initialize(this.emitterKey, this.EmitterUpdate);
-
-                this.isLoaded = true;
+                return;
             }
-
+            
             this.emitterPool.Update();
 
             if (InputHandler.Instance.GetControl(InputStateDebug.DebugConfirm).IsHeld)
             {
                 if (Time.time > this.lastEmitterTime + this.MinEmitterDelay && this.emitterPool.ActiveCount < this.MaxEmitters)
                 {
-                    // spawn a new emitter with current forward velocity
                     T emitter = this.emitterPool.Obtain();
                     this.OnEmit(emitter);
-
+                    
                     this.lastEmitterTime = Time.time;
                 }
             }
@@ -68,5 +63,27 @@
         // -------------------------------------------------------------------
         protected abstract void OnEmit(T instance);
         protected abstract bool EmitterUpdate(T instance);
+
+        protected virtual void Initialize(ResourceKey emitterPrefabKey)
+        {
+            if (this.isInitialized)
+            {
+                throw new InvalidOperationException("Duplicate initialize call");
+            }
+            
+            this.isInitialized = true;
+            this.emitterPool.Initialize(emitterPrefabKey, this.EmitterUpdate);
+        }
+        
+        protected virtual void Initialize(GameObject emitterPrefab)
+        {
+            if (this.isInitialized)
+            {
+                throw new InvalidOperationException("Duplicate initialize call");
+            }
+            
+            this.isInitialized = true;
+            this.emitterPool.Initialize(emitterPrefab, this.EmitterUpdate);
+        }
     }
 }

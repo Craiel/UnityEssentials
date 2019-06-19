@@ -6,7 +6,7 @@
     using UnityEngine;
 
     public class GameObjectPool<T> : TrackedPool<T>
-        where T : class, IPoolable
+        where T : MonoBehaviour, IPoolable
     {
         private GameObject prefab;
         private Func<T, bool> activeUpdateCallback;

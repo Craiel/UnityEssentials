@@ -2,7 +2,7 @@ namespace Craiel.UnityEssentials.Runtime.Debug.Gym
 {
     using Pool;
 
-    public class DebugCollisionEmitterPool : GameObjectPool<DebugCollisionEmitter>
+    public class DebugCollisionEmitterPool : GameObjectBehaviourPool<DebugCollisionEmitter>
     {
     }
 }

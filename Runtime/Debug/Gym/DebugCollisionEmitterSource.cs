@@ -5,7 +5,7 @@ namespace Craiel.UnityEssentials.Runtime.Debug.Gym
 
     public class DebugCollisionEmitterSource : MonoBehaviour
     {
-        private readonly GameObjectPool<DebugCollisionEmitter> emitterPool;
+        private readonly GameObjectBehaviourPool<DebugCollisionEmitter> emitterPool;
         
         private float lastEmit;
 
@@ -14,7 +14,7 @@ namespace Craiel.UnityEssentials.Runtime.Debug.Gym
         // -------------------------------------------------------------------
         public DebugCollisionEmitterSource()
         {
-            this.emitterPool = new GameObjectPool<DebugCollisionEmitter>();
+            this.emitterPool = new GameObjectBehaviourPool<DebugCollisionEmitter>();
         }
         
         // -------------------------------------------------------------------

@@ -9,7 +9,7 @@
 
     public abstract class DebugGymEmitterBase<T, TN> : DebugGymBase
         where T : MonoBehaviour, IPoolable
-        where TN : GameObjectPool<T>, new()
+        where TN : GameObjectBehaviourPool<T>, new()
     {
         private readonly TN emitterPool;
         

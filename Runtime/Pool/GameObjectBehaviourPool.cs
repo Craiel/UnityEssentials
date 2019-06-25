@@ -22,8 +22,8 @@
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        protected GameObjectBehaviourPool(int capacity = DefaultSize)
-            : base(initialCapacity: capacity)
+        public GameObjectBehaviourPool(int capacity = DefaultSize)
+            : base(capacity)
         {
             this.activeEntries = new T[capacity];
         }

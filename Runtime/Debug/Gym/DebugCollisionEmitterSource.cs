@@ -1,21 +1,28 @@
 namespace Craiel.UnityEssentials.Runtime.Debug.Gym
 {
+    using System;
+    using System.ComponentModel;
+    using EngineCore.Jobs;
     using Pool;
+    using Unity.Collections;
+    using Unity.Jobs;
     using UnityEngine;
+    using UnityEngine.Jobs;
 
     public class DebugCollisionEmitterSource : MonoBehaviour
     {
-        private readonly GameObjectBehaviourPool<DebugCollisionEmitter> emitterPool;
+        private GameObjectTracker objectTracker;
         
         private float lastEmit;
 
-        // -------------------------------------------------------------------
-        // Constructor
-        // -------------------------------------------------------------------
-        public DebugCollisionEmitterSource()
-        {
-            this.emitterPool = new GameObjectBehaviourPool<DebugCollisionEmitter>();
-        }
+        private GameObject prefabRoot;
+
+        private NativeArray<Vector3> emissionVelocity;
+        private NativeArray<bool> aliveTimeExceeded;
+
+        private JobHandle velocityJobHandle;
+        private JobHandle aliveTimeJobHandle;
+        private JobHandle positionJobHandle;
         
         // -------------------------------------------------------------------
         // Public
@@ -33,46 +40,122 @@ namespace Craiel.UnityEssentials.Runtime.Debug.Gym
         public float Velocity = 0.1f;
 
         [SerializeField]
-        public float MaxCount = 100;
+        public ushort MaxCount = 100;
+
+        [SerializeField]
+        public float AliveTime = 20f;
 
         public void Awake()
         {
-            this.emitterPool.Initialize(this.Prefab, this.EmitterUpdate);
+            this.objectTracker = new GameObjectTracker(this.MaxCount);
+            
+            this.prefabRoot = new GameObject("EmitterRoot");
+            
+            this.emissionVelocity = new NativeArray<Vector3>(this.MaxCount, Allocator.Persistent);
+            this.aliveTimeExceeded = new NativeArray<bool>(this.MaxCount, Allocator.Persistent);
+        }
+        
+        private struct CheckAliveTimeJob : IJobParallelFor
+        {
+            [Unity.Collections.ReadOnly]
+            public NativeArray<float> AliveTimes;
+
+            public NativeArray<bool> AliveTimeExceeded;
+
+            public float Time;
+
+            public float MaxAliveTime;
+
+            public void Execute(int i)
+            {
+                if (this.Time > this.AliveTimes[i] + this.MaxAliveTime)
+                {
+                    this.AliveTimeExceeded[i] = true;
+                }
+            }
         }
 
         public void Update()
         {
-            this.emitterPool.Update();
-            
-            if (Time.time < this.lastEmit + this.Delay)
-            {
-                return;
-            }
+            this.UpdateEmit();
 
-            if (this.emitterPool.ActiveCount >= this.MaxCount)
+            var velocityJob = new GenericJobAccelerate
             {
-                return;
+                VelocityData = this.emissionVelocity,
+                DeltaTime = Time.deltaTime,
+                Acceleration = Vector3.one * 0.1f
+            };
+
+            var aliveTimeJob = new CheckAliveTimeJob
+            {
+                AliveTimes = this.objectTracker.GetAliveTimes(0),
+                AliveTimeExceeded = this.aliveTimeExceeded,
+                Time = Time.time,
+                MaxAliveTime = this.AliveTime
+            };
+                
+            var positionJob = new GenericJobUpdatePosition
+            {
+                VelocityData = this.emissionVelocity, 
+                DeltaTime = Time.deltaTime
+            };
+
+            this.velocityJobHandle = velocityJob.Schedule(this.MaxCount, 64);
+            this.aliveTimeJobHandle = aliveTimeJob.Schedule(this.MaxCount, 64, this.velocityJobHandle);
+            this.positionJobHandle = positionJob.Schedule(this.objectTracker.GetTransformAccess(0), this.aliveTimeJobHandle);
+        }
+
+        public void LateUpdate()
+        {
+            this.positionJobHandle.Complete();
+
+            for (var i = 0; i < this.aliveTimeExceeded.Length; i++)
+            {
+                if (this.aliveTimeExceeded[i])
+                {
+                    GameObjectTrackerTicket ticket = this.objectTracker.Get(i);
+                    if (ticket != GameObjectTrackerTicket.Invalid)
+                    {
+                        this.objectTracker.Unregister(ref ticket);
+                    }
+                    
+                    this.aliveTimeExceeded[i] = false;
+                }
             }
-         
-            this.lastEmit = Time.time;
-            DebugCollisionEmitter instance = this.emitterPool.Obtain();
-            this.OnEmit(instance);
+        }
+
+        public void OnDestroy()
+        {
+            this.emissionVelocity.Dispose();
+            this.aliveTimeExceeded.Dispose();
+            this.objectTracker.Dispose();
         }
 
         // -------------------------------------------------------------------
         // Private
         // -------------------------------------------------------------------
-        private void OnEmit(DebugCollisionEmitter instance)
+        private void UpdateEmit()
         {
-            Vector3 localForward = this.transform.forward;
-            
-            instance.transform.position = this.transform.position + (localForward * this.SpawnOffset);
-            instance.Initialize(localForward * this.Velocity);
-        }
+            if (Time.time < this.lastEmit + this.Delay)
+            {
+                return;
+            }
 
-        private bool EmitterUpdate(DebugCollisionEmitter instance)
-        {
-            return !(Time.time > instance.TimeOnInitialize + instance.Lifetime);
+            if (this.objectTracker.Entries >= this.MaxCount)
+            {
+                return;
+            }
+
+            GameObject instance = Instantiate(this.Prefab, this.prefabRoot.transform);
+            instance.transform.position = this.transform.position;
+            instance.transform.forward = this.transform.forward;
+            
+            instance.SetActive(true);
+            
+            this.objectTracker.Register(instance, out GameObjectTrackerTicket trackerTicket);
+            this.objectTracker.Track(trackerTicket);
+            
+            this.lastEmit = Time.time;
         }
     }
 }

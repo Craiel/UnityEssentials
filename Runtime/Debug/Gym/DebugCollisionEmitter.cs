@@ -1,6 +1,7 @@
 namespace Craiel.UnityEssentials.Runtime.Debug.Gym
 {
     using Contracts;
+    using Pool;
     using UnityEngine;
 
     [RequireComponent(typeof(Rigidbody))]
@@ -18,6 +19,8 @@ namespace Craiel.UnityEssentials.Runtime.Debug.Gym
 
         [SerializeField]
         public float Lifetime = 4.0f;
+
+        public GameObjectTrackerTicket TrackerTicket { get; set; }
         
         public float TimeOnInitialize { get; private set; }
 

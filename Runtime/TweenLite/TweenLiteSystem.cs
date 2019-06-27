@@ -10,14 +10,14 @@ namespace Craiel.UnityEssentials.Runtime.TweenLite
 
     public partial class TweenLiteSystem : UnitySingletonBehavior<TweenLiteSystem>
     {
-        private readonly TicketProvider<TweenLiteTicket, TweenLiteNode> activeTweens;
+        private readonly TicketProviderManaged<TweenLiteTicket, TweenLiteNode> activeTweens;
 
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
         public TweenLiteSystem()
         {
-            this.activeTweens = new TicketProvider<TweenLiteTicket, TweenLiteNode>();
+            this.activeTweens = new TicketProviderManaged<TweenLiteTicket, TweenLiteNode>();
             this.activeTweens.EnableManagedTickets(this.CheckTweenFinished, this.TweenFinished);
         }
 

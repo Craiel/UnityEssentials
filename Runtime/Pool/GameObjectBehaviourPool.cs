@@ -22,8 +22,8 @@
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public GameObjectBehaviourPool(int capacity = DefaultSize)
-            : base(capacity)
+        public GameObjectBehaviourPool(int capacity = DefaultSize, int maxCapacity = int.MaxValue)
+            : base(capacity, maxCapacity)
         {
             this.activeEntries = new T[capacity];
         }
@@ -32,7 +32,7 @@
         // Public
         // -------------------------------------------------------------------
         public int ActiveCount { get; private set; }
-        
+
         private void Initialize(Func<T, bool> updateCallback, Transform poolRoot)
         {
             this.root = poolRoot;
@@ -136,11 +136,16 @@
         // -------------------------------------------------------------------
         private void FindNextFreeSlot()
         {
-            for (var i = this.nextFreeSlot; i < this.activeEntries.Length; i++)
+            for (var n = 0; n < this.activeEntries.Length; n++)
             {
-                if (this.activeEntries[i] == null)
+                this.nextFreeSlot++;
+                if (this.nextFreeSlot == this.activeEntries.Length)
                 {
-                    this.nextFreeSlot = i;
+                    this.nextFreeSlot = 0;
+                }
+
+                if (this.activeEntries[this.nextFreeSlot] == null)
+                {
                     return;
                 }
             }

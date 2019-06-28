@@ -1,7 +1,5 @@
 namespace Craiel.UnityEssentials.Runtime.Debug.Gym
 {
-    using System;
-    using System.ComponentModel;
     using EngineCore.Jobs;
     using Pool;
     using Unity.Collections;
@@ -11,17 +9,13 @@ namespace Craiel.UnityEssentials.Runtime.Debug.Gym
 
     public class DebugCollisionEmitterSource : MonoBehaviour
     {
-        private GameObjectTracker objectTracker;
+        private GameObjectPoolWithLifeTime objectPool;
         
         private float lastEmit;
 
-        private GameObject prefabRoot;
-
         private NativeArray<Vector3> emissionVelocity;
-        private NativeArray<bool> aliveTimeExceeded;
 
         private JobHandle velocityJobHandle;
-        private JobHandle aliveTimeJobHandle;
         private JobHandle positionJobHandle;
         
         // -------------------------------------------------------------------
@@ -47,51 +41,23 @@ namespace Craiel.UnityEssentials.Runtime.Debug.Gym
 
         public void Awake()
         {
-            this.objectTracker = new GameObjectTracker(this.MaxCount);
-            
-            this.prefabRoot = new GameObject("EmitterRoot");
+            this.objectPool = new GameObjectPoolWithLifeTime(this.MaxCount, this.Prefab);
+            this.objectPool.LifeTimeExpired += this.OnObjectExpired;
             
             this.emissionVelocity = new NativeArray<Vector3>(this.MaxCount, Allocator.Persistent);
-            this.aliveTimeExceeded = new NativeArray<bool>(this.MaxCount, Allocator.Persistent);
-        }
-        
-        private struct CheckAliveTimeJob : IJobParallelFor
-        {
-            [Unity.Collections.ReadOnly]
-            public NativeArray<float> AliveTimes;
-
-            public NativeArray<bool> AliveTimeExceeded;
-
-            public float Time;
-
-            public float MaxAliveTime;
-
-            public void Execute(int i)
-            {
-                if (this.Time > this.AliveTimes[i] + this.MaxAliveTime)
-                {
-                    this.AliveTimeExceeded[i] = true;
-                }
-            }
         }
 
         public void Update()
         {
             this.UpdateEmit();
+            
+            this.objectPool.Update();
 
             var velocityJob = new GenericJobAccelerate
             {
                 VelocityData = this.emissionVelocity,
                 DeltaTime = Time.deltaTime,
                 Acceleration = Vector3.one * 0.1f
-            };
-
-            var aliveTimeJob = new CheckAliveTimeJob
-            {
-                AliveTimes = this.objectTracker.GetAliveTimes(0),
-                AliveTimeExceeded = this.aliveTimeExceeded,
-                Time = Time.time,
-                MaxAliveTime = this.AliveTime
             };
                 
             var positionJob = new GenericJobUpdatePosition
@@ -101,39 +67,30 @@ namespace Craiel.UnityEssentials.Runtime.Debug.Gym
             };
 
             this.velocityJobHandle = velocityJob.Schedule(this.MaxCount, 64);
-            this.aliveTimeJobHandle = aliveTimeJob.Schedule(this.MaxCount, 64, this.velocityJobHandle);
-            this.positionJobHandle = positionJob.Schedule(this.objectTracker.GetTransformAccess(0), this.aliveTimeJobHandle);
+            this.positionJobHandle = positionJob.Schedule(this.objectPool.TransformAccess, this.velocityJobHandle);
         }
 
         public void LateUpdate()
         {
             this.positionJobHandle.Complete();
-
-            for (var i = 0; i < this.aliveTimeExceeded.Length; i++)
-            {
-                if (this.aliveTimeExceeded[i])
-                {
-                    GameObjectTrackerTicket ticket = this.objectTracker.Get(i);
-                    if (ticket != GameObjectTrackerTicket.Invalid)
-                    {
-                        this.objectTracker.Unregister(ref ticket);
-                    }
-                    
-                    this.aliveTimeExceeded[i] = false;
-                }
-            }
+            
+            this.objectPool.LateUpdate();
         }
 
         public void OnDestroy()
         {
             this.emissionVelocity.Dispose();
-            this.aliveTimeExceeded.Dispose();
-            this.objectTracker.Dispose();
+            this.objectPool.Dispose();
         }
 
         // -------------------------------------------------------------------
         // Private
         // -------------------------------------------------------------------
+        private void OnObjectExpired(int id)
+        {
+            this.emissionVelocity[id] = Vector3.zero;
+        }
+        
         private void UpdateEmit()
         {
             if (Time.time < this.lastEmit + this.Delay)
@@ -141,19 +98,15 @@ namespace Craiel.UnityEssentials.Runtime.Debug.Gym
                 return;
             }
 
-            if (this.objectTracker.Entries >= this.MaxCount)
+            if (!this.objectPool.Obtain(out GameObject instance, out ushort id))
             {
                 return;
             }
 
-            GameObject instance = Instantiate(this.Prefab, this.prefabRoot.transform);
+            this.objectPool.SetLifeTime(id, this.AliveTime);
+            
             instance.transform.position = this.transform.position;
             instance.transform.forward = this.transform.forward;
-            
-            instance.SetActive(true);
-            
-            this.objectTracker.Register(instance, out GameObjectTrackerTicket trackerTicket);
-            this.objectTracker.Track(trackerTicket);
             
             this.lastEmit = Time.time;
         }

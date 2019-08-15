@@ -69,7 +69,7 @@ Add the package and dependencies to your Project Manifest.json:
 ### Configuration
 
 Before use the Library will have to be configured.
-To Configure the Library add a class implementing IAudioConfig in the project:
+To Configure the Library add a class implementing `IAudioConfig` in the project:
 
 ```
     [UsedImplicitly]
@@ -106,7 +106,7 @@ GameSceneType is an enum that functions as a mapping to the main scenes of the g
 
 ### Usage
 
-To setup the project to use the Library core create a class inheriting from EssentialEngineCore<T, GameSceneType>:
+To setup the project to use the Library core create a class inheriting from `EssentialEngineCore<T, GameSceneType>`:
 
 ```
     public class GameCore : EssentialEngineCore<GameCore, GameSceneType>
@@ -140,7 +140,7 @@ To setup the project to use the Library core create a class inheriting from Esse
     }
 ```
 
-the call to GameCore.Instance.Transition functions as the global way to start a Scene Transition, this will start a loading process with several stages that can be used to pre-load assets or do other operations.
+the call to `GameCore.Instance.Transition` functions as the global way to start a Scene Transition, this will start a loading process with several stages that can be used to pre-load assets or do other operations.
 
 ## Contributing
 

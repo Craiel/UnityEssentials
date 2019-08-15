@@ -37,7 +37,7 @@ Essential Library for creating Games with Unity.
 - Customizable text Formatter with variable support
 - Finite State Machine implementation
 - Model and Geometry utilities (Dynamic Mesh, Obj import and export etc)
-- Full Extendable Grammar Parser implementation with several built-in grammers (Command line, Java, SQL)
+- Full Extendable Grammar Parser implementation with several built-in grammars (Command line, Java, SQL)
 - I18N Localization support classes
 - Basic Input system based on unity input mapping
 - Random Distribution Algorithms (Constant, Gaussian, Triangular, Uniform etc)

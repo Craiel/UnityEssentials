@@ -1,0 +1,11 @@
+{
+    "description": "Bootstrap framework and library for games.", 
+    "displayName": "Craiel Essentials", 
+    "keywords": [
+        "craiel", 
+        "essentials"
+    ], 
+    "name": "com.craiel.unity.essentials",
+    "unity": "2019.2", 
+    "version": "1.0.0"
+}

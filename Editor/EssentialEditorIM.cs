@@ -9,7 +9,7 @@ namespace Craiel.UnityEssentials.Editor
     using UserInterface;
 
     [CanEditMultipleObjects]
-    public abstract class EssentialCustomEditor : Editor
+    public abstract class EssentialEditorIM : Editor
     {
         private static bool objectFoldout;
 
@@ -27,7 +27,6 @@ namespace Craiel.UnityEssentials.Editor
             this.DrawFull();
             this.serializedObject.ApplyModifiedProperties();
         }
-        
         // -------------------------------------------------------------------
         // Protected
         // -------------------------------------------------------------------
@@ -88,18 +87,18 @@ namespace Craiel.UnityEssentials.Editor
             if (!this.serializedObject.isEditingMultipleObjects)
             {
                 SerializedProperty property = this.serializedObject.FindProperty(expression);
-                
+
                 ReorderableListGUI.Title(title);
                 ReorderableListGUI.ListField((TAdapter)Activator.CreateInstance(typeof(TAdapter), property));
             }
         }
-        
+
         protected virtual void DrawReorderableList<TSource>(string title, Expression<Func<TSource, object>> expression)
         {
             if (!this.serializedObject.isEditingMultipleObjects)
             {
                 SerializedProperty property = this.serializedObject.FindProperty(expression);
-                
+
                 ReorderableListGUI.Title(title);
                 ReorderableListGUI.ListField(property);
             }

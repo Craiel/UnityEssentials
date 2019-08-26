@@ -5,7 +5,7 @@ namespace Craiel.UnityEssentials.Editor.Utils
     using UnityEngine;
 
     [CustomEditor(typeof(TerrainSplitter))]
-    public class TerrainSplitterEditor : Editor
+    public class TerrainSplitterEditor : EssentialEditorIM
     {
         // -------------------------------------------------------------------
         // Public

@@ -1,0 +1,41 @@
+<UXML xmlns="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <VisualElement class="element-group">
+        <Button text="Local" tooltip="Set the Mode to Local Space" name="buttonModeLocal" class="transform-button btn-space" />
+        <Button text="World" tooltip="Set the Mode to World Space" name="buttonModeWorld" class="transform-button btn-space" />
+        <Button text="P" tooltip="Toggle Pivot Display" name="buttonTogglePivot" class="transform-button btn-toggle-option"/>
+        <Button text="Reset" tooltip="Reset all values to default" name="buttonReset" class="transform-button btn-reset" />
+    </VisualElement>
+    <VisualElement>
+        <VisualElement style="flex-direction: row;">
+            <uie:Vector3Field label="Position" name="position" style="flex-grow: 1;" />
+            <Button text="0" name="buttonResetPosition" class="transform-button btn-clear" />
+        </VisualElement>
+        <VisualElement style="flex-direction: row;">
+            <uie:Vector3Field label="Rotation" name="rotation" style="flex-grow: 1;" />
+            <Button text="0" name="buttonResetRotation" class="transform-button btn-clear" />
+        </VisualElement>
+        <VisualElement style="flex-direction: row;">
+            <uie:Vector3Field label="Scale" name="scale" style="flex-grow: 1;" />
+            <Button text="1" name="buttonResetScale" class="transform-button btn-clear" />
+        </VisualElement>
+    </VisualElement>
+    <VisualElement class="element-group">
+        <Button text="Snap" name="buttonSnap" class="transform-button btn-snap" />
+        <Button text="Position" name="buttonSnapPosition" class="transform-button btn-snap" />
+        <Button text="Rotation" name="buttonSnapRotation" class="transform-button btn-snap" />
+    </VisualElement>
+    <VisualElement class="element-group">
+        <Label text="Copy" class="action-label" />
+        <Button text="Transform" name="buttonCopy" class="transform-button btn-copy" />
+        <Button text="Position" name="buttonCopyPosition" class="transform-button btn-copy" />
+        <Button text="Rotation" name="buttonCopyRotation" class="transform-button btn-copy" />
+        <Button text="Scale" name="buttonCopyScale" class="transform-button btn-copy" />
+    </VisualElement>
+    <VisualElement class="element-group">
+        <Label text="Paste" class="action-label" />
+        <Button text="Transform" name="buttonPaste" class="transform-button btn-paste" />
+        <Button text="Position" name="buttonPastePosition" class="transform-button btn-paste" />
+        <Button text="Rotation" name="buttonPasteRotation" class="transform-button btn-paste" />
+        <Button text="Scale" name="buttonPasteScale" class="transform-button btn-paste" />
+    </VisualElement>
+</UXML>

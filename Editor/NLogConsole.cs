@@ -7,10 +7,10 @@ namespace Craiel.UnityEssentials.Editor
 
     using UnityEngine;
 
-    public partial class NLogConsole : EditorWindow
+    public partial class NLogConsole : EssentialEditorWindow<NLogConsole>
     {
         private readonly DrawingContext drawingContext = new DrawingContext();
-        
+
         private Texture2D errorIcon;
         private Texture2D warningIcon;
         private Texture2D messageIcon;
@@ -57,20 +57,21 @@ namespace Craiel.UnityEssentials.Editor
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        [MenuItem("Window/NLog Console")]
-        public static void ShowLogWindow()
+        [MenuItem("Window/Craiel/NLog Console")]
+        public static void ShowWindow()
         {
-            Init();
+            OpenWindow();
         }
 
-        public static void Init()
+        public static void OpenWindow()
         {
             var window = CreateInstance<NLogConsole>();
+            window.titleContent = new GUIContent("NLog Console");
             window.Show();
             window.position = new Rect(200, 200, 400, 300);
             window.currentTopPaneHeight = window.position.height / 2;
         }
-        
+
         public void OnInspectorUpdate()
         {
             if (this.hasChanged)
@@ -79,8 +80,10 @@ namespace Craiel.UnityEssentials.Editor
             }
         }
 
-        public void OnEnable()
+        public override void OnEnable()
         {
+            base.OnEnable();
+
             // Connect to or create the backend
             if (!NLogInterceptor.IsInstanceActive)
             {
@@ -155,7 +158,7 @@ namespace Craiel.UnityEssentials.Editor
                                               border = new RectOffset(0, 0, 0, 0),
                                               fixedHeight = 0
                                           };
-            
+
             this.entryStyleBackOdd = new GUIStyle(this.entryStyleBackEven) { normal = unityLogLineOdd.normal };
 
 

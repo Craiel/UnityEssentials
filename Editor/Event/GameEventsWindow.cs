@@ -1,3 +1,5 @@
+using Craiel.UnityEssentials.Editor;
+
 namespace Craiel.UnityEssentials.Runtime.Event.Editor
 {
     using System;
@@ -7,7 +9,7 @@ namespace Craiel.UnityEssentials.Runtime.Event.Editor
     using UnityEditor;
     using UnityEngine;
 
-    public class GameEventsWindow : EditorWindow
+    public class GameEventsWindow : EssentialEditorWindow<GameEventsWindow>
     {
         private const int EventLimit = 1000;
         private const int EventLimitByGroup = 250;
@@ -38,6 +40,12 @@ namespace Craiel.UnityEssentials.Runtime.Event.Editor
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
+        [MenuItem("Window/Craiel/Game Events")]
+        public static void ShowWindow()
+        {
+            OpenWindow();
+        }
+
         public static void OpenWindow()
         {
             var window = (GameEventsWindow)GetWindow(typeof(GameEventsWindow));
@@ -45,16 +53,20 @@ namespace Craiel.UnityEssentials.Runtime.Event.Editor
             window.Show();
         }
 
-        public void OnEnable()
+        public override void OnEnable()
         {
+            base.OnEnable();
+
             this.eventGroups.Clear();
 
             GameEvents.DebugEventSend = this.OnEventSend;
         }
 
-        public void OnDestroy()
+        public override void OnDestroy()
         {
             GameEvents.DebugEventSend = null;
+
+            base.OnDestroy();
         }
 
         public void OnGUI()
@@ -181,21 +193,21 @@ namespace Craiel.UnityEssentials.Runtime.Event.Editor
         private void DrawContentEntry(GameEventInfo eventData, bool showParentInfo = false)
         {
             GUILayout.BeginHorizontal();
-            
+
             if (showParentInfo)
             {
                 GUILayout.Label(new GUIContent(this.infoIcon));
-                
+
                 GUILayout.Label(string.Format("[{0}] {1} ({2})", eventData.Time.ToShortTimeString(), eventData.Parent.Type, eventData.Receivers.Count.ToString()));
-                
+
             }
             else
             {
                 GUILayout.Space(20);
-                
+
                 GUILayout.Label(string.Format("[{0}] ({1})", eventData.Time.ToShortTimeString(), eventData.Receivers.Count.ToString()));
             }
-            
+
             GUILayout.FlexibleSpace();
 
             GUILayout.EndHorizontal();
@@ -208,13 +220,13 @@ namespace Craiel.UnityEssentials.Runtime.Event.Editor
                     {
                         continue;
                     }
-                    
+
                     GUILayout.BeginHorizontal();
-                    
-                    GUILayout.Space(40);                  
-                    
+
+                    GUILayout.Space(40);
+
                     GUILayout.Label(string.Format("{0}  -  {1}", receiver.TargetName, receiver.MethodName));
-            
+
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
                 }
@@ -241,11 +253,11 @@ namespace Craiel.UnityEssentials.Runtime.Event.Editor
 
                 this.events = new List<GameEventInfo>();
             }
-            
+
             public Type Type { get; private set; }
 
             public int Count { get; private set; }
-            
+
             public int ReceiverCount { get; private set; }
 
             public bool IsFoldout { get; set; }
@@ -267,7 +279,7 @@ namespace Craiel.UnityEssentials.Runtime.Event.Editor
 
                 this.Count++;
                 this.ReceiverCount += issue.Receivers.Count;
-                
+
                 return issue;
             }
         }
@@ -277,7 +289,7 @@ namespace Craiel.UnityEssentials.Runtime.Event.Editor
             public GameEventInfo(GameEventGroup parent, BaseEventSubscriptionTicket[] receivers)
             {
                 this.Parent = parent;
-                
+
                 this.Receivers = new List<GameEventReceiverInfo>();
                 if (receivers != null)
                 {
@@ -287,11 +299,11 @@ namespace Craiel.UnityEssentials.Runtime.Event.Editor
                         {
                             continue;
                         }
-                        
+
                         this.Receivers.Add(new GameEventReceiverInfo(receivers[i]));
                     }
                 }
-                
+
                 this.Time = DateTime.Now;
             }
 
@@ -312,7 +324,7 @@ namespace Craiel.UnityEssentials.Runtime.Event.Editor
                 this.MethodName = methodProperty.GetValue(receiver.TargetDelegate, null).ToString();
                 this.TargetName = targetProperty.GetValue(receiver.TargetDelegate, null).ToString();
             }
-            
+
             public string MethodName { get; private set; }
             public string TargetName { get; private set; }
         }

@@ -6,7 +6,7 @@ namespace Craiel.UnityEssentials.Editor.CameraUtils
     using UserInterface;
 
     [CustomEditor(typeof(PixelPerfectCamera))]
-    public class PixelPerfectCameraEditor : EssentialCustomEditor
+    public class PixelPerfectCameraEditor : EssentialEditorIM
     {
         // -------------------------------------------------------------------
         // Protected

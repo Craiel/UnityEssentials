@@ -1,0 +1,119 @@
+.element-group {
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-top: 2px;
+    margin-bottom: 3px;
+}
+
+.element-group-compact {
+    flex-direction: row;
+    justify-content: flex-start;
+    margin-top: 2px;
+    margin-bottom: 1px;
+}
+
+.transform-button {
+    -unity-font-style: bold;
+    font-size: 9px;
+    height: 16px;
+}
+
+.action-label {
+    align-self: center;
+    margin-left: 20px;
+    margin-right: 0px;
+    width: 50px;
+    color: rgb(110, 110, 110);
+}
+
+.btn-toggle-option {
+    background-color: rgb(60, 90, 90);
+    width: 16px;
+    align-self: center;
+}
+
+.btn-toggle-option:hover {
+    background-color: rgb(80, 110, 110);
+}
+
+.btn-toggle-option:active {
+    background-color: rgb(90, 130, 130);
+}
+
+.btn-clear {
+    background-color: rgb(90, 60, 60);
+    width: 16px;
+    align-self: center;
+}
+
+.btn-clear:hover {
+    background-color: rgb(110, 80, 80);
+}
+
+.btn-clear:active {
+    background-color: rgb(130, 90, 90);
+}
+
+.btn-reset {
+    background-color: rgb(90, 60, 60);
+}
+
+.btn-reset:hover {
+    background-color: rgb(110, 80, 80);
+}
+
+.btn-reset:active {
+    background-color: rgb(130, 90, 90);
+}
+
+.btn-space {
+    background-color: rgb(60, 90, 90);
+    flex-grow: 1;
+}
+
+.btn-space:hover {
+    background-color: rgb(80, 110, 110);
+}
+
+.btn-space:active {
+    background-color: rgb(90, 130, 130);
+}
+
+.btn-snap {
+    background-color: rgb(90, 60, 90);
+    flex-grow: 1;
+}
+
+.btn-snap:hover {
+    background-color: rgb(110, 80, 110);
+}
+
+.btn-snap:active {
+    background-color: rgb(130, 90, 130);
+}
+
+.btn-copy {
+    background-color: rgb(60, 90, 60);
+    flex-grow: 1;
+}
+
+.btn-copy:hover {
+    background-color: rgb(80, 110, 80);
+}
+
+.btn-copy:active {
+    background-color: rgb(90, 130, 90);
+}
+
+.btn-paste {
+    background-color: rgb(90, 90, 60);
+    flex-grow: 1;
+}
+
+.btn-paste:hover {
+    background-color: rgb(110, 110, 80);
+}
+
+.btn-paste:active {
+    background-color: rgb(130, 130, 90);
+}

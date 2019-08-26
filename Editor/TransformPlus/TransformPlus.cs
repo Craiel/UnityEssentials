@@ -1,6 +1,5 @@
 namespace Craiel.UnityEssentials.Editor.TransformPlus
 {
-    using Runtime.Utils;
     using UnityEngine;
 
     public static class TransformPlus
@@ -13,20 +12,20 @@ namespace Craiel.UnityEssentials.Editor.TransformPlus
         private static Vector3 positionCopyCache;
         private static Vector3 rotationCopyCache;
         private static Vector3 scaleCopyCache;
-        
+
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        public static bool IsReadOnly { get; private set; }
-        
         public static Transform Current { get; private set; }
-        
+
         public static TransformPlusSpace Space { get; set; }
-        
+
+        public static bool DrawPivot { get; set; }
+
         public static bool HasPositionCopy { get; private set; }
-        
+
         public static bool HasRotationCopy { get; private set; }
-        
+
         public static bool HasScaleCopy { get; private set; }
 
         public static Vector3 Position
@@ -37,7 +36,7 @@ namespace Craiel.UnityEssentials.Editor.TransformPlus
                 {
                     return Vector3.zero;
                 }
-                
+
                 switch (Space)
                 {
                     case TransformPlusSpace.Local:
@@ -57,7 +56,7 @@ namespace Craiel.UnityEssentials.Editor.TransformPlus
                 }
             }
         }
-        
+
         public static Vector3 Rotation
         {
             get
@@ -66,7 +65,7 @@ namespace Craiel.UnityEssentials.Editor.TransformPlus
                 {
                     return Vector3.zero;
                 }
-                
+
                 switch (Space)
                 {
                     case TransformPlusSpace.Local:
@@ -86,7 +85,7 @@ namespace Craiel.UnityEssentials.Editor.TransformPlus
                 }
             }
         }
-        
+
         public static Vector3 Scale
         {
             get
@@ -95,7 +94,7 @@ namespace Craiel.UnityEssentials.Editor.TransformPlus
                 {
                     return Vector3.zero;
                 }
-                
+
                 switch (Space)
                 {
                     case TransformPlusSpace.Local:
@@ -143,13 +142,13 @@ namespace Craiel.UnityEssentials.Editor.TransformPlus
         public static void Reset()
         {
             SetCurrent(null);
-            
+
             Space = TransformPlusSpace.Local;
 
             positionCopyCache = Vector3.zero;
             rotationCopyCache = Vector3.zero;
             scaleCopyCache = Vector3.one;
-            
+
             HasScaleCopy = false;
             HasPositionCopy = false;
             HasRotationCopy = false;
@@ -179,7 +178,7 @@ namespace Craiel.UnityEssentials.Editor.TransformPlus
                 }
             }
         }
-        
+
         public static void SetPositionSnapped(Vector3 newPosition)
         {
             Vector3 snapped = newPosition;
@@ -188,7 +187,7 @@ namespace Craiel.UnityEssentials.Editor.TransformPlus
             snapped.y = SnapPositionGrid.y > 0 ? Mathf.Round(snapped.y / SnapPositionGrid.y) * SnapPositionGrid.y : snapped.y;
             snapped.z = SnapPositionGrid.z > 0 ? Mathf.Round(snapped.z / SnapPositionGrid.z) * SnapPositionGrid.z : snapped.z;
             snapped += SnapPositionOrigin;
-            
+
             SetPosition(snapped);
         }
 
@@ -225,10 +224,10 @@ namespace Craiel.UnityEssentials.Editor.TransformPlus
             snapped.y = SnapRotationGrid.y > 0 ? Mathf.Round(snapped.y / SnapRotationGrid.y) * SnapRotationGrid.y : snapped.y;
             snapped.z = SnapRotationGrid.z > 0 ? Mathf.Round(snapped.z / SnapRotationGrid.z) * SnapRotationGrid.z : snapped.z;
             snapped += SnapRotationOrigin;
-            
+
             SetRotation(snapped);
         }
-        
+
         public static void SetScale(Vector3 newScale)
         {
             if (Current == null)

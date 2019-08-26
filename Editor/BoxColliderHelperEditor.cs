@@ -6,7 +6,7 @@ namespace Craiel.UnityEssentials.Editor
     using UnityEngine;
 
     [CustomEditor(typeof(BoxColliderHelper))]
-    public class BoxColliderHelperEditor : EssentialCustomEditor
+    public class BoxColliderHelperEditor : EssentialEditorIM
     {
         // -------------------------------------------------------------------
         // Public

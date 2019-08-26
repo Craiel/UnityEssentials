@@ -1,0 +1,25 @@
+<UXML xmlns="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <VisualElement class="element-group">
+        <Button text="Reset" name="buttonReset" class="transform-button btn-reset" />
+    </VisualElement>
+    <VisualElement name="baseEditorContainer">
+    </VisualElement>
+    <VisualElement class="element-group-compact">
+        <Label text="Copy" class="action-label" />
+        <Button text="All" name="buttonCopy" class="transform-button btn-copy" />
+        <Button text="Anchors" name="buttonCopyAnchors" class="transform-button btn-copy" />
+        <Button text="Size" name="buttonCopySize" class="transform-button btn-copy" />
+    </VisualElement>
+    <VisualElement class="element-group-compact">
+        <Label text="Paste" class="action-label" />
+        <Button text="All" name="buttonPaste" class="transform-button btn-paste" />
+        <Button text="Anchors" name="buttonPasteAnchors" class="transform-button btn-paste" />
+        <Button text="Size" name="buttonPasteSize" class="transform-button btn-paste" />
+    </VisualElement>
+    <VisualElement class="element-group-compact">
+        <Label text="Reset" class="action-label" />
+        <Button text="All" name="buttonResetAll" class="transform-button btn-reset" style="flex-grow: 1;" />
+        <Button text="Anchors" name="buttonResetAnchors" class="transform-button btn-reset" style="flex-grow: 1;" />
+        <Button text="Size" name="buttonResetSize" class="transform-button btn-reset" style="flex-grow: 1;" />
+    </VisualElement>
+</UXML>

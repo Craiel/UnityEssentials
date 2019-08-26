@@ -6,7 +6,7 @@ namespace Craiel.UnityEssentials.Editor
     using UnityEditor;
     using UnityEngine;
 
-    public class DirectoryUtilsWindow : EditorWindow
+    public class DirectoryUtilsWindow : EssentialEditorWindow<DirectoryUtilsWindow>
     {
         private const float DirectoryLabelHeight = 21;
 
@@ -18,18 +18,36 @@ namespace Craiel.UnityEssentials.Editor
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        public void OnEnable()
+        [MenuItem("Window/Craiel/Directory Utils")]
+        public static void ShowWindow()
         {
+            OpenWindow();
+        }
+
+        public static void OpenWindow()
+        {
+            var window = CreateInstance<DirectoryUtilsWindow>();
+            window.titleContent = new GUIContent("Directory Utils");
+            window.Show();
+            window.position = new Rect(200, 200, 400, 300);
+        }
+
+        public override void OnEnable()
+        {
+            base.OnEnable();
+
             DirectoryUtils.OnAutoClean += this.OnAutoClean;
 
             this.delayedNotificationMessage = "Click 'Find Empty Dirs' Button.";
         }
 
-        public void OnDisable()
+        public override void OnDisable()
         {
             DirectoryUtils.OnAutoClean -= this.OnAutoClean;
+
+            base.OnDisable();
         }
-        
+
         public void OnGUI()
         {
             if (this.delayedNotificationMessage != null)
@@ -55,7 +73,7 @@ namespace Craiel.UnityEssentials.Editor
                             this.RemoveNotification();
                         }
                     }
-                    
+
                     if (this.ColorButton("Delete All", this.directoryList.Count > 0, Color.red))
                     {
                         DirectoryUtils.DeleteAllEmptyDirAndMeta(this.directoryList);

@@ -9,22 +9,20 @@ namespace Craiel.UnityEssentials.Editor.TransformPlus
         private static Vector2 anchorMaxCache;
         private static Vector2 anchorPositionCache;
         private static Vector2 sizeCache;
-        
+
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        public static bool IsReadOnly { get; private set; }
-        
         public static RectTransform Current { get; private set; }
-        
+
         public static bool HasPivotCopy { get; private set; }
-        
+
         public static bool HasAnchorMinCopy { get; private set; }
-        
+
         public static bool HasAnchorMaxCopy { get; private set; }
-        
+
         public static bool HasAnchorPositionCopy { get; private set; }
-        
+
         public static bool HasSizeCopy { get; private set; }
 
         public static Vector2 Pivot
@@ -39,7 +37,7 @@ namespace Craiel.UnityEssentials.Editor.TransformPlus
                 return Current.pivot;
             }
         }
-        
+
         public static Vector2 AnchorMin
         {
             get
@@ -48,11 +46,11 @@ namespace Craiel.UnityEssentials.Editor.TransformPlus
                 {
                     return Vector2.zero;
                 }
-                
+
                 return Current.anchorMin;
             }
         }
-        
+
         public static Vector2 AnchorMax
         {
             get
@@ -61,7 +59,7 @@ namespace Craiel.UnityEssentials.Editor.TransformPlus
                 {
                     return Vector2.zero;
                 }
-                
+
                 return Current.anchorMax;
             }
         }
@@ -91,7 +89,7 @@ namespace Craiel.UnityEssentials.Editor.TransformPlus
                 return Current.sizeDelta;
             }
         }
-        
+
         public static void SetCurrent(RectTransform target)
         {
             if (Current == target)
@@ -109,7 +107,7 @@ namespace Craiel.UnityEssentials.Editor.TransformPlus
         public static void Reset()
         {
             SetCurrent(null);
-            
+
             pivotCache = Vector2.zero;
             sizeCache = Vector2.zero;
             anchorMaxCache = Vector2.zero;
@@ -122,7 +120,7 @@ namespace Craiel.UnityEssentials.Editor.TransformPlus
             HasAnchorMinCopy = false;
             HasAnchorPositionCopy = false;
         }
-        
+
         public static void UpdateFromScene()
         {
             if (Current == null)
@@ -178,7 +176,7 @@ namespace Craiel.UnityEssentials.Editor.TransformPlus
                 Current.anchorMin = anchorMinCache;
             }
         }
-        
+
         public static void PasteAnchorMax()
         {
             if (HasAnchorMaxCopy && Current != null)
@@ -186,7 +184,7 @@ namespace Craiel.UnityEssentials.Editor.TransformPlus
                 Current.anchorMax = anchorMaxCache;
             }
         }
-        
+
         public static void PasteAnchorPosition()
         {
             if (HasAnchorPositionCopy && Current != null)
@@ -194,7 +192,7 @@ namespace Craiel.UnityEssentials.Editor.TransformPlus
                 Current.anchoredPosition = anchorPositionCache;
             }
         }
-        
+
         public static void PasteSize()
         {
             if (HasSizeCopy && Current != null)

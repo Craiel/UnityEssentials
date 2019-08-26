@@ -50,16 +50,25 @@
                 return;
             }
 
-            var config = Activator.CreateInstance(implementations.First()) as IEssentialEditorConfig;
-            if (config == null)
+            foreach (Type implementation in implementations)
             {
-                UnityEngine.Debug.LogError("Failed to instantiate config class");
+                if (implementation == typeof(EssentialsDefaultConfig) && implementations.Count > 1)
+                {
+                    continue;
+                }
+
+                var config = Activator.CreateInstance(implementation) as IEssentialEditorConfig;
+                if (config == null)
+                {
+                    UnityEngine.Debug.LogError("Failed to instantiate config class");
+                    return;
+                }
+
+                config.Configure();
+
+                IsInitialized = true;
                 return;
             }
-
-            config.Configure();
-
-            IsInitialized = true;
         }
     }
 }

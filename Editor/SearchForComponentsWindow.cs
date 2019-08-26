@@ -7,7 +7,7 @@
     using UnityEditor.SceneManagement;
     using UnityEngine;
 
-    public class SearchForComponentsWindow : EditorWindow
+    public class SearchForComponentsWindow : EssentialEditorWindow<SearchForComponentsWindow>
     {
         private enum SearchMode
         {
@@ -46,6 +46,19 @@
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
+        [MenuItem("Window/Craiel/Search Components")]
+        public static void ShowWindow()
+        {
+            OpenWindow();
+        }
+
+        public static void OpenWindow()
+        {
+            var window = (SearchForComponentsWindow)GetWindow(typeof(SearchForComponentsWindow));
+            window.titleContent = new GUIContent("Search Components");
+            window.Show();
+        }
+
         public void OnGUI()
         {
             GUILayout.Label(this.position + string.Empty);
@@ -286,7 +299,7 @@
                             }
                         }
                     }
-                    
+
                     int indexUnity = asset.IndexOf(EssentialsConstants.UnitySceneExtension, StringComparison.Ordinal);
                     if (indexUnity != -1)
                     {

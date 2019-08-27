@@ -70,7 +70,7 @@ Add the package and dependencies to your Project Manifest.json:
 
 Most things in the Library do not require any configuration, you can start using them right away. All custom inspectors and extensions will start to take effect immediatly after being added to the Project.
 
-If you plan to use the EngineCore + SceneTransition you will have to configure the Library by adding a class implementing `IAudioConfig` in the project:
+If you plan to use the EngineCore + SceneTransition you will have to configure the Library by adding a class implementing `IEssentialConfig` in the project:
 
 ```
     [UsedImplicitly]

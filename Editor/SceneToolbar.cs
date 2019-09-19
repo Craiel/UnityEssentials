@@ -20,8 +20,8 @@
                 Widgets = new List<SceneToolbarWidget>();
             }
 
-            SceneView.onSceneGUIDelegate -= OnSceneGUI;
-            SceneView.onSceneGUIDelegate += OnSceneGUI;
+            SceneView.duringSceneGui -= OnSceneGUI;
+            SceneView.duringSceneGui += OnSceneGUI;
 
             EditorApplication.playModeStateChanged -= PlaymodeStateChanged;
             EditorApplication.playModeStateChanged += PlaymodeStateChanged;
@@ -29,7 +29,7 @@
             EditorApplication.update -= Update;
             EditorApplication.update += Update;
 
-            EssentialsEditorCore.Initialize();
+            EssentialsEditorCore.Configure();
         }
 
         // -------------------------------------------------------------------
@@ -39,6 +39,11 @@
             where T : SceneToolbarWidget
         {
             Widgets.Add(Activator.CreateInstance<T>());
+        }
+
+        public static void ClearWidgets()
+        {
+            Widgets.Clear();
         }
 
         // -------------------------------------------------------------------

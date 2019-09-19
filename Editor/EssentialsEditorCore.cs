@@ -8,19 +8,20 @@
 
     public static class EssentialsEditorCore
     {
+        private static readonly Type ConfigType = typeof(IEssentialEditorConfig);
+        
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
         public static bool IsInitialized { get; private set; }
 
-        public static void Initialize()
+        public static void Configure(bool reconfigure = false)
         {
-            if (IsInitialized)
+            if (IsInitialized && !reconfigure)
             {
                 return;
             }
 
-            Type configType = typeof(IEssentialEditorConfig);
             IList<Type> implementations = new List<Type>();
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
             foreach (Assembly assembly in assemblies)
@@ -30,7 +31,7 @@
                     Type[] types = assembly.GetTypes();
                     foreach (Type type in types)
                     {
-                        if (type.IsInterface || !configType.IsAssignableFrom(type))
+                        if (type.IsInterface || !ConfigType.IsAssignableFrom(type))
                         {
                             continue;
                         }
@@ -44,31 +45,40 @@
                 }
             }
 
-            if (implementations.Count != 1)
+            if (implementations.Count == 0)
             {
-                UnityEngine.Debug.LogError("No implementation of IEssentialEditorConfig found, configure your game data first");
+                UnityEngine.Debug.LogError($"No implementation of {ConfigType.Name} found, configure your game data first");
+                return;
+            }
+            
+            // Remove the default configuration if we have more than one
+            if (implementations.Count > 1)
+            {
+                implementations.Remove(typeof(EssentialsDefaultConfig));
+            }
+            else
+            {
+                if (implementations[0] == typeof(EssentialsDefaultConfig))
+                {
+                    UnityEngine.Debug.LogWarning($"Using Default {ConfigType.Name}");
+                }
+            }
+
+            if (implementations.Count > 1)
+            {
+                UnityEngine.Debug.LogWarning($"Multiple implementations of {ConfigType.Name} found, using first");
+            }
+
+            var config = Activator.CreateInstance(implementations[0]) as IEssentialEditorConfig;
+            if (config == null)
+            {
+                UnityEngine.Debug.LogError("Failed to instantiate config class");
                 return;
             }
 
-            foreach (Type implementation in implementations)
-            {
-                if (implementation == typeof(EssentialsDefaultConfig) && implementations.Count > 1)
-                {
-                    continue;
-                }
+            config.Configure();
 
-                var config = Activator.CreateInstance(implementation) as IEssentialEditorConfig;
-                if (config == null)
-                {
-                    UnityEngine.Debug.LogError("Failed to instantiate config class");
-                    return;
-                }
-
-                config.Configure();
-
-                IsInitialized = true;
-                return;
-            }
+            IsInitialized = true;
         }
     }
 }

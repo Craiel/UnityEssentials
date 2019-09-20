@@ -2,6 +2,7 @@ namespace Craiel.UnityEssentials.Editor
 {
     using System;
     using System.Collections.Generic;
+    using Runtime;
     using UnityEditor;
     using UnityEditor.SceneManagement;
     using UnityEngine;
@@ -18,10 +19,10 @@ namespace Craiel.UnityEssentials.Editor
 
         private static readonly Type[] FilteredComponents =
         {
-            typeof(NavMeshObstacle),
-            typeof(Collider),
-            typeof(Camera),
-            typeof(Light)
+            TypeCache<NavMeshObstacle>.Value,
+            TypeCache<Collider>.Value,
+            TypeCache<Camera>.Value,
+            TypeCache<Light>.Value
         };
 
         // -------------------------------------------------------------------
@@ -63,7 +64,7 @@ namespace Craiel.UnityEssentials.Editor
                     EditorSceneManager.MarkSceneDirty(SceneManager.GetActiveScene());
                 }
             }
-            
+
             if (DisplayComponents)
             {
                 DrawComponents(instanceId, rect);
@@ -117,7 +118,7 @@ namespace Craiel.UnityEssentials.Editor
                 Type componentType = component.GetType();
                 foreach (var filteredComponent in FilteredComponents)
                 {
-                    if (componentType == filteredComponent || componentType.BaseType == filteredComponent) 
+                    if (componentType == filteredComponent || componentType.BaseType == filteredComponent)
                     {
                         components.Add(component);
                     }

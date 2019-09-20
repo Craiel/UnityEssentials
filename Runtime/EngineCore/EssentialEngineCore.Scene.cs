@@ -26,7 +26,7 @@
         protected void RegisterSceneImplementation<TImplementation>(TSceneEnum type)
             where TImplementation : BaseScene<TSceneEnum>
         {
-            this.sceneImplementations.Add(type, typeof(TImplementation));
+            this.sceneImplementations.Add(type, TypeCache<TImplementation>.Value);
         }
 
         // -------------------------------------------------------------------
@@ -72,7 +72,7 @@
                 return null;
             }
 
-            if (!typeof(BaseScene<TSceneEnum>).IsAssignableFrom(implementation))
+            if (!TypeCache<BaseScene<TSceneEnum>>.Value.IsAssignableFrom(implementation))
             {
                 EssentialsCore.Logger.Error("Scene implementation {0} is not of type IGameScene!", implementation);
                 return null;

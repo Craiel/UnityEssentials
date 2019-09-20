@@ -8,6 +8,7 @@ namespace TransformPlus
     using UnityEngine.UIElements;
     using System;
     using System.Reflection;
+    using Craiel.UnityEssentials.Runtime;
 
     public class TransformRectPlusEditorContainer : EssentialEditorTemplateContainer
     {
@@ -37,7 +38,7 @@ namespace TransformPlus
 
             this.AddStyle("TransformPlus");
 
-            Assembly ass = Assembly.GetAssembly(typeof(UnityEditor.Editor));
+            Assembly ass = Assembly.GetAssembly(TypeCache<UnityEditor.Editor>.Value);
             this.baseEditorType = ass.GetType("UnityEditor.RectTransformEditor");
         }
 

@@ -89,7 +89,7 @@ namespace Craiel.UnityEssentials.Runtime.Spatial
             // Attempt find the Min/Max value if null.
             if (searchWindowMinValue.Equals(default(TDimension)))
             {
-                var type = typeof(TDimension);
+                var type = TypeCache<TDimension>.Value;
                 this.MinValue = (TDimension)type.GetField("MinValue").GetValue(type);
             }
             else
@@ -99,7 +99,7 @@ namespace Craiel.UnityEssentials.Runtime.Spatial
 
             if (searchWindowMaxValue.Equals(default(TDimension)))
             {
-                var type = typeof(TDimension);
+                var type = TypeCache<TDimension>.Value;
                 this.MaxValue = (TDimension)type.GetField("MaxValue").GetValue(type);
             }
             else
@@ -195,7 +195,7 @@ namespace Craiel.UnityEssentials.Runtime.Spatial
 
                 zippedList.Add(new KDTreeTuple<TDimension[], TNode>(point, nodeEnum.Current));
             }
-            
+
             // sort the points along the current dimension
             var sortedPoints = zippedList.OrderBy(z => z.Dimensions[dim]).ToArray();
 

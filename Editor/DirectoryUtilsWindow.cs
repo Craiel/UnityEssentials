@@ -3,6 +3,7 @@ using ManagedDirectory = Craiel.UnityEssentials.Runtime.IO.ManagedDirectory;
 namespace Craiel.UnityEssentials.Editor
 {
     using System.Collections.Generic;
+    using Runtime;
     using UnityEditor;
     using UnityEngine;
 
@@ -102,7 +103,7 @@ namespace Craiel.UnityEssentials.Editor
 
                             foreach (ManagedDirectory directory in this.directoryList)
                             {
-                                UnityEngine.Object assetObj = AssetDatabase.LoadAssetAtPath("Assets", typeof(UnityEngine.Object));
+                                UnityEngine.Object assetObj = AssetDatabase.LoadAssetAtPath("Assets", TypeCache<UnityEngine.Object>.Value);
                                 if (null != assetObj)
                                 {
                                     folderContent.text = directory.ToRelative<ManagedDirectory>(DirectoryUtils.DataPath).GetPath();

@@ -31,7 +31,9 @@
                 return false;
             }
 
-            if (compareType.BaseType == typeof(ValueType) || compareType.BaseType == typeof(Enum) || compareType == typeof(string))
+            if (compareType.BaseType == TypeCache<ValueType>.Value
+                || compareType.BaseType == TypeCache<Enum>.Value
+                || compareType == TypeCache<string>.Value)
             {
                 // Value types, strings and enums should have match at this point
                 return false;
@@ -63,7 +65,7 @@
 
             return true;
         }
-        
+
         public static bool DeepCompareEnumerable(this IEnumerable a, IEnumerable b)
         {
             IList<object> entriesA = new List<object>();

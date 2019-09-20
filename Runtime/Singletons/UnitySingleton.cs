@@ -1,7 +1,7 @@
 ﻿namespace Craiel.UnityEssentials.Runtime.Singletons
 {
     using Contracts;
-    
+
     public abstract class UnitySingleton<T> : IUnitySingleton
         where T : class, IUnitySingleton, new()
     {
@@ -29,12 +29,12 @@
             }
 
             Instance = new T();
-            
+
 #if DEBUG
-            EssentialsCore.Logger.Info("Singleton.Instantiate: {0}", typeof(T).Name);
+            EssentialsCore.Logger.Info("Singleton.Instantiate: {0}", TypeCache<T>.Value);
 #endif
         }
-        
+
         public static void InstantiateAndInitialize()
         {
             if (Instance != null && Instance.IsInitialized)

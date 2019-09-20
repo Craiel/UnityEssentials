@@ -7,15 +7,16 @@
 
     public static class TypeExtension
     {
-        public static bool Implements<T>(this Type type) 
+        public static bool Implements<T>(this Type type)
             where T : class
         {
-            if (!typeof(T).IsInterface)
+            Type targetType = TypeCache<T>.Value;
+            if (!targetType.IsInterface)
             {
                 throw new InvalidOperationException("Interface type expected for Implements call");
             }
 
-            return typeof(T).IsAssignableFrom(type);
+            return targetType.IsAssignableFrom(type);
         }
 
         public static bool ImplementsGenericInterface(this Type type, Type interfaceType)
@@ -31,7 +32,7 @@
             {
                 return null;
             }
-            
+
             if (results.Length > 1)
             {
                 throw new InvalidOperationException("Expected only one attribute but found " + results.Length);
@@ -81,7 +82,7 @@
                 {
                     return default(Type);
                 }
-                
+
                 throw new InvalidOperationException("Target type is not nullable, source value is invalid");
             }
 
@@ -90,32 +91,32 @@
                 return source;
             }
 
-            if (targetType == typeof(int))
+            if (targetType == TypeCache<int>.Value)
             {
                 return Convert.ToInt32(source);
             }
 
-            if (targetType == typeof(uint))
+            if (targetType == TypeCache<uint>.Value)
             {
                 return Convert.ToUInt32(source);
             }
 
-            if (targetType == typeof(long))
+            if (targetType == TypeCache<long>.Value)
             {
                 return Convert.ToInt64(source);
             }
 
-            if (targetType == typeof(bool))
+            if (targetType == TypeCache<bool>.Value)
             {
                 return Convert.ToBoolean(source);
             }
 
-            if (targetType == typeof(float))
+            if (targetType == TypeCache<float>.Value)
             {
                 return Convert.ToSingle(source);
             }
 
-            if (targetType == typeof(DateTime))
+            if (targetType == TypeCache<DateTime>.Value)
             {
                 return Convert.ToDateTime(source);
             }
@@ -147,7 +148,7 @@
         public static IDictionary<string, T> GetStaticProperties<T>(this Type type)
         {
             return type.GetFields(BindingFlags.Public | BindingFlags.Static)
-                    .Where(f => f.FieldType == typeof(T))
+                    .Where(f => f.FieldType == TypeCache<T>.Value)
                     .ToDictionary(f => f.Name, f => (T)f.GetValue(null));
         }
     }

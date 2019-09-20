@@ -2,8 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using NLog;
+    using Runtime;
     using UnityEditor;
     using UnityEngine;
 
@@ -21,7 +21,7 @@
         private readonly string saveKey;
 
         private readonly IList<T> enumValues;
-        
+
         private SaveContent content;
 
         private bool inBatch;
@@ -35,8 +35,8 @@
             {
                 throw new InvalidOperationException("EditorConfig Save key is invalid");
             }
-            
-            this.enumValues = Enum.GetValues(typeof(T)).Cast<T>().ToList();
+
+            this.enumValues = EnumCache<T>.Values;
             this.content = new SaveContent();
             this.content.Initialize(this.enumValues.Count);
 
@@ -74,7 +74,7 @@
                 this.content.Clear();
                 return;
             }
-            
+
             if (version != this.Version)
             {
                 if (!this.Upgrade(ref loadedContent, version))
@@ -163,20 +163,20 @@
         public string GetString(T key, string defaultValue = null)
         {
             int keyId = Convert.ToInt32(key);
-            
+
             string value = this.content.StringData[keyId];
             return value ?? defaultValue;
         }
 
         public int GetInt(T key, int defaultValue = 0)
         {
-            int keyId = Convert.ToInt32(key); 
+            int keyId = Convert.ToInt32(key);
 
             if (!this.content.IntDataSet[keyId])
             {
                 return defaultValue;
             }
-            
+
             return this.content.IntData[keyId];
         }
 
@@ -188,7 +188,7 @@
             {
                 return defaultValue;
             }
-            
+
             return this.content.BoolData[keyId];
         }
 
@@ -200,7 +200,7 @@
             {
                 return defaultValue;
             }
-            
+
             return this.content.FloatData[keyId];
         }
 

@@ -54,7 +54,7 @@
 
         public static void OpenWindow()
         {
-            var window = (SearchForComponentsWindow)GetWindow(typeof(SearchForComponentsWindow));
+            var window = (SearchForComponentsWindow)GetWindow(TypeCache<SearchForComponentsWindow>.Value);
             window.titleContent = new GUIContent("Search Components");
             window.Show();
         }
@@ -327,7 +327,7 @@
                         foreach (Component c in comps)
                         {
 
-                            if (c != null && c.GetType() != null && c.GetType().BaseType != null && c.GetType().BaseType == typeof(MonoBehaviour))
+                            if (c != null && c.GetType() != null && c.GetType().BaseType != null && c.GetType().BaseType == TypeCache<MonoBehaviour>.Value)
                             {
                                 SerializedObject so = new SerializedObject(c);
                                 SerializedProperty p = so.FindProperty("m_Script");
@@ -368,7 +368,7 @@
             this.selectedCheckType = (CheckMode)GUILayout.SelectionGrid((int)this.selectedCheckType, CheckTypeTitles, 2, "Toggle");
             this.recursionVal = GUILayout.Toggle(this.recursionVal, "Search all dependencies");
             GUI.enabled = this.selectedCheckType == CheckMode.Single;
-            this.targetComponent = (MonoScript)EditorGUILayout.ObjectField(this.targetComponent, typeof(MonoScript), false);
+            this.targetComponent = (MonoScript)EditorGUILayout.ObjectField(this.targetComponent, TypeCache<MonoScript>.Value, false);
             GUI.enabled = true;
 
             if (!GUILayout.Button("Check component usage"))
@@ -433,7 +433,7 @@
         private GameObject[] GetAllObjectsInScene()
         {
             List<GameObject> objectsInScene = new List<GameObject>();
-            GameObject[] allGOs = (GameObject[])Resources.FindObjectsOfTypeAll(typeof(GameObject));
+            GameObject[] allGOs = (GameObject[])Resources.FindObjectsOfTypeAll(TypeCache<GameObject>.Value);
             foreach (GameObject go in allGOs)
             {
                 //if ( go.hideFlags == HideFlags.NotEditable || go.hideFlags == HideFlags.HideAndDontSave )

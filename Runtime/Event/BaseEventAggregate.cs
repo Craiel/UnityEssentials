@@ -18,14 +18,14 @@
 
         // -------------------------------------------------------------------
         // Public
-        // -------------------------------------------------------------------      
+        // -------------------------------------------------------------------
         public delegate void GameEventAction<in TSpecific>(TSpecific eventData)
             where TSpecific : T;
-        
+
         public BaseEventSubscriptionTicket Subscribe<TSpecific>(GameEventAction<TSpecific> actionDelegate, Func<TSpecific, bool> filterDelegate = null)
             where TSpecific : T
         {
-            var ticket = new BaseEventSubscriptionTicket(typeof(TSpecific), actionDelegate);
+            var ticket = new BaseEventSubscriptionTicket(TypeCache<TSpecific>.Value, actionDelegate);
             if (filterDelegate != null)
             {
                 ticket.FilterDelegate = x => filterDelegate((TSpecific) x);
@@ -41,7 +41,7 @@
             {
                 return;
             }
-            
+
             this.DoUnsubscribe(ticket);
             ticket = null;
         }
@@ -91,11 +91,11 @@
             lock (this.subscribers)
             {
                 BaseEventTargetCollection<T> targets;
-                if (this.subscribers.TryGetValue(typeof(TSpecific), out targets))
+                if (this.subscribers.TryGetValue(TypeCache<TSpecific>.Value, out targets))
                 {
                     targets.Send(eventData);
                 }
-                
+
 #if UNITY_EDITOR
                 GameEvents.DebugEventSend?.Invoke(eventData.GetType(), targets?.Targets);
 #endif

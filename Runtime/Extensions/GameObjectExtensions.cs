@@ -7,7 +7,7 @@
     public static class GameObjectExtensions
     {
         private static readonly List<GameObject> GameObjectTempList = new List<GameObject>();
-        
+
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
@@ -50,7 +50,7 @@
                 Object.Destroy(child);
             }
         }
-        
+
         public static bool IsInLayer(this GameObject target, string layerName)
         {
             return target.layer == LayerMask.NameToLayer(layerName);
@@ -59,9 +59,9 @@
         public static GameObject CreateEmptyGameObject<T>()
             where T : Component
         {
-            return CreateEmptyGameObject(null, components: typeof(T));
+            return CreateEmptyGameObject(null, components: TypeCache<T>.Value);
         }
-        
+
         public static GameObject CreateEmptyGameObject(params System.Type[] components)
         {
             return CreateEmptyGameObject(null, components: components);
@@ -80,33 +80,33 @@
 
             return result;
         }
-        
-        public static T FindInParents<T>(this GameObject gameObject) 
+
+        public static T FindInParents<T>(this GameObject gameObject)
             where T : Component
         {
             if (gameObject == null)
             {
                 return null;
             }
-			
+
             var candidate = gameObject.GetComponent<T>();
 
             if (candidate != null)
             {
                 return candidate;
             }
-			
+
             Transform parent = gameObject.transform.parent;
-			
+
             while (parent != null && candidate == null)
             {
                 candidate = parent.gameObject.GetComponent<T>();
                 parent = parent.parent;
             }
-			
+
             return candidate;
         }
-        
+
         public static GameObject FindGameObject(string name, GameObject root = null)
         {
             if (root)
@@ -127,7 +127,7 @@
 
                 return null;
             }
-            
+
             Scene scene = SceneManager.GetActiveScene();
             GameObjectTempList.Clear();
             scene.GetRootGameObjects(GameObjectTempList);

@@ -14,10 +14,10 @@ namespace Craiel.UnityEssentials.Runtime.FSM
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
-        public EnumStateMachine(T owner = default(T), TS initialState = default(TS), TS globalState = default(TS))
+        public EnumStateMachine(T owner = default, TS initialState = default, TS globalState = default)
             : base(owner, initialState, globalState)
         {
-            int maxValues = Enum.GetValues(typeof(TE)).Length;
+            int maxValues = EnumCache<TE>.Count;
 
             this.states = new TS[maxValues];
         }

@@ -5,11 +5,13 @@
     using Enums;
     using Scene;
     using UnityEngine;
-    
+
     [ExecuteInEditMode]
     public abstract class UnitySingletonBehavior<T> : MonoBehaviour, IUnitySingletonBehavior
         where T : UnitySingletonBehavior<T>
     {
+        private static readonly Type SingletonType = TypeCache<T>.Value;
+
         private static T instance;
 
         // -------------------------------------------------------------------
@@ -55,16 +57,16 @@
             {
                 return;
             }
-            
+
             instance = FindObjectOfType<T>();
-            
+
             if (instance == null)
             {
 #if DEBUG
-                EssentialsCore.Logger.Info("SingletonBehavior.Instantiate: {0}", typeof(T).Name);
+                EssentialsCore.Logger.Info("SingletonBehavior.Instantiate: {0}", SingletonType);
 #endif
-                
-                GameObject gameObject = new GameObject(typeof(T).Name);
+
+                GameObject gameObject = new GameObject(SingletonType.Name);
 
                 try
                 {
@@ -72,14 +74,14 @@
                 }
                 catch (Exception e)
                 {
-                    EssentialsCore.Logger.Error("Error trying to add Singleton Component {0}: {1}", typeof(T), e);
+                    EssentialsCore.Logger.Error("Error trying to add Singleton Component {0}: {1}", SingletonType, e);
                 }
 
                 if (instance == null)
                 {
-                    EssentialsCore.Logger.Error("Adding Component of type {0} returned null", typeof(T));
+                    EssentialsCore.Logger.Error("Adding Component of type {0} returned null", SingletonType);
                 }
-                
+
                 // Only attempt Don't destroy if the object has no parent
                 if (gameObject.transform.parent == null && !RuntimeInfo.RunningFromNUnit)
                 {
@@ -110,13 +112,13 @@
 #if DEBUG
             EssentialsCore.Logger.Info("SingletonBehavior.Awake: {0}", this.GetType().Name);
 #endif
-            
+
             if (instance == null && this.AutoInstantiate)
             {
 #if DEBUG
-                EssentialsCore.Logger.Info("SingletonBehavior.AutoInstantiate: {0}", typeof(T).Name);
+                EssentialsCore.Logger.Info("SingletonBehavior.AutoInstantiate: {0}", TypeCache<T>.Value);
 #endif
-                
+
                 instance = (T)this;
             }
 
@@ -132,7 +134,7 @@
 #if DEBUG
             EssentialsCore.Logger.Info("SingletonBehavior.Initialize: {0}", this.GetType().Name);
 #endif
-            
+
             this.IsInitialized = true;
         }
 
@@ -147,7 +149,7 @@
 
             return root;
         }
-        
+
         protected void DestroySingleton()
         {
 #if DEBUG

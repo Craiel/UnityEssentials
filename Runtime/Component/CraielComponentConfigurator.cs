@@ -9,7 +9,7 @@
     public class CraielComponentConfigurator<T>
         where T : class, ICraielComponentConfig
     {
-        private static readonly string[] IgnoredAssemblies = 
+        private static readonly string[] IgnoredAssemblies =
         {
             "mscorlib",
             "UnityEngine",
@@ -31,7 +31,7 @@
             "Microsoft.",
             "Accessibility"
         };
-        
+
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
@@ -43,18 +43,18 @@
             }
             catch (Exception e)
             {
-                UnityEngine.Debug.LogErrorFormat("Failed to initialize Component Config For {0}: {1}", typeof(T), e);
+                UnityEngine.Debug.LogErrorFormat("Failed to initialize Component Config For {0}: {1}", TypeCache<T>.Value, e);
                 throw;
             }
-            
+
         }
-        
+
         // -------------------------------------------------------------------
         // Private
         // -------------------------------------------------------------------
         private void Initialize()
         {
-            Type configType = typeof(T);
+            Type configType = TypeCache<T>.Value;
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
             IList<Type> implementations = new List<Type>();
             foreach (Assembly assembly in assemblies)
@@ -78,7 +78,7 @@
 #if DEBUG
                 // UnityEngine.Debug.LogFormat("ComponentConfigure: Scanning {0}", assembly.FullName);
 #endif
-                
+
                 try
                 {
                     Type[] candidates = assembly.GetTypes();
@@ -88,7 +88,7 @@
                         {
                             continue;
                         }
-                        
+
                         implementations.Add(candidate);
                     }
                 }
@@ -100,14 +100,14 @@
 
             if (implementations.Count != 1)
             {
-                EssentialsCore.Logger.Error("No implementation of {0} found, configure your game data first", typeof(T).Name);
+                EssentialsCore.Logger.Error("No implementation of {0} found, configure your game data first", TypeCache<T>.Value);
                 return;
             }
 
             T config = Activator.CreateInstance(implementations.First()) as T;
             if (config == null)
             {
-                EssentialsCore.Logger.Error("Failed to instantiate config class of type {0}", typeof(T).Name);
+                EssentialsCore.Logger.Error("Failed to instantiate config class of type {0}", TypeCache<T>.Value);
                 return;
             }
 

@@ -67,7 +67,7 @@
         {
             return ParserExpression.Replace(template, this.FormatEvaluator);
         }
-        
+
         public void Set(string rawKey, string value)
         {
             string key = rawKey.Trim().ToUpper();
@@ -102,7 +102,7 @@
             {
                 return this.GetFormattedValue(key, parameter, value);
             }
-            
+
             if (this.defaultDictionary.TryGetValue(key, out value))
             {
                 return this.GetFormattedValue(key, parameter, value);
@@ -119,12 +119,12 @@
         private string GetFormattedValue(string key, string parameter, object handlerValue)
         {
             Type handlerType = handlerValue.GetType();
-            if (handlerType == typeof(string))
+            if (handlerType == TypeCache<string>.Value)
             {
                 return handlerValue as string;
             }
 
-            if (handlerType == typeof(FormatHandler))
+            if (handlerType == TypeCache<FormatHandler>.Value)
             {
                 return ((FormatHandler)handlerValue).Evaluate(parameter);
             }
@@ -152,7 +152,7 @@
         {
             return DateTime.Now.ToString(parameter);
         }
-        
+
         private string HandleFormatThreadId(string parameter)
         {
             return Thread.CurrentThread.ManagedThreadId.ToString(CultureInfo.InvariantCulture);

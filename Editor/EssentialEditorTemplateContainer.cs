@@ -8,6 +8,8 @@ using UnityEngine.UIElements;
 
 namespace Craiel.UnityEssentials.Editor
 {
+    using Runtime;
+
     public abstract class EssentialEditorTemplateContainer : TemplateContainer, IDisposable
     {
         private const string ViewExtension = ".uxml";
@@ -109,7 +111,7 @@ namespace Craiel.UnityEssentials.Editor
 
         protected bool LoadView<T>(ref VisualTreeAsset target)
         {
-            return this.LoadView(typeof(T).Name, ref target);
+            return this.LoadView(TypeCache<T>.Value.Name, ref target);
         }
 
         protected bool LoadView(string viewName, ref VisualTreeAsset target)
@@ -120,7 +122,7 @@ namespace Craiel.UnityEssentials.Editor
 
         protected bool LoadStyle<T>(ref StyleSheet target, bool silent = true)
         {
-            return this.LoadStyle(typeof(T).Name, ref target, silent);
+            return this.LoadStyle(TypeCache<T>.Value.Name, ref target, silent);
         }
 
         protected bool LoadStyle(string styleName, ref StyleSheet target, bool silent = true)

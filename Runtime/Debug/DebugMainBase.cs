@@ -10,7 +10,7 @@
         protected T CreateComponent<T>()
             where T : DebugComponent
         {
-            return this.CreateDebugSubNode(typeof(T).Name).AddComponent<T>();
+            return this.CreateDebugSubNode(TypeCache<T>.Value.Name).AddComponent<T>();
         }
 
         protected GameObject CreateDebugSubNode(string nodeName)

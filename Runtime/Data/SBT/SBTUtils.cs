@@ -17,8 +17,8 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
     {
         private const int CompressionWarningThreshold = 256;
 
-        public static readonly string SaveIndent = new String(' ', 4); 
-        
+        public static readonly string SaveIndent = new String(' ', 4);
+
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
@@ -29,7 +29,7 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
             {
                 throw new InvalidOperationException("Data must be set for simple types");
             }
-            
+
             switch (type)
             {
                 case SBTType.String:
@@ -76,7 +76,7 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                 {
                     return new SBTNodeSingle((float)data, flags, note);
                 }
-                
+
                 case SBTType.Double:
                 {
                     return new SBTNodeDouble((double)data, flags, note);
@@ -86,47 +86,47 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                 {
                     return new SBTNodeArrayString(type, flags, note);
                 }
-                
+
                 case SBTType.ByteArray:
                 {
                     return new SBTNodeArrayByte(type, flags, note);
                 }
-                
+
                 case SBTType.ShortArray:
                 {
                     return new SBTNodeArrayShort(type, flags, note);
                 }
-                
+
                 case SBTType.UShortArray:
                 {
                     return new SBTNodeArrayUShort(type, flags, note);
                 }
-                
+
                 case SBTType.IntArray:
                 {
                     return new SBTNodeArrayInt(type, flags, note);
                 }
-                
+
                 case SBTType.UIntArray:
                 {
                     return new SBTNodeArrayUInt(type, flags, note);
                 }
-                
+
                 case SBTType.LongArray:
                 {
                     return new SBTNodeArrayLong(type, flags, note);
                 }
-                
+
                 case SBTType.ULongArray:
                 {
                     return new SBTNodeArrayULong(type, flags, note);
                 }
-                
+
                 case SBTType.SingleArray:
                 {
                     return new SBTNodeArraySingle(type, flags, note);
                 }
-                
+
                 case SBTType.DoubleArray:
                 {
                     return new SBTNodeArrayDouble(type, flags, note);
@@ -151,17 +151,17 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                 {
                     return new SBTNodeVector2((Vector2)data, flags, note);
                 }
-                
+
                 case SBTType.Vector3:
                 {
                     return new SBTNodeVector3((Vector3)data, flags, note);
                 }
-                
+
                 case SBTType.Quaternion:
                 {
                     return new SBTNodeQuaternion((Quaternion)data, flags, note);
                 }
-                
+
                 case SBTType.Color:
                 {
                     return new SBTNodeColor((Color)data, flags, note);
@@ -183,19 +183,19 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                 }
             }
         }
-        
+
         public static string SerializeToString(this ISBTNode node)
         {
             byte[] data = node.Serialize();
             return Convert.ToBase64String(data);
         }
-        
+
         public static byte[] Serialize(this ISBTNode node)
         {
             using (var stream = new MemoryStream())
             {
                 node.Serialize(stream);
-                
+
                 byte[] data = new byte[stream.Length];
                 stream.Seek(0, SeekOrigin.Begin);
                 stream.Read(data, 0, data.Length);
@@ -212,13 +212,13 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                 {
                     EssentialsCore.Logger.Warn("SBT Compressed Serialize called on small data, use compression on large data sets only");
                 }
-                
+
                 using(var zipStream = new GZipStream(stream, CompressionLevel.Optimal, true))
                 {
                     zipStream.Write(rawData, 0, rawData.Length);
                     zipStream.Flush();
                 }
-                
+
                 byte[] data = new byte[stream.Length];
                 stream.Seek(0, SeekOrigin.Begin);
                 stream.Read(data, 0, data.Length);
@@ -235,7 +235,7 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                 stream.Write(data, 0, data.Length);
             }
         }
-        
+
         public static void SerializeToFileCompressed(this ISBTNode node, ManagedFile target)
         {
             target.GetDirectory().Create();
@@ -245,7 +245,7 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                 stream.Write(data, 0, data.Length);
             }
         }
-        
+
         public static void Serialize(this ISBTNode node, Stream target)
         {
             using (var writer = new BinaryWriter(target, Encoding.UTF8, true))
@@ -254,17 +254,17 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                 node.Save(writer);
             }
         }
-        
+
         public static void Serialize(this ISBTNode node, ISBTNodeSerializer target)
         {
             target.Serialize(node);
         }
-        
+
         public static ISBTNode Deserialize(string data)
         {
             return Deserialize(Convert.FromBase64String(data));
         }
-        
+
         public static ISBTNode Deserialize(byte[] data)
         {
             using (var stream = new MemoryStream(data))
@@ -272,7 +272,7 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                 return Deserialize(stream);
             }
         }
-        
+
         public static ISBTNode DeserializeCompressed(byte[] data)
         {
             using (var stream = new MemoryStream(data))
@@ -289,7 +289,7 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                 }
             }
         }
-        
+
         public static ISBTNode DeserializeCompressed(Stream stream)
         {
             using (var decompressedStream = new MemoryStream())
@@ -335,19 +335,19 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                 }
             }
         }
-        
+
         internal static void WriteHeader(this ISBTNode node, BinaryWriter target)
         {
             target.Write((byte)node.Type);
             target.Write((ushort)node.Flags);
         }
-        
+
         internal static void ReadHeader(BinaryReader source, out SBTType nodeType, out SBTFlags nodeFlags)
         {
             nodeType = (SBTType)source.ReadByte();
             nodeFlags = (SBTFlags)source.ReadUInt16();
         }
-        
+
         public static object ReadSimpleTypeData(SBTType type, BinaryReader reader)
         {
             switch (type)
@@ -356,7 +356,7 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
                 {
                     return reader.ReadString();
                 }
-                
+
                 case SBTType.Byte:
                 {
                     return reader.ReadByte();
@@ -523,56 +523,56 @@ namespace Craiel.UnityEssentials.Runtime.Data.SBT
 
         public static SBTType GetArrayBaseType(Type type)
         {
-            if (type == typeof(string))
+            if (type == TypeCache<string>.Value)
             {
                 return SBTType.StringArray;
             }
 
-            if (type == typeof(byte))
+            if (type == TypeCache<byte>.Value)
             {
                 return SBTType.ByteArray;
             }
 
-            if (type == typeof(short))
+            if (type == TypeCache<short>.Value)
             {
                 return SBTType.ShortArray;
             }
 
-            if (type == typeof(ushort))
+            if (type == TypeCache<ushort>.Value)
             {
                 return SBTType.UShortArray;
             }
 
-            if (type == typeof(int))
+            if (type == TypeCache<int>.Value)
             {
                 return SBTType.IntArray;
             }
 
-            if (type == typeof(uint))
+            if (type == TypeCache<uint>.Value)
             {
                 return SBTType.UIntArray;
             }
 
-            if (type == typeof(long))
+            if (type == TypeCache<long>.Value)
             {
                 return SBTType.LongArray;
             }
 
-            if (type == typeof(ulong))
+            if (type == TypeCache<ulong>.Value)
             {
                 return SBTType.ULongArray;
             }
 
-            if (type == typeof(float))
+            if (type == TypeCache<float>.Value)
             {
                 return SBTType.SingleArray;
             }
 
-            if (type == typeof(double))
+            if (type == TypeCache<double>.Value)
             {
                 return SBTType.DoubleArray;
             }
-            
+
             throw new ArgumentException("Type not supported for SBT Array");
         }
     }

@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    
+
     public class ResourceMap<T> where T : class
     {
         private const int KeyLookupLength = 2;
@@ -41,7 +41,7 @@
         // -------------------------------------------------------------------
         public IList<ResourceKey> GetKeysByType<TX>()
         {
-            return this.GetKeysByType(typeof(TX));
+            return this.GetKeysByType(TypeCache<TX>.Value);
         }
 
         public IList<ResourceKey> GetKeysByType(Type type)
@@ -180,7 +180,7 @@
             {
                 return this.data[existingKey.Value];
             }
-            
+
             return null;
         }
 

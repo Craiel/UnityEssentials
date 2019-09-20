@@ -11,20 +11,20 @@
     public static class EssentialsCore
     {
         public static readonly Color DefaultGizmoColor = Color.black;
-        
+
         public const string ResourcesFolderName = "Resources";
         public static readonly int ResourceFolderNameSize = ResourcesFolderName.Length;
 
         public const string PrefabExtension = ".prefab";
-        
+
         public static readonly ManagedDirectory AssetsPath = new ManagedDirectory("Assets");
-        
+
         public static readonly ManagedDirectory ResourcesPath = AssetsPath.ToDirectory(ResourcesFolderName);
 
         public static readonly ManagedDirectory DefaultScenesPath = AssetsPath.ToDirectory("Scenes");
 
         public static readonly NLog.Logger Logger = LogManager.GetLogger("CRAIEL_ESSENTIALS");
-        
+
         public static readonly ManagedDirectory PersistentDataPath = new ManagedDirectory(Application.persistentDataPath);
         public static readonly ManagedDirectory DefaultSavePath = PersistentDataPath.ToDirectory("Save");
         public const string DefaultSavePrefix = "esv_";
@@ -41,7 +41,7 @@
             DefaultInputState = InputStateDefault.Instance;
 
             CoreScenes = new ManagedFile[0];
-            
+
             ScenesPath = DefaultScenesPath;
 
             Initialize();
@@ -68,7 +68,7 @@
         // -------------------------------------------------------------------
         private static void Initialize()
         {
-            Type configType = typeof(IEssentialConfig);
+            Type configType = TypeCache<IEssentialConfig>.Value;
             var implementations = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(x => x.GetTypes())
                 .Where(x => !x.IsInterface && configType.IsAssignableFrom(x))

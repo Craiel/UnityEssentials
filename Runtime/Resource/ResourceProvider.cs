@@ -19,16 +19,16 @@
         private readonly ResourceMap<ResourceLoadRequest> resourceMap;
 
         private readonly IDictionary<ResourceKey, int> referenceCount;
-        
+
         private readonly Queue<ResourceLoadInfo> currentPendingLoads;
         private readonly IList<UnityEngine.Object> pendingInstantiations;
 
         private readonly ResourceRequestPool<ResourceLoadRequest> requestPool;
-        
+
         private readonly IDictionary<ResourceKey, long> history;
 
         private readonly IDictionary<Type, ResourceKey> fallbackResources;
-        
+
         // -------------------------------------------------------------------
         // Constructor
         // -------------------------------------------------------------------
@@ -41,7 +41,7 @@
             this.pendingInstantiations = new List<UnityEngine.Object>();
 
             this.requestPool = new ResourceRequestPool<ResourceLoadRequest>(DefaultRequestPoolSize);
-            
+
             this.history = new Dictionary<ResourceKey, long>();
 
             this.fallbackResources = new Dictionary<Type, ResourceKey>();
@@ -81,7 +81,7 @@
             IList<ResourceKey> resources = Instance.AcquireResourcesByType<T>();
             if (resources == null || resources.Count != 1)
             {
-                EssentialsCore.Logger.Warn("Expected 1 result for {0}", typeof(T));
+                EssentialsCore.Logger.Warn("Expected 1 result for {0}", TypeCache<T>.Value);
                 return null;
             }
 
@@ -94,10 +94,10 @@
             {
                 AssetBundle bundle = BundleProvider.Instance.GetBundle(key.Bundle.Value);
 
-                return bundle.LoadAsset(key.Path, key.Type ?? typeof(UnityEngine.Object));
+                return bundle.LoadAsset(key.Path, key.Type ?? TypeCache<UnityEngine.Object>.Value);
             }
 
-            return Resources.Load(key.Path, key.Type ?? typeof(UnityEngine.Object));
+            return Resources.Load(key.Path, key.Type ?? TypeCache<UnityEngine.Object>.Value);
         }
 
         // Note: Use this only when we can not do an async loading, avoid if possible
@@ -257,7 +257,7 @@
 
             return request;
         }
-        
+
         public void ReleaseResource<T>(ResourceReference<T> reference)
             where T : UnityEngine.Object
         {
@@ -320,7 +320,7 @@
             {
                 return;
             }
-            
+
             int resourceCount = this.currentPendingLoads.Count;
             while (this.currentPendingLoads.Count > 0)
             {
@@ -358,7 +358,7 @@
         {
             if (!(data is T))
             {
-                EssentialsCore.Logger.Error("Type requested {0} did not match the registered key type {1} for {2}", typeof(T), key.Type, key);
+                EssentialsCore.Logger.Error("Type requested {0} did not match the registered key type {1} for {2}", TypeCache<T>.Value, key.Type, key);
                 return null;
             }
 
@@ -373,7 +373,7 @@
             {
                 this.ResourceLoading(info);
             }
-            
+
             UnityEngine.Object result = LoadImmediate(info.Key);
 
             var request = new ResourceLoadRequest(info, result);
@@ -438,7 +438,7 @@
                     EssentialsCore.Logger.Error("Failed to instantiate resource {0} on load: {1}", request.Info.Key, e);
                 }
             }
-            
+
             this.resourceMap.SetData(request.Info.Key, request);
 
             this.ResourcesLoaded++;
@@ -461,7 +461,7 @@
         private UnityEngine.Object AcquireFallbackResource<T>()
         {
             ResourceKey fallbackKey;
-            if (this.fallbackResources.TryGetValue(typeof(T), out fallbackKey))
+            if (this.fallbackResources.TryGetValue(TypeCache<T>.Value, out fallbackKey))
             {
                 ResourceLoadRequest request = this.resourceMap.GetData(fallbackKey);
                 UnityEngine.Object data = request != null ? request.GetAsset() : null;

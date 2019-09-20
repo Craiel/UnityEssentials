@@ -37,7 +37,7 @@
                 target.enabled = false;
             }
 
-            Debug.LogFormat("DEBUG Disabled {0} Behaviors of type {1}", targets.Length, typeof(T).Name);
+            Debug.LogFormat("DEBUG Disabled {0} Behaviors of type {1}", targets.Length, TypeCache<T>.Value);
         }
     }
 }

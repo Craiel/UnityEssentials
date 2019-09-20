@@ -4,6 +4,7 @@ namespace Craiel.UnityEssentials.Editor
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Reflection;
+	using Runtime;
 	using UnityEditor;
 	using UnityEngine;
 
@@ -93,7 +94,7 @@ namespace Craiel.UnityEssentials.Editor
 					property.boundsValue = default(Bounds);
 					break;
 				}
-					
+
 				case SerializedPropertyType.Gradient:
 					//!TODO: Amend when Unity add a public API for setting the gradient.
 					break;
@@ -131,7 +132,7 @@ namespace Craiel.UnityEssentials.Editor
 			{
 				throw new ArgumentNullException("target");
 			}
-			
+
 			if (source == null)
 			{
 				throw new ArgumentNullException("source");
@@ -236,13 +237,13 @@ namespace Craiel.UnityEssentials.Editor
 					target.boundsValue = source.boundsValue;
 					break;
 				}
-					
+
 				case SerializedPropertyType.Gradient:
 					//!TODO: Amend when Unity add a public API for setting the gradient.
 					break;
 			}
 		}
-		
+
 		public static T GetValue<T>(this SerializedProperty property)
 		{
 			return GetNestedObject<T>(property.propertyPath, GetSerializedPropertyRootComponent(property));
@@ -262,12 +263,12 @@ namespace Craiel.UnityEssentials.Editor
 
 			return SetFieldOrPropertyValue(fieldName, obj, value);
 		}
-		
+
 		public static Component GetSerializedPropertyRootComponent(SerializedProperty property)
 		{
 			return (Component)property.serializedObject.targetObject;
 		}
-		
+
 		public static T GetNestedObject<T>(string path, object obj, bool includeAllBases = false)
 		{
 			foreach (string part in path.Split('.'))
@@ -276,30 +277,30 @@ namespace Craiel.UnityEssentials.Editor
 			}
 			return (T)obj;
 		}
-		
+
 		public static T GetFieldOrPropertyValue<T>(string fieldName, object obj, bool includeAllBases = false, BindingFlags bindings = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
 		{
 			FieldInfo field = obj.GetType().GetField(fieldName, bindings);
 			if (field != null) return (T)field.GetValue(obj);
- 
+
 			PropertyInfo property = obj.GetType().GetProperty(fieldName, bindings);
 			if (property != null) return (T)property.GetValue(obj, null);
- 
+
 			if (includeAllBases)
 			{
  				foreach (Type type in GetBaseClassesAndInterfaces(obj.GetType()))
 				{
 					field = type.GetField(fieldName, bindings);
 					if (field != null) return (T)field.GetValue(obj);
- 
+
 					property = type.GetProperty(fieldName, bindings);
 					if (property != null) return (T)property.GetValue(obj, null);
 				}
 			}
- 
+
 			return default(T);
 		}
-		
+
 		public static bool SetFieldOrPropertyValue(string fieldName, object obj, object value, bool includeAllBases = false, BindingFlags bindings = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)
 		{
 			FieldInfo field = obj.GetType().GetField(fieldName, bindings);
@@ -308,14 +309,14 @@ namespace Craiel.UnityEssentials.Editor
 				field.SetValue(obj, value);
 				return true;
 			}
- 
+
 			PropertyInfo property = obj.GetType().GetProperty(fieldName, bindings);
 			if (property != null)
 			{
 				property.SetValue(obj, value, null);
 				return true;
 			}
- 
+
 			if (includeAllBases)
 			{
 				foreach (Type type in GetBaseClassesAndInterfaces(obj.GetType()))
@@ -326,7 +327,7 @@ namespace Craiel.UnityEssentials.Editor
 						field.SetValue(obj, value);
 						return true;
 					}
- 
+
 					property = type.GetProperty(fieldName, bindings);
 					if (property != null)
 					{
@@ -335,7 +336,7 @@ namespace Craiel.UnityEssentials.Editor
 					}
 				}
 			}
-			
+
 			return false;
 		}
 
@@ -345,7 +346,7 @@ namespace Craiel.UnityEssentials.Editor
 
 			if (includeSelf) allTypes.Add(type);
 
-			if (type.BaseType == typeof(object))
+			if (type.BaseType == TypeCache<object>.Value)
 			{
 				allTypes.AddRange(type.GetInterfaces());
 			}

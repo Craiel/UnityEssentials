@@ -4,6 +4,7 @@ namespace Craiel.UnityEssentials.Editor
     using System.Linq.Expressions;
     using ReorderableList;
     using ReorderableList.Contracts;
+    using Runtime;
     using UnityEditor;
     using UnityEngine;
     using UserInterface;
@@ -89,7 +90,7 @@ namespace Craiel.UnityEssentials.Editor
                 SerializedProperty property = this.serializedObject.FindProperty(expression);
 
                 ReorderableListGUI.Title(title);
-                ReorderableListGUI.ListField((TAdapter)Activator.CreateInstance(typeof(TAdapter), property));
+                ReorderableListGUI.ListField((TAdapter)Activator.CreateInstance(TypeCache<TAdapter>.Value, property));
             }
         }
 

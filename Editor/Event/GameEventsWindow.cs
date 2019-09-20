@@ -48,7 +48,7 @@ namespace Craiel.UnityEssentials.Runtime.Event.Editor
 
         public static void OpenWindow()
         {
-            var window = (GameEventsWindow)GetWindow(typeof(GameEventsWindow));
+            var window = (GameEventsWindow)GetWindow(TypeCache<GameEventsWindow>.Value);
             window.titleContent = new GUIContent("Game Events");
             window.Show();
         }

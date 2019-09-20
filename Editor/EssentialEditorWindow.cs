@@ -1,5 +1,6 @@
 ﻿namespace Craiel.UnityEssentials.Editor
 {
+    using Runtime;
     using UnityEditor;
     using UnityEngine;
 
@@ -10,14 +11,14 @@
         // Public
         // -------------------------------------------------------------------
         public static T Instance { get; private set; }
-        
+
         [SerializeField]
         public GUIStyle ToolBarStyle;
-        
+
         public virtual void OnEnable()
         {
             Instance = (T)this;
-            
+
             if (this.ToolBarStyle == null)
             {
                 this.ToolBarStyle = new GUIStyle(EditorStyles.toolbarButton)
@@ -49,7 +50,7 @@
         // -------------------------------------------------------------------
         protected static void OpenWindow(string windowTitle)
         {
-            var window = (T)GetWindow(typeof(T));
+            var window = (T)GetWindow(TypeCache<T>.Value);
             window.titleContent = new GUIContent(windowTitle);
             window.Show();
         }

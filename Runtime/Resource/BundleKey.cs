@@ -18,14 +18,14 @@ namespace Craiel.UnityEssentials.Runtime.Resource
         // Public
         // -------------------------------------------------------------------
         public static BundleKey Invalid = new BundleKey(-1, null);
-        
+
         public int BundleVersion { get; set; }
-        
+
         public string Bundle { get; set; }
-    
+
         public static bool operator ==(BundleKey rhs, BundleKey lhs)
         {
-            return rhs.BundleVersion == lhs.BundleVersion 
+            return rhs.BundleVersion == lhs.BundleVersion
                 && rhs.Bundle == lhs.Bundle;
         }
 
@@ -41,7 +41,7 @@ namespace Craiel.UnityEssentials.Runtime.Resource
 
         public override bool Equals(object other)
         {
-            if (other == null || other.GetType() != typeof(BundleKey))
+            if (other == null || other.GetType() != TypeCache<BundleKey>.Value)
             {
                 return false;
             }

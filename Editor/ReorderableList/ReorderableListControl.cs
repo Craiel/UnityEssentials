@@ -3,6 +3,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 	using System;
 	using System.Collections.Generic;
 	using Contracts;
+	using Runtime;
 	using Runtime.Utils;
 	using UnityEditor;
 	using UnityEngine;
@@ -22,22 +23,22 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 		protected static readonly GUIContent CommandRemove = new GUIContent("Remove");
 
 		protected static readonly GUIContent CommandClearAll = new GUIContent("Clear All");
-		
+
 		protected static readonly GenericMenu.MenuFunction2 DefaultContextHandler = DefaultContextMenuHandler;
-		
+
 		private static readonly int ListControlHint = "_ReorderableListControl_".GetHashCode();
-		
+
 		private static readonly Stack<ListInfo> CurrentListStack;
 
 		private static readonly Stack<ItemInfo> CurrentItemStack;
-		
+
 		private static readonly GUIContent TempContent = new GUIContent();
 		private static readonly GUIContent SizePrefixLabel = new GUIContent("Size");
-		
+
 		private static readonly Dictionary<int, float> ContainerHeightCache = new Dictionary<int, float>();
-		
+
 		private static GUIStyle rightAlignedLabelStyle;
-		
+
 		private static float anchorMouseOffset;
 
 		private static int anchorIndex = -1;
@@ -47,30 +48,30 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 		private static int autoFocusControlId;
 
 		private static int autoFocusIndex = -1;
-		
+
 		private static int simulateMouseDragControlId;
-		
+
 		private static Rect dragItemPosition;
 
 		private static Rect removeButtonPosition;
-		
+
 		private static bool trackingCancelBlockContext;
-		
+
 		private static int dropTargetNestedCounter;
-		
+
 		private static int contextControlId;
 
 		private static int contextItemIndex;
 
 		private static string contextCommandName;
-		
+
 		private ReorderableListFlags flags;
-		
+
 		private float verticalSpacing = 10f;
-		
+
 		private event AddMenuClickedEventHandler addMenuClicked;
 		private int addMenuClickedSubscriberCount;
-		
+
 		private int controlId;
 
 		private Rect visibleRect;
@@ -88,8 +89,8 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 		private float insertionPosition;
 
 		private int newSizeInput;
-		
-		
+
+
 		// -------------------------------------------------------------------
 		// Constructor
 		// -------------------------------------------------------------------
@@ -112,7 +113,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 				TargetBackgroundColor = new Color(0, 0, 0, 0.5f);
 			}
 		}
-		
+
 		public ReorderableListControl()
 		{
 			this.HorizontalLineAtEnd = false;
@@ -129,7 +130,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 		{
 			this.Flags = flags;
 		}
-		
+
 		// -------------------------------------------------------------------
 		// Public
 		// -------------------------------------------------------------------
@@ -141,7 +142,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 				{
 					return;
 				}
-				
+
 				this.addMenuClicked += value;
 				++this.addMenuClickedSubscriberCount;
 				this.HasAddMenuButton = this.addMenuClickedSubscriberCount != 0;
@@ -152,18 +153,18 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 				{
 					return;
 				}
-				
+
 				this.addMenuClicked -= value;
 				--this.addMenuClickedSubscriberCount;
 				this.HasAddMenuButton = this.addMenuClickedSubscriberCount != 0;
 			}
 		}
-		
+
 		public event ItemInsertedEventHandler ItemInserted;
 		public event ItemRemovingEventHandler ItemRemoving;
 		public event ItemMovingEventHandler ItemMoving;
 		public event ItemMovedEventHandler ItemMoved;
-		
+
 		public delegate T ItemDrawer<T>(Rect position, T item);
 
 		public delegate void DrawEmpty();
@@ -173,7 +174,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 		public static readonly Color AnchorBackgroundColor;
 
 		public static readonly Color TargetBackgroundColor;
-		
+
 		public static int CurrentListControlId
 		{
 			get { return CurrentListStack.Peek().ControlId; }
@@ -193,19 +194,19 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 		{
 			get { return CurrentItemStack.Peek().ItemPosition; }
 		}
-		
+
 		public ReorderableListFlags Flags
 		{
 			get { return this.flags; }
 			set { this.flags = value; }
 		}
-		
+
 		public float VerticalSpacing
 		{
 			get { return this.verticalSpacing; }
 			set { this.verticalSpacing = value; }
 		}
-		
+
 		public GUIStyle ContainerStyle { get; set; }
 
 		public GUIStyle FooterButtonStyle { get; set; }
@@ -223,7 +224,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 		{
 			int controlId = GetReorderableListControlId();
 
-			var control = GUIUtility.GetStateObject(typeof(ReorderableListControl), controlId) as ReorderableListControl;
+			var control = GUIUtility.GetStateObject(TypeCache<ReorderableListControl>.Value, controlId) as ReorderableListControl;
 			control.Flags = flags;
 			control.Draw(controlId, adaptor, drawEmpty);
 		}
@@ -233,11 +234,11 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 		{
 			int controlId = GetReorderableListControlId();
 
-			var control = GUIUtility.GetStateObject(typeof(ReorderableListControl), controlId) as ReorderableListControl;
+			var control = GUIUtility.GetStateObject(TypeCache<ReorderableListControl>.Value, controlId) as ReorderableListControl;
 			control.Flags = flags;
 			control.Draw(position, controlId, adaptor, drawEmpty);
 		}
-		
+
 		public void Draw(IReorderableListAdaptor adaptor, DrawEmpty drawEmpty)
 		{
 			this.Draw(GetReorderableListControlId(), adaptor, drawEmpty);
@@ -247,7 +248,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 		{
 			this.Draw(GetReorderableListControlId(), adaptor, null);
 		}
-		
+
 		public void Draw(Rect position, IReorderableListAdaptor adaptor, DrawEmptyAbsolute drawEmpty)
 		{
 			this.Draw(position, GetReorderableListControlId(), adaptor, drawEmpty);
@@ -313,7 +314,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 		{
 			this.DrawSizeField(SizePrefixLabel, adaptor);
 		}
-		
+
 		public bool DoCommand(string commandName, int itemIndex, IReorderableListAdaptor adaptor)
 		{
 			if (!this.HandleCommand(contextCommandName, itemIndex, adaptor))
@@ -321,7 +322,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 				Debug.LogWarning("Unknown context command.");
 				return false;
 			}
-			
+
 			return true;
 		}
 
@@ -342,7 +343,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 			{
 				totalHeight += adaptor.GetItemHeight(i);
 			}
-			
+
 			// Add spacing between list items.
 			totalHeight += 4 * count;
 
@@ -372,7 +373,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 
 			return totalHeight;
 		}
-		
+
 		// -------------------------------------------------------------------
 		// Protected
 		// -------------------------------------------------------------------
@@ -399,7 +400,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 				this.ItemRemoving(this, args);
 			}
 		}
-		
+
 		protected virtual void OnItemMoving(ItemMovingEventArgs args)
 		{
 			if (this.ItemMoving != null)
@@ -479,7 +480,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 					this.MoveItem(adaptor, itemIndex, 0);
 					return true;
 				}
-					
+
 				case "Move to Bottom":
 				{
 					this.MoveItem(adaptor, itemIndex, adaptor.Count);
@@ -491,13 +492,13 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 					this.InsertItem(adaptor, itemIndex);
 					return true;
 				}
-					
+
 				case "Insert Below":
 				{
 					this.InsertItem(adaptor, itemIndex + 1);
 					return true;
 				}
-					
+
 				case "Duplicate":
 				{
 					this.DuplicateItem(adaptor, itemIndex);
@@ -509,7 +510,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 					this.RemoveItem(adaptor, itemIndex);
 					return true;
 				}
-					
+
 				case "Clear All":
 				{
 					this.ClearAll(adaptor);
@@ -542,7 +543,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 
 				GUI.changed = true;
 			}
-			
+
 			ReorderableListGUI.IndexOfChangedItem = -1;
 		}
 
@@ -651,7 +652,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 
 			return true;
 		}
-		
+
 		// -------------------------------------------------------------------
 		// Private
 		// -------------------------------------------------------------------
@@ -676,17 +677,17 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 		{
 			get { return (this.flags & ReorderableListFlags.HideRemoveButtons) == 0; }
 		}
-		
+
 		private static int GetReorderableListControlId()
 		{
 			return GUIUtility.GetControlID(ListControlHint, FocusType.Passive);
 		}
-		
+
 		private static int CountDigits(int number)
 		{
 			return Mathf.Max(2, Mathf.CeilToInt(Mathf.Log10(number)));
 		}
-		
+
 		private void PrepareState(int targetControlId, IReorderableListAdaptor adaptor)
 		{
 			this.controlId = targetControlId;
@@ -726,7 +727,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 
 			return ReorderableListGUIHelper.IconButton(position, visible, iconNormal, iconActive, this.ItemButtonStyle);
 		}
-		
+
 		private static void BeginTrackingReorderDrag(int targetControlId, int itemIndex)
 		{
 			GUIUtility.hotControl = targetControlId;
@@ -926,7 +927,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 
 			this.DrawListItem(dragItemPosition, adaptor, anchorIndex);
 		}
-		
+
 		private void DrawListContainerAndItems(Rect position, IReorderableListAdaptor adaptor)
 		{
 			int initialDropTargetNestedCounterValue = dropTargetNestedCounter;
@@ -972,7 +973,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 						trackingCancelBlockContext = true;
 						Event.current.Use();
 					}
-					
+
 					break;
 
 				case EventType.MouseUp:
@@ -987,10 +988,10 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 						{
 							StopTrackingReorderDrag();
 						}
-						
+
 						Event.current.Use();
 					}
-					
+
 					break;
 
 				case EventType.KeyDown:
@@ -999,7 +1000,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 						StopTrackingReorderDrag();
 						Event.current.Use();
 					}
-					
+
 					break;
 
 				case EventType.ExecuteCommand:
@@ -1017,7 +1018,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 							contextItemIndex = 0;
 						}
 					}
-					
+
 					break;
 
 				case EventType.Repaint:
@@ -1142,7 +1143,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 									Event.current.Use();
 								}
 							}
-							
+
 							break;
 					}
 				}
@@ -1287,7 +1288,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 				}
 			}
 		}
-		
+
 		private void CheckForAutoFocusControl()
 		{
 			if (Event.current.type == EventType.Used)
@@ -1378,7 +1379,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 
 			EditorGUIUtility.labelWidth = restoreLabelWidth;
 		}
-		
+
 		private Rect GetListRectWithAutoLayout(IReorderableListAdaptor adaptor, float padding)
 		{
 			float totalHeight;
@@ -1522,7 +1523,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 
 			this.DrawFooterControls(position, adaptor);
 		}
-		
+
 		private void Draw(Rect position, int targetControlId, IReorderableListAdaptor adaptor, DrawEmptyAbsolute drawEmpty)
 		{
 			this.FixStyles();
@@ -1561,7 +1562,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 
 			this.DrawFooterControls(position, adaptor);
 		}
-	
+
 		private void ShowContextMenu(int itemIndex, IReorderableListAdaptor adaptor)
 		{
 			GenericMenu menu = new GenericMenu();
@@ -1590,7 +1591,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 			var e = EditorGUIUtility.CommandEvent("ReorderableListContextCommand");
 			EditorWindow.focusedWindow.SendEvent(e);
 		}
-		
+
 		private struct ListInfo
 		{
 			public ListInfo(int controlId, Rect position)
@@ -1598,7 +1599,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 				this.ControlId = controlId;
 				this.Position = position;
 			}
-			
+
 			public readonly int ControlId;
 			public readonly Rect Position;
 		}
@@ -1610,7 +1611,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 				this.ItemIndex = itemIndex;
 				this.ItemPosition = itemPosition;
 			}
-			
+
 			public readonly int ItemIndex;
 			public readonly Rect ItemPosition;
 		}

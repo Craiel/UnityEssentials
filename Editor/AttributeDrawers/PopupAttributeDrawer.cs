@@ -1,6 +1,7 @@
 namespace Craiel.UnityEssentials.Editor.AttributeDrawers
 {
     using System;
+    using Runtime;
     using Runtime.Attributes;
     using Runtime.Utils;
     using UnityEditor;
@@ -26,7 +27,7 @@ namespace Craiel.UnityEssentials.Editor.AttributeDrawers
                 EditorGUILayout.HelpBox("Popup has invalid values set!", MessageType.Error);
                 return;
             }
-            
+
             if (this.validateValue == null || this.setValue == null)
             {
                 if (!this.Initialize(property))
@@ -47,9 +48,9 @@ namespace Craiel.UnityEssentials.Editor.AttributeDrawers
             }
 
             position.max -= new Vector2(20, 0);
-            
+
             GUIContent customLabel = new GUIContent(label.text, string.Format("{0} (Value Type: {1})", label.tooltip ?? string.Empty, this.variableType.Name));
-            
+
             EditorGUI.BeginChangeCheck();
             selectedIndex = EditorGUI.Popup(position, customLabel, selectedIndex, this.displayValues);
             if (EditorGUI.EndChangeCheck())
@@ -70,7 +71,7 @@ namespace Craiel.UnityEssentials.Editor.AttributeDrawers
             {
                 this.displayValues[i] = new GUIContent(typed.Entries[i].ToString());
                 this.values[i] = typed.Entries[i];
-                
+
                 if (this.variableType == null)
                 {
                     this.variableType = typed.Entries[i].GetType();
@@ -86,42 +87,42 @@ namespace Craiel.UnityEssentials.Editor.AttributeDrawers
             }
 
             string valueFormatString = "{0}";
-            if (this.variableType == typeof(string))
+            if (this.variableType == TypeCache<string>.Value)
             {
                 this.validateValue = x =>
                 {
                     return property.stringValue == (string)this.values[x] ? x : 0;
                 };
-                
+
                 this.setValue = x =>
                 {
                     property.stringValue = (string)this.values[x];
                 };
             }
-            else if (this.variableType == typeof(int))
+            else if (this.variableType == TypeCache<int>.Value)
             {
                 this.validateValue = x =>
                 {
                     return property.intValue == (int)this.values[x] ? x : 0;
                 };
-                
+
                 this.setValue = x =>
                 {
                     property.intValue = (int)this.values[x];
                 };
             }
-            else if (this.variableType == typeof(float))
+            else if (this.variableType == TypeCache<float>.Value)
             {
                 this.validateValue = x =>
                 {
                     return Math.Abs(property.floatValue - (float)this.values[x]) < EssentialMathUtils.Epsilon ? x : 0;
                 };
-                
+
                 this.setValue = x =>
                 {
                     property.floatValue = (float)this.values[x];
                 };
-                
+
                 valueFormatString = "{0}f";
             }
             else

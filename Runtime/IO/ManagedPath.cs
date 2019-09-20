@@ -17,7 +17,7 @@
 
         public static readonly string DirectorySeparatorMandatoryRegexSegment = string.Format(@"[\{0}\{1}\{2}]+", DirectorySeparator, DirectorySeparatorAlternative, DirectorySeparatorUnity);
         public static readonly string DirectoryRegex = string.Concat(string.Format("(^|{0})", DirectorySeparatorMandatoryRegexSegment), "{0}", DirectorySeparatorMandatoryRegexSegment);
-        
+
         private string path;
 
         private DriveInfo drive;
@@ -36,14 +36,14 @@
         public string DirectoryName { get; protected set; }
 
         public string DirectoryNameWithoutPath { get; protected set; }
-        
+
         public bool IsNull { get; private set; }
 
         public bool EndsWithSeparator
         {
             get
             {
-                return this.path.EndsWith(DirectorySeparator) 
+                return this.path.EndsWith(DirectorySeparator)
                     || this.path.EndsWith(DirectorySeparatorAlternative)
                     || this.path.EndsWith(DirectorySeparatorUnity);
             }
@@ -74,7 +74,7 @@
             {
                 return false;
             }
-            
+
             return this.path.Equals(obj.ToString());
         }
 
@@ -85,7 +85,7 @@
             {
                 return true;
             }
-            
+
             // Now lets try to find out if we are dealing with the same file by taking the absolute paths of both
             string thisString = this.GetAbsolutePath(root);
             string otherString = other.GetAbsolutePath(root);
@@ -113,7 +113,7 @@
 
             // Uri transforms this so we have to bring it back in line
             relativePath = relativePath.Replace("/", DirectorySeparator);
-            return (T)Activator.CreateInstance(typeof(T), relativePath);
+            return (T)Activator.CreateInstance(TypeCache<T>.Value, relativePath);
         }
 
         public T ToAbsolute<T>(ManagedPath root) where T : ManagedPath
@@ -124,13 +124,13 @@
             }
 
             string absolutePath = this.GetAbsolutePath(root);
-            return (T)Activator.CreateInstance(typeof(T), absolutePath);
+            return (T)Activator.CreateInstance(TypeCache<T>.Value, absolutePath);
         }
 
         public T ToAbsolute<T>() where T : ManagedPath
         {
             string absolutePath = System.IO.Path.GetFullPath(this.GetPath());
-            return (T)Activator.CreateInstance(typeof(T), absolutePath);
+            return (T)Activator.CreateInstance(TypeCache<T>.Value, absolutePath);
         }
 
         public bool Contains(string pattern, bool ignoreCase = false)
@@ -235,7 +235,7 @@
                 }
             }
         }
-        
+
         protected DriveInfo Drive
         {
             get
@@ -255,7 +255,7 @@
             for (int i = 0; i < other.Length; i++)
             {
                 string otherValue;
-                if (typeof(T) == typeof(string))
+                if (TypeCache<T>.Value == TypeCache<string>.Value)
                 {
                     otherValue = other[i] as string;
                 }
@@ -264,7 +264,7 @@
                     otherValue = other[i].ToString();
                 }
 
-                result = string.IsNullOrEmpty(this.path) || this.HasDelimiter(result, otherValue) ? 
+                result = string.IsNullOrEmpty(this.path) || this.HasDelimiter(result, otherValue) ?
                     string.Concat(result, otherValue) :
                     string.Concat(result, DirectorySeparator, otherValue);
             }
@@ -274,7 +274,7 @@
 
         protected bool HasDelimiter(string first, string second)
         {
-            return first.EndsWith(DirectorySeparator) 
+            return first.EndsWith(DirectorySeparator)
                 || first.EndsWith(DirectorySeparatorAlternative)
                 || first.EndsWith(DirectorySeparatorUnity)
                 || second.StartsWith(DirectorySeparator)

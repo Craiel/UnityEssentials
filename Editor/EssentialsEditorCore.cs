@@ -2,14 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
+    using Runtime;
     using Runtime.Contracts;
 
     public static class EssentialsEditorCore
     {
-        private static readonly Type ConfigType = typeof(IEssentialEditorConfig);
-        
+        private static readonly Type ConfigType = TypeCache<IEssentialEditorConfig>.Value;
+
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
@@ -50,15 +50,15 @@
                 UnityEngine.Debug.LogError($"No implementation of {ConfigType.Name} found, configure your game data first");
                 return;
             }
-            
+
             // Remove the default configuration if we have more than one
             if (implementations.Count > 1)
             {
-                implementations.Remove(typeof(EssentialsDefaultConfig));
+                implementations.Remove(TypeCache<EssentialsDefaultConfig>.Value);
             }
             else
             {
-                if (implementations[0] == typeof(EssentialsDefaultConfig))
+                if (implementations[0] == TypeCache<EssentialsDefaultConfig>.Value)
                 {
                     UnityEngine.Debug.LogWarning($"Using Default {ConfigType.Name}");
                 }

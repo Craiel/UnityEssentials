@@ -11,23 +11,23 @@ namespace Craiel.UnityEssentials.Runtime.Mathematics.Rnd
         // -------------------------------------------------------------------
         static DistributionAdapters()
         {
-            Adapters.Add(typeof(ConstantDoubleDistribution), new ConstantDoubleDistributionAdapter());
-            Adapters.Add(typeof(ConstantFloatDistribution), new ConstantFloatDistributionAdapter());
-            Adapters.Add(typeof(ConstantIntegerDistribution), new ConstantIntegerDistributionAdapter());
-            Adapters.Add(typeof(ConstantLongDistribution), new ConstantLongDistributionAdapter());
+            Adapters.Add(TypeCache<ConstantDoubleDistribution>.Value, new ConstantDoubleDistributionAdapter());
+            Adapters.Add(TypeCache<ConstantFloatDistribution>.Value, new ConstantFloatDistributionAdapter());
+            Adapters.Add(TypeCache<ConstantIntegerDistribution>.Value, new ConstantIntegerDistributionAdapter());
+            Adapters.Add(TypeCache<ConstantLongDistribution>.Value, new ConstantLongDistributionAdapter());
 
-            Adapters.Add(typeof(GaussianDoubleDistribution), new GaussianDoubleDistributionAdapter());
-            Adapters.Add(typeof(GaussianFloatDistribution), new GaussianFloatDistributionAdapter());
+            Adapters.Add(TypeCache<GaussianDoubleDistribution>.Value, new GaussianDoubleDistributionAdapter());
+            Adapters.Add(TypeCache<GaussianFloatDistribution>.Value, new GaussianFloatDistributionAdapter());
 
-            Adapters.Add(typeof(TriangularDoubleDistribution), new TriangularDoubleDistributionAdapter());
-            Adapters.Add(typeof(TriangularFloatDistribution), new TriangularFloatDistributionAdapter());
-            Adapters.Add(typeof(TriangularIntegerDistribution), new TriangularIntegerDistributionAdapter());
-            Adapters.Add(typeof(TriangularLongDistribution), new TriangularLongDistributionAdapter());
+            Adapters.Add(TypeCache<TriangularDoubleDistribution>.Value, new TriangularDoubleDistributionAdapter());
+            Adapters.Add(TypeCache<TriangularFloatDistribution>.Value, new TriangularFloatDistributionAdapter());
+            Adapters.Add(TypeCache<TriangularIntegerDistribution>.Value, new TriangularIntegerDistributionAdapter());
+            Adapters.Add(TypeCache<TriangularLongDistribution>.Value, new TriangularLongDistributionAdapter());
 
-            Adapters.Add(typeof(UniformDoubleDistribution), new UniformDoubleDistributionAdapter());
-            Adapters.Add(typeof(UniformFloatDistribution), new UniformFloatDistributionAdapter());
-            Adapters.Add(typeof(UniformIntegerDistribution), new UniformIntegerDistributionAdapter());
-            Adapters.Add(typeof(UniformLongDistribution), new UniformLongDistributionAdapter());
+            Adapters.Add(TypeCache<UniformDoubleDistribution>.Value, new UniformDoubleDistributionAdapter());
+            Adapters.Add(TypeCache<UniformFloatDistribution>.Value, new UniformFloatDistributionAdapter());
+            Adapters.Add(TypeCache<UniformIntegerDistribution>.Value, new UniformIntegerDistributionAdapter());
+            Adapters.Add(TypeCache<UniformLongDistribution>.Value, new UniformLongDistributionAdapter());
         }
 
         // -------------------------------------------------------------------
@@ -39,7 +39,7 @@ namespace Craiel.UnityEssentials.Runtime.Mathematics.Rnd
             where TN : DoubleDistribution
         {
             protected DoubleAdapter(string category)
-                : base(category, typeof(DoubleDistribution))
+                : base(category, TypeCache<DoubleDistribution>.Value)
             {
             }
 
@@ -62,7 +62,7 @@ namespace Craiel.UnityEssentials.Runtime.Mathematics.Rnd
             where TN : FloatDistribution
         {
             protected FloatAdapter(string category)
-                : base(category, typeof(FloatDistribution))
+                : base(category, TypeCache<FloatDistribution>.Value)
             {
             }
 
@@ -85,7 +85,7 @@ namespace Craiel.UnityEssentials.Runtime.Mathematics.Rnd
             where TN : IntegerDistribution
         {
             protected IntegerAdapter(string category)
-                : base(category, typeof(IntegerDistribution))
+                : base(category, TypeCache<IntegerDistribution>.Value)
             {
             }
 
@@ -108,7 +108,7 @@ namespace Craiel.UnityEssentials.Runtime.Mathematics.Rnd
             where TN : LongDistribution
         {
             protected LongAdapter(string category)
-                : base(category, typeof(LongDistribution))
+                : base(category, TypeCache<LongDistribution>.Value)
             {
             }
 

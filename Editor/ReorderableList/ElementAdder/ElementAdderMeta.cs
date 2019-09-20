@@ -4,6 +4,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList.ElementAdder
 	using System.Collections.Generic;
 	using System.Linq;
 	using Contracts;
+	using Runtime;
 
 	public static class ElementAdderMeta
 	{
@@ -24,7 +25,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList.ElementAdder
 
 			Dictionary<Type, List<Type>> contractMap;
 			List<Type> commandTypes;
-			if (contextMap.TryGetValue(typeof(TContext), out contractMap))
+			if (contextMap.TryGetValue(TypeCache<TContext>.Value, out contractMap))
 			{
 				if (contractMap.TryGetValue(contractType, out commandTypes))
 				{
@@ -34,7 +35,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList.ElementAdder
 			else
 			{
 				contractMap = new Dictionary<Type, List<Type>>();
-				contextMap[typeof(TContext)] = contractMap;
+				contextMap[TypeCache<TContext>.Value] = contractMap;
 			}
 
 			commandTypes = new List<Type>();
@@ -43,7 +44,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList.ElementAdder
 			{
 				var attributes =
 					(ElementAdderMenuCommandAttribute[]) Attribute.GetCustomAttributes(commandType,
-						typeof(ElementAdderMenuCommandAttribute));
+						TypeCache<ElementAdderMenuCommandAttribute>.Value);
 				if (attributes.All(a => a.ContractType != contractType))
 				{
 					continue;
@@ -91,8 +92,8 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList.ElementAdder
 				from assembly in AppDomain.CurrentDomain.GetAssemblies()
 				from assemblyType in assembly.GetTypes()
 				where assemblyType.IsClass && !assemblyType.IsAbstract &&
-				      assemblyType.IsDefined(typeof(ElementAdderMenuCommandAttribute), false)
-				where typeof(IElementAdderMenuCommand<TContext>).IsAssignableFrom(assemblyType)
+				      assemblyType.IsDefined(TypeCache<ElementAdderMenuCommandAttribute>.Value, false)
+				where TypeCache<IElementAdderMenuCommand<TContext>>.Value.IsAssignableFrom(assemblyType)
 				select assemblyType;
 		}
 

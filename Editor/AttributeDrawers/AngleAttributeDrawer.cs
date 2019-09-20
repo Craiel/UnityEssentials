@@ -1,6 +1,7 @@
 ﻿namespace Craiel.UnityEssentials.Editor.AttributeDrawers
 {
     using System.Reflection;
+    using Runtime;
     using Runtime.Attributes;
     using UnityEditor;
     using UnityEngine;
@@ -8,7 +9,7 @@
     [CustomPropertyDrawer(typeof(AngleAttribute))]
     public class AngleAttributeDrawer : PropertyDrawer
     {
-        private static readonly MethodInfo KnobMethodInfo = typeof(EditorGUI).GetMethod(
+        private static readonly MethodInfo KnobMethodInfo = TypeCache<EditorGUI>.Value.GetMethod(
             "Knob",
             BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Static);
 

@@ -5,7 +5,6 @@
 <#@ import namespace="System.Collections.Generic" #>
 namespace Craiel.UnityEssentials.Enums
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -26,7 +25,7 @@ foreach(string file in files)
         continue;
     }
 
-    WriteLine(string.Format("        public static readonly IList<{0}> {0}Values = Enum.GetValues(typeof({0})).Cast<{0}>().ToList();\r\n", name));
+    WriteLine(string.Format("        public static readonly IList<{0}> {0}Values = EnumCache<{0}>.Values.ToList();\r\n", name));
 }
 #>
     }

@@ -2,6 +2,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 {
 	using System;
 	using System.Reflection;
+	using Runtime;
 	using UnityEditor;
 	using UnityEngine;
 
@@ -9,11 +10,11 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 	{
 		private static readonly Color SeparatorColor;
 		private static readonly GUIStyle SeparatorStyle;
-		
+
 		private static readonly GUIStyle TempStyle = new GUIStyle();
 		private static readonly GUIContent TempIconContent = new GUIContent();
 		private static readonly int IconButtonHint = "_ReorderableIconButton_".GetHashCode();
-		
+
 		// -------------------------------------------------------------------
 		// Constructor
 		// -------------------------------------------------------------------
@@ -25,7 +26,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 				PropertyInfo visibleRectProperty = guiClipType.GetProperty("visibleRect", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
 				if (visibleRectProperty != null)
 				{
-					VisibleRect = (Func<Rect>) Delegate.CreateDelegate(typeof(Func<Rect>), visibleRectProperty.GetGetMethod(true) ?? visibleRectProperty.GetGetMethod(false));
+					VisibleRect = (Func<Rect>) Delegate.CreateDelegate(TypeCache<Func<Rect>>.Value, visibleRectProperty.GetGetMethod(true) ?? visibleRectProperty.GetGetMethod(false));
 				}
 			}
 
@@ -35,10 +36,10 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
                 return;
 		    }
 
-			MethodInfo focusTextInControlMethod = typeof(EditorGUI).GetMethod("FocusTextInControl", BindingFlags.Static | BindingFlags.Public);
+			MethodInfo focusTextInControlMethod = TypeCache<EditorGUI>.Value.GetMethod("FocusTextInControl", BindingFlags.Static | BindingFlags.Public);
 			if (focusTextInControlMethod == null)
 			{
-				focusTextInControlMethod = typeof(GUI).GetMethod("FocusControl", BindingFlags.Static | BindingFlags.Public);
+				focusTextInControlMethod = TypeCache<GUI>.Value.GetMethod("FocusControl", BindingFlags.Static | BindingFlags.Public);
 			    if (focusTextInControlMethod == null)
 			    {
                     Debug.LogError("Could not get FocusTextInControl MethodInfo!");
@@ -46,7 +47,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 			    }
 			}
 
-			FocusTextInControl = (Action<string>) Delegate.CreateDelegate(typeof(Action<string>), focusTextInControlMethod);
+			FocusTextInControl = (Action<string>) Delegate.CreateDelegate(TypeCache<Action<string>>.Value, focusTextInControlMethod);
 
 			SeparatorColor = EditorGUIUtility.isProSkin
 				? new Color(0.11f, 0.11f, 0.11f)
@@ -96,7 +97,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 						GUIUtility.keyboardControl = 0;
 						Event.current.Use();
 					}
-					
+
 					break;
 
 				case EventType.MouseDrag:
@@ -104,7 +105,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 					{
 						Event.current.Use();
 					}
-					
+
 					break;
 
 				case EventType.MouseUp:
@@ -114,7 +115,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 						result = position.Contains(Event.current.mousePosition);
 						Event.current.Use();
 					}
-					
+
 					break;
 
 				case EventType.Repaint:
@@ -125,7 +126,7 @@ namespace Craiel.UnityEssentials.Editor.ReorderableList
 						position.height -= 1;
 						style.Draw(position, TempIconContent, isActive, isActive, false, false);
 					}
-					
+
 					break;
 			}
 

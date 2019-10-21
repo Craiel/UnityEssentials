@@ -7,7 +7,7 @@ namespace Craiel.UnityEssentials.Editor
 
     using UnityEngine;
 
-    public partial class NLogConsole : EssentialEditorWindow<NLogConsole>
+    public partial class NLogConsole : EssentialEditorWindowIM<NLogConsole>
     {
         private readonly DrawingContext drawingContext = new DrawingContext();
 
@@ -57,7 +57,7 @@ namespace Craiel.UnityEssentials.Editor
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        [MenuItem("Window/Craiel/NLog Console")]
+        [MenuItem(EssentialsEditorConstants.MenuRoot + "NLog Console")]
         public static void ShowWindow()
         {
             OpenWindow();

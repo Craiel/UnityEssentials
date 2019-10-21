@@ -9,7 +9,7 @@ namespace Craiel.UnityEssentials.Runtime.Event.Editor
     using UnityEditor;
     using UnityEngine;
 
-    public class GameEventsWindow : EssentialEditorWindow<GameEventsWindow>
+    public class GameEventsWindow : EssentialEditorWindowIM<GameEventsWindow>
     {
         private const int EventLimit = 1000;
         private const int EventLimitByGroup = 250;
@@ -40,7 +40,7 @@ namespace Craiel.UnityEssentials.Runtime.Event.Editor
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        [MenuItem("Window/Craiel/Game Events")]
+        [MenuItem(EssentialsEditorConstants.MenuRoot + "Game Events")]
         public static void ShowWindow()
         {
             OpenWindow();

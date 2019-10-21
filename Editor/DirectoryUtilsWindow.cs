@@ -7,7 +7,7 @@ namespace Craiel.UnityEssentials.Editor
     using UnityEditor;
     using UnityEngine;
 
-    public class DirectoryUtilsWindow : EssentialEditorWindow<DirectoryUtilsWindow>
+    public class DirectoryUtilsWindow : EssentialEditorWindowIM<DirectoryUtilsWindow>
     {
         private const float DirectoryLabelHeight = 21;
 
@@ -19,7 +19,7 @@ namespace Craiel.UnityEssentials.Editor
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        [MenuItem("Window/Craiel/Directory Utils")]
+        [MenuItem(EssentialsEditorConstants.MenuRoot + "Directory Utils")]
         public static void ShowWindow()
         {
             OpenWindow();

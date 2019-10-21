@@ -2,12 +2,13 @@ namespace Craiel.UnityEssentials.Editor
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Runtime;
     using UnityEditor;
     using UnityEditor.SceneManagement;
     using UnityEngine;
-    using UnityEngine.AI;
     using UnityEngine.SceneManagement;
+    using UnityEngine.UI;
 
     [InitializeOnLoad]
     internal class HierarchyWindowItemDecorators
@@ -17,12 +18,26 @@ namespace Craiel.UnityEssentials.Editor
         private const bool DisplayComponents = true;
         private const int IconSize = 16;
 
+        private static readonly HashSet<Component> TempComponents = new HashSet<Component>();
+
         private static readonly Type[] FilteredComponents =
         {
-            TypeCache<NavMeshObstacle>.Value,
-            TypeCache<Collider>.Value,
-            TypeCache<Camera>.Value,
-            TypeCache<Light>.Value
+            TypeCache<Transform>.Value,
+            TypeCache<RectTransform>.Value,
+            TypeCache<CanvasScaler>.Value,
+            TypeCache<CanvasRenderer>.Value,
+            TypeCache<GraphicRaycaster>.Value,
+            TypeCache<FlareLayer>.Value,
+            TypeCache<ScriptableObject>.Value,
+            TypeCache<ContentSizeFitter>.Value,
+            TypeCache<LayoutElement>.Value,
+            TypeCache<Shadow>.Value,
+            TypeCache<MeshFilter>.Value
+        };
+
+        private static readonly HashSet<string> FilteredIcons = new HashSet<string>
+        {
+            "cs Script Icon"
         };
 
         // -------------------------------------------------------------------
@@ -39,7 +54,7 @@ namespace Craiel.UnityEssentials.Editor
         // -------------------------------------------------------------------
         private static void OnItemGui(int instanceId, Rect selectionRect)
         {
-                DrawIcon(instanceId, selectionRect);
+            DrawIcon(instanceId, selectionRect);
         }
 
         private static void DrawIcon(int instanceId, Rect rect)
@@ -73,17 +88,23 @@ namespace Craiel.UnityEssentials.Editor
 
         private static void DrawComponents(int instanceId, Rect rect)
         {
-            var components = GetComponents(instanceId);
-            if (components == null)
+            UpdateComponents(instanceId);
+            if (TempComponents.Count == 0)
             {
                 return;
             }
 
             var textures = new HashSet<Texture>();
 
-            foreach (var component in components)
+            foreach (var component in TempComponents)
             {
-                textures.Add(AssetPreview.GetMiniThumbnail(component));
+                Texture2D previewTexture = AssetPreview.GetMiniThumbnail(component);
+                if (previewTexture == null || FilteredIcons.Contains(previewTexture.name))
+                {
+                    continue;
+                }
+
+                textures.Add(previewTexture);
             }
 
             if (textures.Count > 0)
@@ -99,33 +120,48 @@ namespace Craiel.UnityEssentials.Editor
             }
         }
 
-        private static HashSet<Component> GetComponents(int instanceId)
+        private static void UpdateComponents(int instanceId)
         {
-            var components = new HashSet<Component>();
+            TempComponents.Clear();
+
             var sceneGameObject = EditorUtility.InstanceIDToObject(instanceId) as GameObject;
             if (sceneGameObject == null)
             {
-                return null;
+                return;
             }
 
-            foreach (var component in sceneGameObject.GetComponents<Component>())
+            var subComponents = sceneGameObject.GetComponents<Component>().ToList();
+            foreach (Component component in subComponents)
             {
                 if (component == null)
                 {
                     continue;
                 }
 
+                var behavior = component as Behaviour;
+                if (behavior != null && !behavior.enabled)
+                {
+                    continue;
+                }
+
                 Type componentType = component.GetType();
+                bool isFiltered = false;
                 foreach (var filteredComponent in FilteredComponents)
                 {
-                    if (componentType == filteredComponent || componentType.BaseType == filteredComponent)
+                    if (componentType == filteredComponent)
                     {
-                        components.Add(component);
+                        isFiltered = true;
+                        break;
                     }
                 }
-            }
 
-            return components;
+                if (isFiltered)
+                {
+                    continue;
+                }
+
+                TempComponents.Add(component);
+            }
         }
     }
 }

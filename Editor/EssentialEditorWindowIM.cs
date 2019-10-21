@@ -1,28 +1,34 @@
-namespace Craiel.UnityEssentials.Editor
+﻿namespace Craiel.UnityEssentials.Editor
 {
-    using System;
     using Runtime;
     using UnityEditor;
     using UnityEngine;
 
-    public abstract class EssentialEditorWindow<T, TC> : EditorWindow
-        where T : EssentialEditorWindow<T, TC>
-        where TC: EssentialEditorTemplateContainer
+    public abstract class EssentialEditorWindowIM<T> : EditorWindow
+        where T : EssentialEditorWindowIM<T>
     {
-        private TC container;
-
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
         public static T Instance { get; private set; }
 
+        [SerializeField]
+        public GUIStyle ToolBarStyle;
+
         public virtual void OnEnable()
         {
-            this.container = Activator.CreateInstance<TC>();
-            this.container.Initialize();
-            this.rootVisualElement.Add(this.container);
-
             Instance = (T)this;
+
+            if (this.ToolBarStyle == null)
+            {
+                this.ToolBarStyle = new GUIStyle(EditorStyles.toolbarButton)
+                {
+                    imagePosition = ImagePosition.ImageOnly,
+                    fixedHeight = 48,
+                    fixedWidth = 48,
+                    wordWrap = false
+                };
+            }
         }
 
         public virtual void OnDestroy()

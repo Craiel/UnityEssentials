@@ -7,7 +7,7 @@
     using UnityEditor.SceneManagement;
     using UnityEngine;
 
-    public class SearchForComponentsWindow : EssentialEditorWindow<SearchForComponentsWindow>
+    public class SearchForComponentsWindow : EssentialEditorWindowIM<SearchForComponentsWindow>
     {
         private enum SearchMode
         {
@@ -46,7 +46,7 @@
         // -------------------------------------------------------------------
         // Public
         // -------------------------------------------------------------------
-        [MenuItem("Window/Craiel/Search Components")]
+        [MenuItem(EssentialsEditorConstants.MenuRoot + "Search Components")]
         public static void ShowWindow()
         {
             OpenWindow();

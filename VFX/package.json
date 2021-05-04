@@ -1,0 +1,15 @@
+{
+    "description": "VFX library", 
+    "displayName": "Craiel VFX", 
+    "keywords": [
+        "craiel",
+        "vfx"
+    ], 
+    "name": "com.craiel.unity.vfx",
+    "unity": "2019.2", 
+    "version": "0.0.1",
+    "dependencies": {
+        "com.craiel.unity.essentials": "1.0.0",
+        "com.craiel.unity.gamedata": "1.0.0"
+    }
+}

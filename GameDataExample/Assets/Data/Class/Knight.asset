@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a325ad4084b4a04b0efdd043549bbdc, type: 3}
+  m_Name: Knight
+  m_EditorClassIdentifier: 
+  Guid: 78de6e840619aec4b875b9405d842608
+  Name: Knight
+  DisplayName: 
+  Notes: 
+  Description: 
+  IconSmall:
+    Resource: {fileID: 21300000, guid: 2dc9346d2626f4b4b9cd21256e050137, type: 3}
+  IconLarge:
+    Resource: {fileID: 21300000, guid: 2dc9346d2626f4b4b9cd21256e050137, type: 3}
+  Deprecated: 0
+  InternalType: 1
+  AvailableInCharacterCreation: 1
+  Factions:
+  - RefGuid: 476cd758145d004449186ba66ab5170a
+  Races:
+  - RefGuid: e6f18df841906324892998013ed00089
+  - RefGuid: 484bec3ec59590d488c460c471d77e9b

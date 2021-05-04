@@ -1,0 +1,14 @@
+{
+    "name": "Craiel.UnityVFX.Editor",
+    "references": [
+        "Craiel.UnityVFX.Runtime",
+        "Craiel.UnityGameData.Editor",
+        "Craiel.UnityEssentials.Editor",
+        "Craiel.UnityEssentials.Runtime",
+        "Craiel.UnityGameData.Runtime"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": []
+}

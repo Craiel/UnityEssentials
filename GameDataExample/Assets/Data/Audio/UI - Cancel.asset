@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0da16649f9e7720428d03e72cc0ae244, type: 3}
+  m_Name: UI - Cancel
+  m_EditorClassIdentifier: 
+  Guid: 7d607389f39ac5543b8dc42c7a056a2a
+  Name: UI - Cancel
+  DisplayName: 
+  Notes: 
+  Description: 
+  IconSmall:
+    Resource: {fileID: 0}
+  IconLarge:
+    Resource: {fileID: 0}
+  Deprecated: 0
+  AudioChannel: 2
+  PlayBehavior: 1
+  OnlyOneAtATime: 0
+  AudioClips:
+  - Resource: {fileID: 8300000, guid: 92a22ca98144b45428e942ad8ab34b16, type: 3}

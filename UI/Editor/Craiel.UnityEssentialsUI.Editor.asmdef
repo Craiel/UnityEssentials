@@ -1,0 +1,21 @@
+{
+    "name": "Craiel.UnityEssentialsUI.Editor",
+    "references": [
+        "Craiel.UnityEssentialsUI.Runtime",
+        "Craiel.UnityEssentials.Editor",
+        "Unity.TextMeshPro.Editor",
+        "Unity.TextMeshPro",
+        "Craiel.UnityEssentials.Runtime"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a325ad4084b4a04b0efdd043549bbdc, type: 3}
+  m_Name: Priest
+  m_EditorClassIdentifier: 
+  Guid: 0c9e329be1a547e409767042a791f50b
+  Name: Priest
+  DisplayName: 
+  Notes: 
+  Description: 
+  IconSmall:
+    Resource: {fileID: 21300000, guid: df1c7ddea410c034a971e50a4a05b63e, type: 3}
+  IconLarge:
+    Resource: {fileID: 21300000, guid: df1c7ddea410c034a971e50a4a05b63e, type: 3}
+  Deprecated: 0
+  InternalType: 0
+  AvailableInCharacterCreation: 1
+  Factions:
+  - RefGuid: e943f9d2ccb8589479d3824c721b28d4
+  - RefGuid: 476cd758145d004449186ba66ab5170a
+  Races:
+  - RefGuid: c2953bdfa5e210b4799ba62e97e93144
+  - RefGuid: ffb580e2cf5c2f741adcb4af89230d08
+  - RefGuid: e6f18df841906324892998013ed00089
+  - RefGuid: 484bec3ec59590d488c460c471d77e9b

@@ -1,0 +1,13 @@
+{
+    "name": "Craiel.UnityAudio.Editor",
+    "references": [
+        "Craiel.UnityAudio.Runtime",
+        "Craiel.UnityGameData.Editor",
+        "Craiel.UnityEssentials.Editor",
+        "Craiel.UnityGameData.Runtime"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": []
+}

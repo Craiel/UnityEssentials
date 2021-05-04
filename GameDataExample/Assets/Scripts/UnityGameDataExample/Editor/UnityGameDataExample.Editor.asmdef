@@ -1,0 +1,25 @@
+{
+    "name": "UnityGameDataExample.Editor",
+    "references": [
+        "Craiel.UnityGameData.Editor",
+        "Craiel.UnityAudio.Editor",
+        "Craiel.UnityEssentials.Editor",
+        "Craiel.UnityVFX.Editor",
+        "Craiel.UnityEssentials.Runtime",
+        "UnityGameDataExample.Runtime",
+        "Craiel.UnityGameData.Runtime",
+        "Unity.TextMeshPro.Editor",
+        "Unity.TextMeshPro",
+        "Craiel.UnityEssentialsUI.Editor"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
+}

@@ -1,0 +1,15 @@
+{
+    "name": "Craiel.UnityEssentialsUI.Runtime",
+    "references": [
+        "Craiel.UnityEssentials.Runtime",
+        "Unity.TextMeshPro"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
+}

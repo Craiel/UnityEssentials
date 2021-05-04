@@ -1,0 +1,9 @@
+{
+    "name": "Craiel.UnityVFX.Runtime",
+    "references": [
+        "Craiel.UnityEssentials.Runtime",
+        "Craiel.UnityGameData.Runtime"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": []
+}

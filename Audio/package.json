@@ -1,0 +1,15 @@
+{
+    "description": "Audio library", 
+    "displayName": "Craiel Audio", 
+    "keywords": [
+        "craiel",
+        "audio"
+    ], 
+    "name": "com.craiel.unity.audio",
+    "unity": "2019.2", 
+    "version": "1.0.0",
+    "dependencies": {
+        "com.craiel.unity.essentials": "1.0.0",
+        "com.craiel.unity.gamedata": "1.0.0"
+    }
+}

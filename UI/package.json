@@ -1,0 +1,15 @@
+{
+    "description": "UI Bootstrap framework and library for games.", 
+    "displayName": "Craiel Essentials (UI)", 
+    "keywords": [
+        "craiel", 
+        "essentials",
+        "ui"
+    ], 
+    "name": "com.craiel.unity.essentials.ui",
+    "unity": "2019.2", 
+    "version": "1.0.0",
+    "dependencies": {
+        "com.craiel.unity.essentials": "1.0.0"
+    }
+}

@@ -10,6 +10,7 @@
     "unity": "2019.2", 
     "version": "1.0.0",
     "dependencies": {
-        "com.craiel.unity.essentials": "1.0.0"
+        "com.craiel.unity.essentials": "1.0.0",
+        "com.unity.textmeshpro": "3.0.6"
     }
 }

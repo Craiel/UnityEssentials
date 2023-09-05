@@ -83,7 +83,7 @@
                 this.ProcessResultEntry(processingDictionary, result, false);
             }
 
-            CollectionExtensions.AddRange(this.issueGroups, processingDictionary.Values);
+            this.issueGroups.AddRange(processingDictionary.Values);
 
             foreach (ValidationIssueGroup issueGroup in this.issueGroups)
             {

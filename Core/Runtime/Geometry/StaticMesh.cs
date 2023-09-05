@@ -1,5 +1,3 @@
-using CollectionExtensions = Craiel.UnityEssentials.Runtime.Extensions.CollectionExtensions;
-
 namespace Craiel.UnityEssentials.Runtime.Geometry
 {
     using System;
@@ -28,7 +26,7 @@ namespace Craiel.UnityEssentials.Runtime.Geometry
 
             if (offset == Vector3.zero)
             {
-                CollectionExtensions.AddRange(this.Vertices, vertices);
+                Extensions.CollectionExtensions.AddRange(this.Vertices, vertices);
             }
             else
             {
@@ -38,9 +36,9 @@ namespace Craiel.UnityEssentials.Runtime.Geometry
                 }
             }
             
-            CollectionExtensions.AddRange(this.Normals, normals);
-            CollectionExtensions.AddRange(this.NormalMapping, normalMapping);
-            CollectionExtensions.AddRange(this.Triangles, triangles);
+            Extensions.CollectionExtensions.AddRange(this.Normals, normals);
+            Extensions.CollectionExtensions.AddRange(this.NormalMapping, normalMapping);
+            Extensions.CollectionExtensions.AddRange(this.Triangles, triangles);
 
             this.RecalculateBounds();
         }

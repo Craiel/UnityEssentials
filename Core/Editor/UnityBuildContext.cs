@@ -1,5 +1,4 @@
-﻿using CollectionExtensions = Craiel.UnityEssentials.Runtime.Extensions.CollectionExtensions;
-using ManagedDirectory = Craiel.UnityEssentials.Runtime.IO.ManagedDirectory;
+﻿using ManagedDirectory = Craiel.UnityEssentials.Runtime.IO.ManagedDirectory;
 using ManagedFile = Craiel.UnityEssentials.Runtime.IO.ManagedFile;
 
 namespace Craiel.UnityEssentials.Editor
@@ -81,10 +80,10 @@ namespace Craiel.UnityEssentials.Editor
 
             if (this.IncludeCoreScenes)
             {
-                CollectionExtensions.AddRange(this.ScenesToIncludeInBuild, EssentialsCore.CoreScenes);
+                Runtime.Extensions.CollectionExtensions.AddRange(this.ScenesToIncludeInBuild, EssentialsCore.CoreScenes);
             }
 
-            CollectionExtensions.AddRange(this.ScenesToIncludeInBuild, this.additionalScenesToInclude);
+            Runtime.Extensions.CollectionExtensions.AddRange(this.ScenesToIncludeInBuild, this.additionalScenesToInclude);
         }
     }
 }

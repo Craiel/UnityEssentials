@@ -49,7 +49,7 @@ namespace Craiel.UnityEssentials.Runtime.Profiling
 
         public void Start()
         {
-            this.currentRefreshRate = Screen.currentResolution.refreshRate;
+            this.currentRefreshRate = (int)Screen.currentResolution.refreshRateRatio.value;
 
 //            if (this.DisableVsync)
 //            {
